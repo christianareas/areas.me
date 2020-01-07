@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>areas.me</title>
+    <link href="https://christianareas.github.io/areas.me/feed.xml" rel="self" />
+    <link href="https://christianareas.github.io/areas.me" />
+    <updated>2020-01-07T15:44:10-08:00</updated>
+    <author>
+        <name>Christian Areas</name>
+    </author>
+    <id>https://christianareas.github.io/areas.me</id>
+
+    <entry>
+        <title>Hello World</title>
+        <author>
+            <name>Christian Areas</name>
+        </author>
+        <link href="https://christianareas.github.io/areas.me/hello-world.html"/>
+        <id>https://christianareas.github.io/areas.me/hello-world.html</id>
+
+        <updated>2020-01-07T15:38:48-08:00</updated>
+            <summary>
+                <![CDATA[
+                    What's up!?
+                ]]>
+            </summary>
+        <content type="html">
+            <![CDATA[
+                What's up!?
+            ]]>
+        </content>
+    </entry>
+</feed>

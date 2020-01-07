@@ -1,0 +1,27 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "areas.me",
+    "description": "",
+    "home_page_url": "https://christianareas.github.io/areas.me",
+    "feed_url": "https://christianareas.github.io/areas.me/feed.json",
+    "user_comment": "",
+    "author": {
+        "name": "Christian Areas"
+    },
+    "items": [
+        {
+            "id": "https://christianareas.github.io/areas.me/hello-world.html",
+            "url": "https://christianareas.github.io/areas.me/hello-world.html",
+            "title": "Hello World",
+            "summary": "What's up!?",
+            "content_html": "What's up!?",
+            "author": {
+                "name": "Christian Areas"
+            },
+            "tags": [
+            ],
+            "date_published": "2020-01-07T15:38:48-08:00",
+            "date_modified": "2020-01-07T15:38:48-08:00"
+        }
+    ]
+}
