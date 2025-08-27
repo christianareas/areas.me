@@ -45,7 +45,7 @@ const mcpServer = createMcpHandler(
 			// Tools.
 			server.tool(
 				resourceAndTool.name,
-				{},
+				resourceAndTool.description,
 				{
 					title: resourceAndTool.title,
 					description: resourceAndTool.description,
