@@ -76,7 +76,7 @@ export const resume: Resume = {
 		firstName: "Christian",
 		middleName: "",
 		lastName: "Areas",
-		who: "A writer who uses their technical skills and love of learning to create a great developer experience",
+		who: "A writer who uses their technical skills and love of learning and teaching to create a great developer experience",
 		email: "me@areas.me",
 		phoneCountryCode: 1,
 		phoneNumber: 4088029811,
