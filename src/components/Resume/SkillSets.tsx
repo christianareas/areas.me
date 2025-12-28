@@ -18,6 +18,7 @@ export default function SkillSets() {
 		"command-line-tools": "Command-Line Tools",
 		databases: "Databases",
 		frameworks: "Frameworks",
+		"cloud-deployments": "Cloud Deployments",
 		languages: "Languages",
 		specifications: "Specifications",
 	}
