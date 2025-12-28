@@ -58,6 +58,26 @@ const createServer = () => {
 		}),
 	)
 
+	server.registerTool(
+		"get-resume-pdf-download-link",
+		{
+			title: `Get ${candidateFirstName}’s Resume (PDF)`,
+			description: `Get ${candidateFirstName}'s resume as a PDF.`,
+		},
+		async () => {
+			const pdfUrl = `https://www.areas.me/api/resume/${candidateId}/pdf`
+
+			return {
+				content: [
+					{
+						type: "text",
+						text: `${pdfUrl}.`,
+					},
+				],
+			}
+		},
+	)
+
 	// Prompts.
 	server.registerPrompt(
 		`who-is-${candidateFirstName.toLowerCase()}`,
