@@ -102,7 +102,7 @@ export const resume: Resume = {
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 					accomplishmentId: "7f4d6d8b-56c4-40a7-9c75-9d48f34a5161",
 					accomplishment:
-						"Wrote most of Postman’s public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
+						"Wrote much of Postman’s public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
 					sortOrder: 0,
 				},
 				{
