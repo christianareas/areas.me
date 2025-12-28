@@ -23,13 +23,14 @@ const mcpServer = createMcpHandler(
 		// Resources and tools.
 		for (const resourceAndTool of resourcesAndTools) {
 			// Resources.
-			server.resource(
+			server.registerResource(
 				resourceAndTool.name,
 				resourceAndTool.uri,
 				{
 					title: resourceAndTool.title,
 					description: resourceAndTool.description,
 					mimeType: "application/json",
+					// annotations: {},
 				},
 				async (uri) => ({
 					contents: [
@@ -43,13 +44,14 @@ const mcpServer = createMcpHandler(
 			)
 
 			// Tools.
-			server.tool(
+			server.registerTool(
 				resourceAndTool.name,
-				{},
 				{
 					title: resourceAndTool.title,
 					description: resourceAndTool.description,
-					idempotentHint: true,
+					// inputSchema: {},
+					// outputSchema: {},
+					// annotations: {},
 				},
 				async () => ({
 					content: [
@@ -58,14 +60,15 @@ const mcpServer = createMcpHandler(
 							text: JSON.stringify(resourceAndTool.get(), null, 2),
 						},
 					],
+					// structuredContent: {},
 				}),
 			)
 		}
 	},
 	{},
 	{
-		basePath: "/api/resume",
-		streamableHttpEndpoint: "/mcp",
+		basePath: "/api",
+		verboseLogs: true,
 	},
 )
 
