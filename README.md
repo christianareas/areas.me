@@ -20,12 +20,12 @@ To add [Christian’s Resume MCP Server](https://www.postman.com/areas-team/work
 ``` json
 {
 	"mcpServers": {
-		"christian-areas-resume": {
+		"christian-areas": {
 			"command": "npx",
 			"args": [
 				"-y",
 				"mcp-remote",
-				"https://www.areas.me/api/resume/mcp"
+				"https://www.areas.me/api/mcp/resume"
 			]
 		}
 	}
