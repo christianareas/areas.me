@@ -61,7 +61,7 @@ export async function GET(
 				left: "0",
 				right: "0",
 			},
-			scale: 0.9,
+			scale: 0.89,
 		})
 		const pdf = new Uint8Array(pdfBuffer)
 

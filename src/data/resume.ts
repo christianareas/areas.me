@@ -44,6 +44,7 @@ export type SkillSet = {
 		| "command-line-tools"
 		| "databases"
 		| "frameworks"
+		| "cloud-deployments"
 		| "languages"
 		| "specifications"
 	sortOrder: number
@@ -102,7 +103,7 @@ export const resume: Resume = {
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 					accomplishmentId: "7f4d6d8b-56c4-40a7-9c75-9d48f34a5161",
 					accomplishment:
-						"Wrote most of Postman’s public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
+						"Wrote much of Postman’s public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
 					sortOrder: 0,
 				},
 				{
@@ -507,11 +508,38 @@ export const resume: Resume = {
 			],
 		},
 
+		// Cloud deployments.
+		{
+			skillSetId: "2bb574c3-b0fe-469a-a254-c0cb8d8f59d0",
+			skillSetType: "cloud-deployments",
+			sortOrder: 5,
+			skills: [
+				{
+					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
+					skillId: "e3b280c4-0508-4211-a662-e11bd0f213f7",
+					skill: "AWS",
+					sortOrder: 0,
+				},
+				{
+					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
+					skillId: "8130a6a0-06de-47cd-8378-5f7f62d4a942",
+					skill: "Google Cloud",
+					sortOrder: 1,
+				},
+				{
+					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
+					skillId: "a16960db-3a6e-4af7-9cae-22514fea422b",
+					skill: "Vercel",
+					sortOrder: 2,
+				},
+			],
+		},
+
 		// Apps.
 		{
 			skillSetId: "1477a047-4eee-40b3-a11b-6a870ec1a4b1",
 			skillSetType: "apps",
-			sortOrder: 5,
+			sortOrder: 6,
 			skills: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -540,7 +568,7 @@ export const resume: Resume = {
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 					skillId: "545b7551-1ec3-471a-8bc9-d27e56637f4a",
-					skill: "Visual Studio Code",
+					skill: "Cursor and Visual Studio Code",
 					sortOrder: 4,
 				},
 				{
