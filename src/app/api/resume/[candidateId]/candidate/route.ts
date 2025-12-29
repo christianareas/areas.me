@@ -4,7 +4,7 @@ import { type Candidate, resume } from "@/data/resume"
 import { validateCandidateId, validateResumeSection } from "@/lib/api/resume"
 
 //
-// GET /api/resume/[candidateId]/candidate request.
+// GET /api/resume/[candidateId]/candidate.
 //
 export async function GET(
 	_request: NextRequest,
@@ -28,7 +28,7 @@ export async function GET(
 }
 
 //
-// PATCH /api/resume/[candidateId]/candidate request.
+// PATCH /api/resume/[candidateId]/candidate.
 //
 export async function PATCH(
 	request: NextRequest,
@@ -73,7 +73,7 @@ export async function PATCH(
 	) {
 		return NextResponse.json(
 			{
-				error: `candidateId’s (${candidateId} and ${candidateUpdate.candidateId}) don’t match.`,
+				error: `The candidateId’s (${candidateId} and ${candidateUpdate.candidateId}) don’t match.`,
 			},
 			{ status: 400 },
 		)
