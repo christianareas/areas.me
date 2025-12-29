@@ -1,7 +1,10 @@
 // Dependencies.
+import { eq } from "drizzle-orm"
 import { type NextRequest, NextResponse } from "next/server"
-import { type Candidate, resume } from "@/data/resume"
-import { validateCandidateId, validateResumeSection } from "@/lib/api/resume"
+import type { Candidate } from "@/data/resume"
+import { validateCandidateId } from "@/lib/api/resume"
+import { db } from "@/lib/db"
+import { candidates } from "@/lib/db/schema"
 
 //
 // GET /api/resume/[candidateId]/candidate.
@@ -18,11 +21,21 @@ export async function GET(
 	if (candidateIdError) return candidateIdError
 
 	// Candidate.
-	const candidate = resume.candidate
+	const candidateRows = await db
+		.select()
+		.from(candidates)
+		.where(eq(candidates.candidateId, candidateId))
+		.limit(1)
+
+	const candidate = candidateRows[0]
 
 	// Validate the candidate.
-	const candidateError = validateResumeSection(candidate, "candidate")
-	if (candidateError) return candidateError
+	if (!candidate) {
+		return NextResponse.json(
+			{ error: `Couldn’t find the candidate (${candidateId}).` },
+			{ status: 404 },
+		)
+	}
 
 	return NextResponse.json({ candidate }, { status: 200 })
 }
@@ -42,11 +55,21 @@ export async function PATCH(
 	if (candidateIdError) return candidateIdError
 
 	// Candidate.
-	const candidate = resume.candidate
+	const candidateRows = await db
+		.select()
+		.from(candidates)
+		.where(eq(candidates.candidateId, candidateId))
+		.limit(1)
+
+	const candidate = candidateRows[0]
 
 	// Validate the candidate.
-	const candidateError = validateResumeSection(candidate, "candidate")
-	if (candidateError) return candidateError
+	if (!candidate) {
+		return NextResponse.json(
+			{ error: `Couldn’t find the candidate (${candidateId}).` },
+			{ status: 404 },
+		)
+	}
 
 	// Request body.
 	const candidateUpdate = (await request.json()) as Partial<Candidate>

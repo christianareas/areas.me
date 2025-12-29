@@ -13,10 +13,11 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+		"reinstall": "rm -rf node_modules .next package-lock.json && npm i",
+		"update:latest": "npx -y npm-check-updates -u && npm i && npm dedupe && npm outdated && npm ls",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"reinstall": "rm -rf node_modules .next package-lock.json && npm i",
-		"update:latest": "npx -y npm-check-updates -u && npm i && npm dedupe && npm outdated && npm ls"
+		"db:seed": "tsx src/lib/db/seed.ts"
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.25.1",
@@ -39,6 +40,7 @@
 		"eslint-config-next": "^16.1.1",
 		"playwright-chromium": "^1.57.0",
 		"tailwindcss": "^4.1.18",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	}
 }
