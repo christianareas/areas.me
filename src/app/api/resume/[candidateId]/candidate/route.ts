@@ -1,22 +1,89 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId } from "@/lib/api/resume"
+import { type Candidate, resume } from "@/data/resume"
+import { validateCandidateId, validateResumeSection } from "@/lib/api/resume"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/candidate request.
+//
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate candidate ID.
+	// Validate the candidate ID.
 	const candidateIdError = validateCandidateId(candidateId)
 	if (candidateIdError) return candidateIdError
 
 	// Candidate.
 	const candidate = resume.candidate
 
+	// Validate the candidate.
+	const candidateError = validateResumeSection(candidate, "candidate")
+	if (candidateError) return candidateError
+
 	return NextResponse.json({ candidate }, { status: 200 })
+}
+
+//
+// PATCH /api/resume/[candidateId]/candidate request.
+//
+export async function PATCH(
+	request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// Validate the candidate ID.
+	const candidateIdError = validateCandidateId(candidateId)
+	if (candidateIdError) return candidateIdError
+
+	// Candidate.
+	const candidate = resume.candidate
+
+	// Validate the candidate.
+	const candidateError = validateResumeSection(candidate, "candidate")
+	if (candidateError) return candidateError
+
+	// Request body.
+	const candidateUpdate = (await request.json()) as Partial<Candidate>
+
+	// Validate the request body.
+	if (
+		!candidateUpdate ||
+		typeof candidateUpdate !== "object" ||
+		Array.isArray(candidateUpdate) ||
+		Object.keys(candidateUpdate).length === 0
+	) {
+		return NextResponse.json(
+			{
+				error: "You must send an object with at least one property.",
+			},
+			{ status: 400 },
+		)
+	}
+
+	// If there’s a candidateId in the request body, validate it.
+	if (
+		candidateUpdate.candidateId &&
+		candidateUpdate.candidateId !== candidateId
+	) {
+		return NextResponse.json(
+			{
+				error: `candidateId’s (${candidateId} and ${candidateUpdate.candidateId}) don’t match.`,
+			},
+			{ status: 400 },
+		)
+	}
+
+	// Update the candidate.
+	const updatedCandidate = {
+		...candidate,
+		...candidateUpdate,
+	}
+
+	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
 }
