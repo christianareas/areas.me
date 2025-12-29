@@ -30,7 +30,7 @@ export default function Candidate() {
 				<h2 className="font-extralight text-sm italic">{candidate?.who}</h2>
 			</section>
 
-			<section className="text-center text-sm lg:min-w-[200px] lg:text-right">
+			<section className="text-center text-sm lg:min-w-50 lg:text-right">
 				<ul className="space-y-1.5">
 					{/*
 						*****
