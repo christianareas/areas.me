@@ -1,12 +1,12 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
+import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
 import {
-	parseRequestBody,
+	parseJson,
 	validateDataFoundByCandidateId,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
-} from "@/lib/api/resume"
-import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
+} from "@/lib/api/validate"
 import { getCandidateById, updateCandidateById } from "@/lib/db/candidate"
 
 //
@@ -51,8 +51,8 @@ export async function PATCH(
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Parse the request body.
-	const requestBodyOrResponse = await parseRequestBody(request)
+	// Parse the request body JSON.
+	const requestBodyOrResponse = await parseJson(request)
 	if (requestBodyOrResponse instanceof NextResponse)
 		return requestBodyOrResponse
 
@@ -76,14 +76,13 @@ export async function PATCH(
 		candidatePatch,
 	)
 
-	if (!updatedCandidate) {
-		return NextResponse.json(
-			{
-				error: `Couldn’t find the candidate by candidateId (${candidateId}).`,
-			},
-			{ status: 404 },
-		)
-	}
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFoundByCandidateId(
+		candidateId,
+		updatedCandidate,
+		"candidate",
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
 }
