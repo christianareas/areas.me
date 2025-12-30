@@ -1,4 +1,5 @@
 // Dependencies.
+import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { validate } from "uuid"
 import {
@@ -41,6 +42,22 @@ export function validateDataFoundByCandidateId<T>(
 	}
 
 	return null
+}
+
+// Validate the request body is valid JSON.
+export async function parseRequestBody(request: NextRequest) {
+	let requestBody: unknown
+
+	try {
+		requestBody = await request.json()
+	} catch {
+		return NextResponse.json(
+			{ error: "The request body isn't valid JSON." },
+			{ status: 400 },
+		)
+	}
+
+	return requestBody
 }
 
 //

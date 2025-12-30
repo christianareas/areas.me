@@ -1,6 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import {
+	parseRequestBody,
 	validateDataFoundByCandidateId,
 	validateUuidFormat,
 } from "@/lib/api/resume"
@@ -49,17 +50,12 @@ export async function PATCH(
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Validate the request body is valid JSON.
-	let requestBody: unknown
-
-	try {
-		requestBody = await request.json()
-	} catch {
-		return NextResponse.json(
-			{ error: "The request body isn't valid JSON." },
-			{ status: 400 },
-		)
+	// Parse the request body.
+	const requestBodyOrResponse = await parseRequestBody(request)
+	if (requestBodyOrResponse instanceof NextResponse) {
+		return requestBodyOrResponse
 	}
+	const requestBody = requestBodyOrResponse
 
 	// Validate the request body against the schema.
 	const parsedRequestBody = candidatePatchSchema.safeParse(requestBody)
