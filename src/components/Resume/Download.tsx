@@ -2,7 +2,7 @@
 
 // Dependencies.
 import { LuCloudDownload } from "react-icons/lu"
-import { resume } from "@/data/resume"
+import { resume } from "@/lib/db/resume"
 
 // Component.
 export default function Download() {

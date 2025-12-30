@@ -1,26 +1,35 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId, validateResumeSection } from "@/lib/api/resume"
+import {
+	validateDataFoundByCandidateId,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/candidate"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/education.
+//
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Education.
-	const education = resume.education
+	const education = await getCandidateByCandidateId(candidateId)
 
-	// Validate education.
-	const educationError = validateResumeSection(education, "education")
-	if (educationError) return educationError
+	// Validate the education found.
+	const educationValidationResponse = validateDataFoundByCandidateId(
+		candidateId,
+		education,
+		"education",
+	)
+	if (educationValidationResponse) return educationValidationResponse
 
 	return NextResponse.json({ education }, { status: 200 })
 }

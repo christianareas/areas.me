@@ -7,7 +7,10 @@ import {
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
 } from "@/lib/api/validate"
-import { getCandidateById, updateCandidateById } from "@/lib/db/candidate"
+import {
+	getCandidateByCandidateId,
+	updateCandidateByCandidateId,
+} from "@/lib/db/candidate"
 
 //
 // GET /api/resume/[candidateId]/candidate.
@@ -24,7 +27,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateById(candidateId)
+	const candidate = await getCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFoundByCandidateId(
@@ -71,7 +74,7 @@ export async function PATCH(
 	const candidatePatch = candidatePatchOrResponse
 
 	// Updated candidate.
-	const updatedCandidate = await updateCandidateById(
+	const updatedCandidate = await updateCandidateByCandidateId(
 		candidateId,
 		candidatePatch,
 	)

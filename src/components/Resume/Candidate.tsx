@@ -1,7 +1,7 @@
 // Dependencies.
 import Link from "next/link"
 import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu"
-import { resume } from "@/data/resume"
+import { resume } from "@/lib/db/resume"
 import { formatUrl } from "@/util/candidate"
 
 // Component.

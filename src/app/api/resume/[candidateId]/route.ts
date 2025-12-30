@@ -1,11 +1,11 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
 import { validateCandidateId } from "@/lib/api/resume"
+import { resume } from "@/lib/db/resume"
 
 // GET request.
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
