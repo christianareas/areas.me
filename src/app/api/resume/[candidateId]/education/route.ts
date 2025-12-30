@@ -5,6 +5,7 @@ import {
 	validateUuidFormat,
 } from "@/lib/api/validate"
 import { getCandidateByCandidateId } from "@/lib/db/candidate"
+import { getEducationByCandidateId } from "@/lib/db/education"
 
 //
 // GET /api/resume/[candidateId]/education.
@@ -20,16 +21,19 @@ export async function GET(
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Education.
-	const education = await getCandidateByCandidateId(candidateId)
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
 
-	// Validate the education found.
-	const educationValidationResponse = validateDataFoundByCandidateId(
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFoundByCandidateId(
 		candidateId,
-		education,
-		"education",
+		candidate,
+		"candidate",
 	)
-	if (educationValidationResponse) return educationValidationResponse
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	// Education.
+	const education = await getEducationByCandidateId(candidateId)
 
 	return NextResponse.json({ education }, { status: 200 })
 }

@@ -4,7 +4,7 @@ import type { CandidatePatch } from "@/lib/api/schemas/candidate"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
-// Get candidate by ID.
+// Get candidate by candidate ID.
 export async function getCandidateByCandidateId(candidateId: string) {
 	const [candidate] = await db
 		.select()
