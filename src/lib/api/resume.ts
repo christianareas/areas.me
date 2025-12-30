@@ -1,5 +1,4 @@
 // Dependencies.
-import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { validate } from "uuid"
 import {
@@ -11,8 +10,6 @@ import {
 	type Skill,
 	type SkillSet,
 } from "@/data/resume"
-import { db } from "@/lib/db"
-import { candidates } from "@/lib/db/schema"
 
 // Validate UUID format.
 export function validateUuidFormat(uuid: string) {
@@ -26,17 +23,6 @@ export function validateUuidFormat(uuid: string) {
 	}
 
 	return null
-}
-
-// Get candidate by ID.
-export async function getCandidateById(candidateId: string) {
-	const [candidate] = await db
-		.select()
-		.from(candidates)
-		.where(eq(candidates.candidateId, candidateId))
-		.limit(1)
-
-	return candidate ?? null
 }
 
 // Validate data found by candidate ID.

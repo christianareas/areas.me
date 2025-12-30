@@ -1,11 +1,11 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import type { Candidate } from "@/data/resume"
 import {
-	getCandidateById,
 	validateDataFoundByCandidateId,
 	validateUuidFormat,
 } from "@/lib/api/resume"
+import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
+import { getCandidateById, updateCandidateById } from "@/lib/db/candidate"
 
 //
 // GET /api/resume/[candidateId]/candidate.
@@ -49,52 +49,58 @@ export async function PATCH(
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Candidate.
-	const candidate = await getCandidateById(candidateId)
+	// Validate the request body is valid JSON.
+	let requestBody: unknown
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFoundByCandidateId(
+	try {
+		requestBody = await request.json()
+	} catch {
+		return NextResponse.json(
+			{ error: "The request body isn't valid JSON." },
+			{ status: 400 },
+		)
+	}
+
+	// Validate the request body against the schema.
+	const parsedRequestBody = candidatePatchSchema.safeParse(requestBody)
+
+	if (!parsedRequestBody.success) {
+		const issues = parsedRequestBody.error.issues.map((issue) => {
+			if (issue.code === "unrecognized_keys") {
+				return {
+					path: "",
+					message: `The schema doesn't allow these fields: ${issue.keys.join(", ")}.`,
+				}
+			}
+
+			return {
+				path: issue.path.join("."),
+				message: issue.message,
+			}
+		})
+
+		return NextResponse.json(
+			{ error: "The request body doesn’t match the schema.", issues },
+			{ status: 400 },
+		)
+	}
+
+	// Candidate patch.
+	const candidatePatch = parsedRequestBody.data
+
+	// Updated candidate.
+	const updatedCandidate = await updateCandidateById(
 		candidateId,
-		candidate,
-		"candidate",
+		candidatePatch,
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
 
-	// Request body.
-	const candidateUpdate = (await request.json()) as Partial<Candidate>
-
-	// Validate the request body.
-	if (
-		!candidateUpdate ||
-		typeof candidateUpdate !== "object" ||
-		Array.isArray(candidateUpdate) ||
-		Object.keys(candidateUpdate).length === 0
-	) {
+	if (!updatedCandidate) {
 		return NextResponse.json(
 			{
-				error: "You must send an object with at least one property.",
+				error: `Couldn’t find the candidate by candidateId (${candidateId}).`,
 			},
-			{ status: 400 },
+			{ status: 404 },
 		)
-	}
-
-	// If there’s a candidateId in the request body, validate it.
-	if (
-		candidateUpdate.candidateId &&
-		candidateUpdate.candidateId !== candidateId
-	) {
-		return NextResponse.json(
-			{
-				error: `The candidateId’s (${candidateId} and ${candidateUpdate.candidateId}) don’t match.`,
-			},
-			{ status: 400 },
-		)
-	}
-
-	// Update the candidate.
-	const updatedCandidate = {
-		...candidate,
-		...candidateUpdate,
 	}
 
 	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
