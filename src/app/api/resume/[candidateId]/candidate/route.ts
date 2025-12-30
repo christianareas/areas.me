@@ -1,10 +1,11 @@
 // Dependencies.
-import { eq } from "drizzle-orm"
 import { type NextRequest, NextResponse } from "next/server"
 import type { Candidate } from "@/data/resume"
-import { validateCandidateId } from "@/lib/api/resume"
-import { db } from "@/lib/db"
-import { candidates } from "@/lib/db/schema"
+import {
+	getCandidateById,
+	validateDataFoundByCandidateId,
+	validateUuidFormat,
+} from "@/lib/api/resume"
 
 //
 // GET /api/resume/[candidateId]/candidate.
@@ -16,26 +17,20 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidateRows = await db
-		.select()
-		.from(candidates)
-		.where(eq(candidates.candidateId, candidateId))
-		.limit(1)
+	const candidate = await getCandidateById(candidateId)
 
-	const candidate = candidateRows[0]
-
-	// Validate the candidate.
-	if (!candidate) {
-		return NextResponse.json(
-			{ error: `Couldn’t find the candidate (${candidateId}).` },
-			{ status: 404 },
-		)
-	}
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFoundByCandidateId(
+		candidateId,
+		candidate,
+		"candidate",
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	return NextResponse.json({ candidate }, { status: 200 })
 }
@@ -50,26 +45,20 @@ export async function PATCH(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidateRows = await db
-		.select()
-		.from(candidates)
-		.where(eq(candidates.candidateId, candidateId))
-		.limit(1)
+	const candidate = await getCandidateById(candidateId)
 
-	const candidate = candidateRows[0]
-
-	// Validate the candidate.
-	if (!candidate) {
-		return NextResponse.json(
-			{ error: `Couldn’t find the candidate (${candidateId}).` },
-			{ status: 404 },
-		)
-	}
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFoundByCandidateId(
+		candidateId,
+		candidate,
+		"candidate",
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Request body.
 	const candidateUpdate = (await request.json()) as Partial<Candidate>

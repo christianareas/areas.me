@@ -1,5 +1,7 @@
 // Dependencies.
+import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
+import { validate } from "uuid"
 import {
 	type Accomplishment,
 	type Candidate,
@@ -9,6 +11,55 @@ import {
 	type Skill,
 	type SkillSet,
 } from "@/data/resume"
+import { db } from "@/lib/db"
+import { candidates } from "@/lib/db/schema"
+
+// Validate UUID format.
+export function validateUuidFormat(uuid: string) {
+	if (!validate(uuid)) {
+		return NextResponse.json(
+			{
+				error: `The UUID ${uuid} isn’t valid.`,
+			},
+			{ status: 400 },
+		)
+	}
+
+	return null
+}
+
+// Get candidate by ID.
+export async function getCandidateById(candidateId: string) {
+	const [candidate] = await db
+		.select()
+		.from(candidates)
+		.where(eq(candidates.candidateId, candidateId))
+		.limit(1)
+
+	return candidate ?? null
+}
+
+// Validate data found by candidate ID.
+export function validateDataFoundByCandidateId<T>(
+	candidateId: string,
+	data: T | null,
+	dataName: string,
+) {
+	if (!data) {
+		return NextResponse.json(
+			{
+				error: `Couldn’t find the ${dataName} by candidateId (${candidateId}).`,
+			},
+			{ status: 404 },
+		)
+	}
+
+	return null
+}
+
+//
+// **
+//
 
 // Validate the candidate ID.
 export function validateCandidateId(candidateId: string): NextResponse | null {
