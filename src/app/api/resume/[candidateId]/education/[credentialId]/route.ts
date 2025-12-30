@@ -1,9 +1,12 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
-import { resume } from "@/lib/db/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/candidate"
+import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/credential"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/education/[credentialId].
+//
 export async function GET(
 	_request: NextRequest,
 	{
@@ -13,23 +16,37 @@ export async function GET(
 	// Candidate and credential IDs.
 	const { candidateId, credentialId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate and credential IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([
+		candidateId,
+		credentialId,
+	])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Credential.
-	const credential = resume.education?.find(
-		(credential) => credential.credentialId === credentialId,
+	const credential = await getCredentialByCandidateIdAndCredentialId(
+		candidateId,
+		credentialId,
 	)
 
-	// Validate credential.
-	const credentialError = validateResumeItem(
+	// Validate the credential found.
+	const credentialValidationResponse = validateDataFound(
 		credential,
 		"credential",
-		credentialId,
-		"credentialId",
+		{ candidateId, credentialId },
 	)
-	if (credentialError) return credentialError
+	if (credentialValidationResponse) return credentialValidationResponse
 
 	return NextResponse.json({ credential }, { status: 200 })
 }

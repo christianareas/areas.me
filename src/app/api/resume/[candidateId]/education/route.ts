@@ -1,9 +1,6 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import {
-	validateDataFoundByCandidateId,
-	validateUuidFormat,
-} from "@/lib/api/validate"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { getCandidateByCandidateId } from "@/lib/db/candidate"
 import { getEducationByCandidateId } from "@/lib/db/education"
 
@@ -25,10 +22,10 @@ export async function GET(
 	const candidate = await getCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFoundByCandidateId(
-		candidateId,
+	const candidateValidationResponse = validateDataFound(
 		candidate,
 		"candidate",
+		{ candidateId },
 	)
 	if (candidateValidationResponse) return candidateValidationResponse
 

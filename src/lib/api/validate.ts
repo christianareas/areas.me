@@ -5,29 +5,37 @@ import { validate } from "uuid"
 import type { ZodType } from "zod"
 
 // Validate UUID format.
-export function validateUuidFormat(uuid: string) {
-	if (!validate(uuid)) {
-		return NextResponse.json(
-			{
-				error: `The UUID ${uuid} isn’t valid.`,
-			},
-			{ status: 400 },
-		)
+export function validateUuidFormat(uuid: string | string[]) {
+	const uuids = Array.isArray(uuid) ? uuid : [uuid]
+
+	for (const uuid of uuids) {
+		if (!validate(uuid)) {
+			return NextResponse.json(
+				{
+					error: `The UUID ${uuid} isn’t valid.`,
+				},
+				{ status: 400 },
+			)
+		}
 	}
 
 	return null
 }
 
 // Validate data found by candidate ID.
-export function validateDataFoundByCandidateId<T>(
-	candidateId: string,
+export function validateDataFound<T>(
 	data: T | null,
 	dataName: string,
+	ids: Record<string, string>,
 ) {
 	if (!data) {
+		const identifierMessage = Object.entries(ids)
+			.map(([key, value]) => `${key} (${value})`)
+			.join(" and ")
+
 		return NextResponse.json(
 			{
-				error: `Couldn’t find the ${dataName} by candidateId (${candidateId}).`,
+				error: `Couldn’t find the ${dataName} by ${identifierMessage}.`,
 			},
 			{ status: 404 },
 		)

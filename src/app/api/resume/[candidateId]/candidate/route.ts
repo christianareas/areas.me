@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
 import {
 	parseJson,
-	validateDataFoundByCandidateId,
+	validateDataFound,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
 } from "@/lib/api/validate"
@@ -30,10 +30,10 @@ export async function GET(
 	const candidate = await getCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFoundByCandidateId(
-		candidateId,
+	const candidateValidationResponse = validateDataFound(
 		candidate,
 		"candidate",
+		{ candidateId },
 	)
 	if (candidateValidationResponse) return candidateValidationResponse
 
@@ -80,10 +80,10 @@ export async function PATCH(
 	)
 
 	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFoundByCandidateId(
-		candidateId,
+	const candidateValidationResponse = validateDataFound(
 		updatedCandidate,
 		"candidate",
+		{ candidateId },
 	)
 	if (candidateValidationResponse) return candidateValidationResponse
 
