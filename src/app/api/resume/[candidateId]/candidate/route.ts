@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import {
 	parseRequestBody,
 	validateDataFoundByCandidateId,
+	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
 } from "@/lib/api/resume"
 import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
@@ -52,37 +53,22 @@ export async function PATCH(
 
 	// Parse the request body.
 	const requestBodyOrResponse = await parseRequestBody(request)
-	if (requestBodyOrResponse instanceof NextResponse) {
+	if (requestBodyOrResponse instanceof NextResponse)
 		return requestBodyOrResponse
-	}
+
+	// Request body.
 	const requestBody = requestBodyOrResponse
 
 	// Validate the request body against the schema.
-	const parsedRequestBody = candidatePatchSchema.safeParse(requestBody)
-
-	if (!parsedRequestBody.success) {
-		const issues = parsedRequestBody.error.issues.map((issue) => {
-			if (issue.code === "unrecognized_keys") {
-				return {
-					path: "",
-					message: `The schema doesn't allow these fields: ${issue.keys.join(", ")}.`,
-				}
-			}
-
-			return {
-				path: issue.path.join("."),
-				message: issue.message,
-			}
-		})
-
-		return NextResponse.json(
-			{ error: "The request body doesn’t match the schema.", issues },
-			{ status: 400 },
-		)
-	}
+	const candidatePatchOrResponse = validateRequestBodyAgainstSchema(
+		requestBody,
+		candidatePatchSchema,
+	)
+	if (candidatePatchOrResponse instanceof NextResponse)
+		return candidatePatchOrResponse
 
 	// Candidate patch.
-	const candidatePatch = parsedRequestBody.data
+	const candidatePatch = candidatePatchOrResponse
 
 	// Updated candidate.
 	const updatedCandidate = await updateCandidateById(

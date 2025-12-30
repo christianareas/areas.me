@@ -2,6 +2,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { validate } from "uuid"
+import type { z } from "zod"
 import {
 	type Accomplishment,
 	type Candidate,
@@ -58,6 +59,40 @@ export async function parseRequestBody(request: NextRequest) {
 	}
 
 	return requestBody
+}
+
+// Validate the request body against the schema.
+export function validateRequestBodyAgainstSchema<T>(
+	requestBody: unknown,
+	schema: z.ZodType<T>,
+) {
+	const parsedRequestBody = schema.safeParse(requestBody)
+
+	if (!parsedRequestBody.success) {
+		const issues = parsedRequestBody.error.issues.map((issue) => {
+			const formatted: { message: string; path?: string } = {
+				message: issue.message,
+			}
+
+			if (issue.code === "unrecognized_keys") {
+				formatted.message = `The schema doesn't allow these fields: ${issue.keys.join(", ")}.`
+				return formatted
+			}
+
+			if (issue.path.length > 0) {
+				formatted.path = issue.path.join(".")
+			}
+
+			return formatted
+		})
+
+		return NextResponse.json(
+			{ error: "The request body doesn’t match the schema.", issues },
+			{ status: 400 },
+		)
+	}
+
+	return parsedRequestBody.data
 }
 
 //
