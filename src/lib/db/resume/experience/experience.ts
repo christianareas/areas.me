@@ -10,8 +10,6 @@ type Accomplishment = {
 	sortOrder: number
 }
 
-const accomplishmentsByRoleId = new Map<string, Accomplishment[]>()
-
 // Get experience by candidate ID.
 export async function getExperienceByCandidateId(candidateId: string) {
 	// Select roles.
@@ -52,6 +50,8 @@ export async function getExperienceByCandidateId(candidateId: string) {
 		.orderBy(asc(accomplishments.roleId), asc(accomplishments.sortOrder))
 
 	// Group accomplishments by role.
+	const accomplishmentsByRoleId = new Map<string, Accomplishment[]>()
+
 	for (const accomplishmentRow of accomplishmentRows) {
 		const accomplishments =
 			accomplishmentsByRoleId.get(accomplishmentRow.roleId) ?? []

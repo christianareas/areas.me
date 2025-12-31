@@ -10,8 +10,6 @@ type Skill = {
 	sortOrder: number
 }
 
-const skillsBySkillSetId = new Map<string, Skill[]>()
-
 // Get skill sets by candidate ID.
 export async function getSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets.
@@ -50,6 +48,8 @@ export async function getSkillSetsByCandidateId(candidateId: string) {
 		.orderBy(asc(skills.skillSetId), asc(skills.sortOrder))
 
 	// Group skills by skill set.
+	const skillsBySkillSetId = new Map<string, Skill[]>()
+
 	for (const skillRow of skillRows) {
 		const skills = skillsBySkillSetId.get(skillRow.skillSetId) ?? []
 		skills.push({
