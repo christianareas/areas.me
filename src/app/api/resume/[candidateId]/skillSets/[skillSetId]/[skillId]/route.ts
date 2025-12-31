@@ -1,9 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
 import { getSkillByCandidateIdSkillSetIdAndSkillId } from "@/lib/db/resume/skillSets/skill"
-import { getSkillSetByCandidateIdAndSkillSetId } from "@/lib/db/resume/skillSets/skillSet"
 
 //
 // GET /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
@@ -31,44 +29,34 @@ export async function GET(
 	])
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	// Candidate, skill set, and skill.
+	const skillLookup = await getSkillByCandidateIdSkillSetIdAndSkillId(
+		candidateId,
+		skillSetId,
+		skillId,
+	)
 
 	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
-
-	// Skill set.
-	const skillSet = await getSkillSetByCandidateIdAndSkillSetId(
-		candidateId,
-		skillSetId,
-	)
+	if (!skillLookup) {
+		return validateDataFound(null, "candidate", { candidateId }) as NextResponse
+	}
 
 	// Validate the skill set found.
-	const skillSetValidationResponse = validateDataFound(skillSet, "skill set", {
-		candidateId,
-		skillSetId,
-	})
-	if (skillSetValidationResponse) return skillSetValidationResponse
-
-	// Skill.
-	const skill = await getSkillByCandidateIdSkillSetIdAndSkillId(
-		candidateId,
-		skillSetId,
-		skillId,
-	)
+	if (!skillLookup.skillSetId) {
+		return validateDataFound(null, "skill set", {
+			candidateId,
+			skillSetId,
+		}) as NextResponse
+	}
 
 	// Validate the skill found.
-	const skillValidationResponse = validateDataFound(skill, "skill", {
-		candidateId,
-		skillSetId,
-		skillId,
-	})
-	if (skillValidationResponse) return skillValidationResponse
+	if (!skillLookup.skillId) {
+		return validateDataFound(null, "skill", {
+			candidateId,
+			skillSetId,
+			skillId,
+		}) as NextResponse
+	}
 
-	return NextResponse.json({ skill }, { status: 200 })
+	return NextResponse.json({ skill: skillLookup }, { status: 200 })
 }

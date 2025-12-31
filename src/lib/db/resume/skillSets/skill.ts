@@ -1,7 +1,7 @@
 // Dependencies.
 import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { skills } from "@/lib/db/schema"
+import { candidates, skillSets, skills } from "@/lib/db/schema"
 
 // Get skill by candidate ID, skill set ID, and skill ID.
 export async function getSkillByCandidateIdSkillSetIdAndSkillId(
@@ -9,23 +9,32 @@ export async function getSkillByCandidateIdSkillSetIdAndSkillId(
 	skillSetId: string,
 	skillId: string,
 ) {
-	// Select skill.
+	// Select candidate, skill set, and skill.
 	const [skill] = await db
 		.select({
-			candidateId: skills.candidateId,
-			skillSetId: skills.skillSetId,
+			candidateId: candidates.candidateId,
+			skillSetId: skillSets.skillSetId,
 			skillId: skills.skillId,
 			skill: skills.skill,
 			sortOrder: skills.sortOrder,
 		})
-		.from(skills)
-		.where(
+		.from(candidates)
+		.leftJoin(
+			skillSets,
 			and(
-				eq(skills.candidateId, candidateId),
-				eq(skills.skillSetId, skillSetId),
+				eq(skillSets.candidateId, candidates.candidateId),
+				eq(skillSets.skillSetId, skillSetId),
+			),
+		)
+		.leftJoin(
+			skills,
+			and(
+				eq(skills.candidateId, candidates.candidateId),
+				eq(skills.skillSetId, skillSets.skillSetId),
 				eq(skills.skillId, skillId),
 			),
 		)
+		.where(eq(candidates.candidateId, candidateId))
 		.limit(1)
 
 	return skill ?? null

@@ -2,9 +2,7 @@
 
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
 import { getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/accomplishment"
-import { getRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role"
 
 //
 // GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
@@ -32,42 +30,35 @@ export async function GET(
 	])
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
-
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
-
-	// Role.
-	const role = await getRoleByCandidateIdAndRoleId(candidateId, roleId)
-
-	// Validate the role found.
-	const roleValidationResponse = validateDataFound(role, "role", {
-		candidateId,
-		roleId,
-	})
-	if (roleValidationResponse) return roleValidationResponse
-
-	// Accomplishment.
-	const accomplishment =
+	// Candidate, role, and accomplishment.
+	const accomplishmentLookup =
 		await getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
 			candidateId,
 			roleId,
 			accomplishmentId,
 		)
 
-	// Validate the accomplishment found.
-	const accomplishmentValidationResponse = validateDataFound(
-		accomplishment,
-		"accomplishment",
-		{ candidateId, roleId, accomplishmentId },
-	)
-	if (accomplishmentValidationResponse) return accomplishmentValidationResponse
+	// Validate the candidate found.
+	if (!accomplishmentLookup) {
+		return validateDataFound(null, "candidate", { candidateId }) as NextResponse
+	}
 
-	return NextResponse.json({ accomplishment }, { status: 200 })
+	// Validate the role found.
+	if (!accomplishmentLookup.roleId) {
+		return validateDataFound(null, "role", { candidateId, roleId }) as NextResponse
+	}
+
+	// Validate the accomplishment found.
+	if (!accomplishmentLookup.accomplishmentId) {
+		return validateDataFound(null, "accomplishment", {
+			candidateId,
+			roleId,
+			accomplishmentId,
+		}) as NextResponse
+	}
+
+	return NextResponse.json(
+		{ accomplishment: accomplishmentLookup },
+		{ status: 200 },
+	)
 }

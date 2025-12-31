@@ -1,7 +1,7 @@
 // Dependencies.
 import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { accomplishments } from "@/lib/db/schema"
+import { accomplishments, candidates, roles } from "@/lib/db/schema"
 
 // Get accomplishment by candidate ID, role ID, and accomplishment ID.
 export async function getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
@@ -9,23 +9,32 @@ export async function getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
 	roleId: string,
 	accomplishmentId: string,
 ) {
-	// Select accomplishment.
+	// Select candidate, role, and accomplishment.
 	const [accomplishment] = await db
 		.select({
-			candidateId: accomplishments.candidateId,
-			roleId: accomplishments.roleId,
+			candidateId: candidates.candidateId,
+			roleId: roles.roleId,
 			accomplishmentId: accomplishments.accomplishmentId,
 			accomplishment: accomplishments.accomplishment,
 			sortOrder: accomplishments.sortOrder,
 		})
-		.from(accomplishments)
-		.where(
+		.from(candidates)
+		.leftJoin(
+			roles,
 			and(
-				eq(accomplishments.candidateId, candidateId),
-				eq(accomplishments.roleId, roleId),
+				eq(roles.candidateId, candidates.candidateId),
+				eq(roles.roleId, roleId),
+			),
+		)
+		.leftJoin(
+			accomplishments,
+			and(
+				eq(accomplishments.candidateId, candidates.candidateId),
+				eq(accomplishments.roleId, roles.roleId),
 				eq(accomplishments.accomplishmentId, accomplishmentId),
 			),
 		)
+		.where(eq(candidates.candidateId, candidateId))
 		.limit(1)
 
 	return accomplishment ?? null
