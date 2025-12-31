@@ -18,7 +18,7 @@ import {
 export const candidates = pgTable(
 	"candidates",
 	{
-		candidateId: uuid("candidate_id").primaryKey(),
+		candidateId: uuid("candidate_id").primaryKey(), // Primary key.
 		firstName: text("first_name").notNull(),
 		middleName: text("middle_name").notNull(),
 		lastName: text("last_name").notNull(),
@@ -47,10 +47,10 @@ export const candidates = pgTable(
 export const roles = pgTable(
 	"roles",
 	{
-		roleId: uuid("role_id").primaryKey(),
+		roleId: uuid("role_id").primaryKey(), // Primary key.
 		candidateId: uuid("candidate_id")
 			.notNull()
-			.references(() => candidates.candidateId, { onDelete: "cascade" }),
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
 		company: text("company").notNull(),
 		role: text("role").notNull(),
 		startDate: date("start_date", { mode: "string" }).notNull(),
@@ -76,13 +76,13 @@ export const roles = pgTable(
 export const accomplishments = pgTable(
 	"accomplishments",
 	{
-		accomplishmentId: uuid("accomplishment_id").primaryKey(),
+		accomplishmentId: uuid("accomplishment_id").primaryKey(), // Primary key.
 		candidateId: uuid("candidate_id")
 			.notNull()
-			.references(() => candidates.candidateId, { onDelete: "cascade" }),
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
 		roleId: uuid("role_id")
 			.notNull()
-			.references(() => roles.roleId, { onDelete: "cascade" }),
+			.references(() => roles.roleId, { onDelete: "cascade" }), // Foreign key.
 		accomplishment: text("accomplishment").notNull(),
 		sortOrder: integer("sort_order").notNull(),
 		createdAt: timestamp("created_at", { withTimezone: true })
@@ -109,10 +109,10 @@ export const accomplishments = pgTable(
 export const skillSets = pgTable(
 	"skill_sets",
 	{
-		skillSetId: uuid("skill_set_id").primaryKey(),
+		skillSetId: uuid("skill_set_id").primaryKey(), // Primary key.
 		candidateId: uuid("candidate_id")
 			.notNull()
-			.references(() => candidates.candidateId, { onDelete: "cascade" }),
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
 		skillSetType: text("skill_set_type").notNull(),
 		sortOrder: integer("sort_order").notNull(),
 		createdAt: timestamp("created_at", { withTimezone: true })
@@ -134,13 +134,13 @@ export const skillSets = pgTable(
 export const skills = pgTable(
 	"skills",
 	{
-		skillId: uuid("skill_id").primaryKey(),
+		skillId: uuid("skill_id").primaryKey(), // Primary key.
 		candidateId: uuid("candidate_id")
 			.notNull()
-			.references(() => candidates.candidateId, { onDelete: "cascade" }),
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
 		skillSetId: uuid("skill_set_id")
 			.notNull()
-			.references(() => skillSets.skillSetId, { onDelete: "cascade" }),
+			.references(() => skillSets.skillSetId, { onDelete: "cascade" }), // Foreign key.
 		skill: text("skill").notNull(),
 		sortOrder: integer("sort_order").notNull(),
 		createdAt: timestamp("created_at", { withTimezone: true })
@@ -167,10 +167,10 @@ export const skills = pgTable(
 export const credentials = pgTable(
 	"credentials",
 	{
-		credentialId: uuid("credential_id").primaryKey(),
+		credentialId: uuid("credential_id").primaryKey(), // Primary key.
 		candidateId: uuid("candidate_id")
 			.notNull()
-			.references(() => candidates.candidateId, { onDelete: "cascade" }),
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
 		institution: text("institution").notNull(),
 		credential: text("credential").notNull(),
 		startDate: date("start_date", { mode: "string" }),
