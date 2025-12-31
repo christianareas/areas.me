@@ -1,9 +1,11 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { validateCandidateId } from "@/lib/api/resume"
-import { resume } from "@/lib/db/seed/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
 
-// GET request.
+//
+// GET /resume/[candidateId]
+//
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -11,9 +13,20 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	return NextResponse.json({ resume }, { status: 200 })
 }

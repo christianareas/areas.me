@@ -10,7 +10,7 @@ import {
 import {
 	getCandidateByCandidateId,
 	updateCandidateByCandidateId,
-} from "@/lib/db/resume/candidate"
+} from "@/lib/db/resume/candidate/candidate"
 
 //
 // GET /api/resume/[candidateId]/candidate.
