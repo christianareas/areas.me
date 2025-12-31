@@ -15,6 +15,9 @@
 		"lint": "next lint",
 		"reinstall": "rm -rf node_modules .next package-lock.json && npm i",
 		"update:latest": "npx -y npm-check-updates -u && npm i && npm dedupe && npm outdated && npm ls",
+		"biome:check": "npx biome check",
+		"biome:check:write": "npx biome check --write",
+		"biome:check:write:unsafe": "npx biome check --write --unsafe",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:seed": "tsx src/lib/db/seed/seed.ts"
