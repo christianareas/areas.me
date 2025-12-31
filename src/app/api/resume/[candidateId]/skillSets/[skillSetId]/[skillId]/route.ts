@@ -1,9 +1,13 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
-import { resume } from "@/lib/db/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
+import { getSkillByCandidateIdSkillSetIdAndSkillId } from "@/lib/db/resume/skill"
+import { getSkillSetByCandidateIdAndSkillSetId } from "@/lib/db/resume/skillSet"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
+//
 export async function GET(
 	_request: NextRequest,
 	{
@@ -19,30 +23,52 @@ export async function GET(
 	// Candidate, skill set, skill IDs.
 	const { candidateId, skillSetId, skillId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate, skill set, and skill IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([
+		candidateId,
+		skillSetId,
+		skillId,
+	])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Skill set.
-	const skillSet = resume.skillSets?.find(
-		(skillSet) => skillSet.skillSetId === skillSetId,
+	const skillSet = await getSkillSetByCandidateIdAndSkillSetId(
+		candidateId,
+		skillSetId,
 	)
 
-	// Validate skill set.
-	const skillSetError = validateResumeItem(
-		skillSet,
-		"skillSet",
+	// Validate the skill set found.
+	const skillSetValidationResponse = validateDataFound(skillSet, "skill set", {
+		candidateId,
 		skillSetId,
-		"skillSetId",
-	)
-	if (skillSetError) return skillSetError
+	})
+	if (skillSetValidationResponse) return skillSetValidationResponse
 
 	// Skill.
-	const skill = skillSet?.skills?.find((skill) => skill.skillId === skillId)
+	const skill = await getSkillByCandidateIdSkillSetIdAndSkillId(
+		candidateId,
+		skillSetId,
+		skillId,
+	)
 
-	// Validate skill.
-	const skillError = validateResumeItem(skill, "skill", skillId, "skillId")
-	if (skillError) return skillError
+	// Validate the skill found.
+	const skillValidationResponse = validateDataFound(skill, "skill", {
+		candidateId,
+		skillSetId,
+		skillId,
+	})
+	if (skillValidationResponse) return skillValidationResponse
 
 	return NextResponse.json({ skill }, { status: 200 })
 }

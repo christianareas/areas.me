@@ -1,7 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateCandidateId } from "@/lib/api/resume"
-import { resume } from "@/lib/db/resume"
+import { resume } from "@/lib/db/seed/resume"
 
 // GET request.
 export async function GET(

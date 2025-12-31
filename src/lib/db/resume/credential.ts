@@ -9,7 +9,14 @@ export async function getCredentialByCandidateIdAndCredentialId(
 	credentialId: string,
 ) {
 	const [credential] = await db
-		.select()
+		.select({
+			candidateId: credentials.candidateId,
+			credentialId: credentials.credentialId,
+			institution: credentials.institution,
+			credential: credentials.credential,
+			startDate: credentials.startDate,
+			endDate: credentials.endDate,
+		})
 		.from(credentials)
 		.where(
 			and(

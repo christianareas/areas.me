@@ -1,8 +1,8 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/candidate"
-import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/credential"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
+import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/credential"
 
 //
 // GET /api/resume/[candidateId]/education/[credentialId].

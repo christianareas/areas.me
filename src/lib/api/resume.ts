@@ -8,7 +8,7 @@ import {
 	resume,
 	type Skill,
 	type SkillSet,
-} from "@/lib/db/resume"
+} from "@/lib/db/seed/resume"
 
 // Validate the candidate ID.
 export function validateCandidateId(candidateId: string): NextResponse | null {

@@ -3,7 +3,7 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
 import { chromium } from "playwright-chromium"
-import { resume } from "@/lib/db/resume"
+import { resume } from "@/lib/db/seed/resume"
 
 // GET request.
 export async function GET(

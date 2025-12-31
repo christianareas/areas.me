@@ -6,7 +6,14 @@ import { credentials } from "@/lib/db/schema"
 // Get education by candidate ID.
 export async function getEducationByCandidateId(candidateId: string) {
 	const education = await db
-		.select()
+		.select({
+			candidateId: credentials.candidateId,
+			credentialId: credentials.credentialId,
+			institution: credentials.institution,
+			credential: credentials.credential,
+			startDate: credentials.startDate,
+			endDate: credentials.endDate,
+		})
 		.from(credentials)
 		.where(eq(credentials.candidateId, candidateId))
 

@@ -1,6 +1,6 @@
 // Dependencies.
-import type { SkillSet } from "@/lib/db/resume"
-import { resume } from "@/lib/db/resume"
+import type { SkillSet } from "@/lib/db/seed/resume"
+import { resume } from "@/lib/db/seed/resume"
 
 // Component.
 export default function SkillSets() {
