@@ -17,7 +17,7 @@
 		"update:latest": "npx -y npm-check-updates -u && npm i && npm dedupe && npm outdated && npm ls",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:seed": "tsx src/lib/db/seed.ts"
+		"db:seed": "tsx src/lib/db/seed/seed.ts"
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.25.1",
