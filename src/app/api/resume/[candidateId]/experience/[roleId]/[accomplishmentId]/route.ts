@@ -45,7 +45,10 @@ export async function GET(
 
 	// Validate the role found.
 	if (!accomplishmentLookup.roleId) {
-		return validateDataFound(null, "role", { candidateId, roleId }) as NextResponse
+		return validateDataFound(null, "role", {
+			candidateId,
+			roleId,
+		}) as NextResponse
 	}
 
 	// Validate the accomplishment found.
