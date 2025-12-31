@@ -4,7 +4,9 @@ import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
 import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/skillSets"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/skillSets/.
+//
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
