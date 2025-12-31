@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
-import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/credential"
+import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/education/credential"
 
 //
 // GET /api/resume/[candidateId]/education/[credentialId].
