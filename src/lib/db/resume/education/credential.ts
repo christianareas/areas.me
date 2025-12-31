@@ -8,6 +8,7 @@ export async function getCredentialByCandidateIdAndCredentialId(
 	candidateId: string,
 	credentialId: string,
 ) {
+	// Select credential.
 	const [credential] = await db
 		.select({
 			candidateId: credentials.candidateId,

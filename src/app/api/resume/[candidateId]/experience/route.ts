@@ -2,6 +2,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
+import { getExperienceByCandidateId } from "@/lib/db/resume/experience/experience"
 
 //
 // GET /api/resume/[candidateId]/experience.
@@ -29,7 +30,7 @@ export async function GET(
 	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Experience.
-	const experience = resume.experience
+	const experience = await getExperienceByCandidateId(candidateId)
 
 	return NextResponse.json({ experience }, { status: 200 })
 }

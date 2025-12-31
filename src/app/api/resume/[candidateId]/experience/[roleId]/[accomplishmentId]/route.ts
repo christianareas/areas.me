@@ -1,9 +1,14 @@
 // Dependencies.
-import { type NextRequest, NextResponse } from "next/server"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
-import { resume } from "@/lib/db/seed/resume"
 
-// GET request.
+import { type NextRequest, NextResponse } from "next/server"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
+import { getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/accomplishment"
+import { getRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role"
+
+//
+// GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
+//
 export async function GET(
 	_request: NextRequest,
 	{
@@ -19,30 +24,50 @@ export async function GET(
 	// Candidate, role, accomplishment IDs.
 	const { candidateId, roleId, accomplishmentId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate, role, and accomplishment IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([
+		candidateId,
+		roleId,
+		accomplishmentId,
+	])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Role.
-	const role = resume.experience?.find((role) => role.roleId === roleId)
+	const role = await getRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// Validate role.
-	const roleError = validateResumeItem(role, "role", roleId, "roleId")
-	if (roleError) return roleError
+	// Validate the role found.
+	const roleValidationResponse = validateDataFound(role, "role", {
+		candidateId,
+		roleId,
+	})
+	if (roleValidationResponse) return roleValidationResponse
 
 	// Accomplishment.
-	const accomplishment = role?.accomplishments?.find(
-		(accomplishment) => accomplishment.accomplishmentId === accomplishmentId,
-	)
+	const accomplishment =
+		await getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
+			candidateId,
+			roleId,
+			accomplishmentId,
+		)
 
-	// Validate role.
-	const accomplishmentError = validateResumeItem(
+	// Validate the accomplishment found.
+	const accomplishmentValidationResponse = validateDataFound(
 		accomplishment,
 		"accomplishment",
-		accomplishmentId,
-		"accomplishmentId",
+		{ candidateId, roleId, accomplishmentId },
 	)
-	if (accomplishmentError) return accomplishmentError
+	if (accomplishmentValidationResponse) return accomplishmentValidationResponse
 
 	return NextResponse.json({ accomplishment }, { status: 200 })
 }

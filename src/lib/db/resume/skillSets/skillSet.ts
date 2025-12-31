@@ -8,6 +8,7 @@ export async function getSkillSetByCandidateIdAndSkillSetId(
 	candidateId: string,
 	skillSetId: string,
 ) {
+	// Select skill set.
 	const [skillSet] = await db
 		.select({
 			candidateId: skillSets.candidateId,
@@ -24,8 +25,10 @@ export async function getSkillSetByCandidateIdAndSkillSetId(
 		)
 		.limit(1)
 
+	// If there’s no skill set, return null.
 	if (!skillSet) return null
 
+	// Select skills.
 	const skillSetSkills = await db
 		.select({
 			skillId: skills.skillId,

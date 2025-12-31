@@ -5,6 +5,7 @@ import { credentials } from "@/lib/db/schema"
 
 // Get education by candidate ID.
 export async function getEducationByCandidateId(candidateId: string) {
+	// Select credentials.
 	const education = await db
 		.select({
 			candidateId: credentials.candidateId,

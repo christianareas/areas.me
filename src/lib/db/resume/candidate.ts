@@ -6,6 +6,7 @@ import { candidates } from "@/lib/db/schema"
 
 // Get candidate by candidate ID.
 export async function getCandidateByCandidateId(candidateId: string) {
+	// Select candidate.
 	const [candidate] = await db
 		.select({
 			candidateId: candidates.candidateId,
@@ -27,11 +28,12 @@ export async function getCandidateByCandidateId(candidateId: string) {
 	return candidate ?? null
 }
 
-// Update candidate by ID.
+// Update candidate by candidate ID.
 export async function updateCandidateByCandidateId(
 	candidateId: string,
 	candidatePatch: CandidatePatch,
 ) {
+	// Update candidate.
 	const [updatedCandidate] = await db
 		.update(candidates)
 		.set({ ...candidatePatch, updatedAt: new Date() })

@@ -1,9 +1,12 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
-import { resume } from "@/lib/db/seed/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate"
+import { getRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/experience/[roleId].
+//
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string; roleId: string }> },
@@ -11,16 +14,30 @@ export async function GET(
 	// Candidate and role IDs.
 	const { candidateId, roleId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate and role IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([candidateId, roleId])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Role.
-	const role = resume.experience?.find((role) => role.roleId === roleId)
+	const role = await getRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// Validate role.
-	const roleError = validateResumeItem(role, "role", roleId, "roleId")
-	if (roleError) return roleError
+	// Validate the role found.
+	const roleValidationResponse = validateDataFound(role, "role", {
+		candidateId,
+		roleId,
+	})
+	if (roleValidationResponse) return roleValidationResponse
 
 	return NextResponse.json({ role }, { status: 200 })
 }

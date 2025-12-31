@@ -9,6 +9,7 @@ export async function getSkillByCandidateIdSkillSetIdAndSkillId(
 	skillSetId: string,
 	skillId: string,
 ) {
+	// Select skill.
 	const [skill] = await db
 		.select({
 			candidateId: skills.candidateId,
