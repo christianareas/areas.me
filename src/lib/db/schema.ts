@@ -15,25 +15,29 @@ import {
 //
 
 // Candidate table.
-export const candidates = pgTable("candidates", {
-	candidateId: uuid("candidate_id").primaryKey(),
-	firstName: text("first_name").notNull(),
-	middleName: text("middle_name").notNull(),
-	lastName: text("last_name").notNull(),
-	who: text("who").notNull(),
-	email: text("email").notNull(),
-	phoneCountryCode: integer("phone_country_code").notNull(),
-	phoneNumber: bigint("phone_number", { mode: "number" }).notNull(),
-	website: text("website").notNull(),
-	linkedIn: text("linkedin").notNull(),
-	gitHub: text("github").notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true })
-		.defaultNow()
-		.notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true })
-		.defaultNow()
-		.notNull(),
-})
+export const candidates = pgTable(
+	"candidates",
+	{
+		candidateId: uuid("candidate_id").primaryKey(),
+		firstName: text("first_name").notNull(),
+		middleName: text("middle_name").notNull(),
+		lastName: text("last_name").notNull(),
+		who: text("who").notNull(),
+		email: text("email").notNull(),
+		phoneCountryCode: integer("phone_country_code").notNull(),
+		phoneNumber: bigint("phone_number", { mode: "number" }).notNull(),
+		website: text("website").notNull(),
+		linkedIn: text("linkedin").notNull(),
+		gitHub: text("github").notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.defaultNow()
+			.notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+			.defaultNow()
+			.notNull(),
+	},
+	() => [],
+)
 
 //
 // Experience.
