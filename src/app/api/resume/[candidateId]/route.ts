@@ -1,10 +1,10 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
+import { getResumeByCandidateId } from "@/lib/db/resume/resume"
 
 //
-// GET /resume/[candidateId]
+// GET /api/resume/[candidateId]/.
 //
 export async function GET(
 	_request: NextRequest,
@@ -17,16 +17,14 @@ export async function GET(
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	// Resume.
+	const resume = await getResumeByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	// Validate the resume found.
+	const resumeValidationResponse = validateDataFound(resume, "resume", {
+		candidateId,
+	})
+	if (resumeValidationResponse) return resumeValidationResponse
 
 	return NextResponse.json({ resume }, { status: 200 })
 }
