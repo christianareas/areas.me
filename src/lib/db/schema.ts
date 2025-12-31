@@ -58,7 +58,14 @@ export const roles = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [index("roles_candidate_id_index").on(table.candidateId)],
+	(table) => [
+		index("roles_candidate_id_end_date_start_date_company_index").on(
+			table.candidateId,
+			table.endDate,
+			table.startDate,
+			table.company,
+		),
+	],
 )
 
 // Accomplishments table.
@@ -171,5 +178,11 @@ export const credentials = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [index("credentials_candidate_id_index").on(table.candidateId)],
+	(table) => [
+		index("credentials_candidate_id_end_date_start_date_index").on(
+			table.candidateId,
+			table.endDate,
+			table.startDate,
+		),
+	],
 )
