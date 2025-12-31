@@ -10,7 +10,7 @@ type Role = {
 	company: string
 	role: string
 	startDate: string
-	endDate: string
+	endDate: string | null
 	accomplishments: Accomplishment[]
 }
 
@@ -45,8 +45,8 @@ export async function getExperienceByCandidateId(candidateId: string) {
 		)
 		.where(eq(roles.candidateId, candidateId))
 		.orderBy(
-			desc(roles.startDate),
 			desc(roles.endDate),
+			desc(roles.startDate),
 			asc(roles.company),
 			asc(accomplishments.sortOrder),
 		)

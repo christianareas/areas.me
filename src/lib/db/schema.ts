@@ -1,6 +1,7 @@
 // Dependencies.
 import {
 	bigint,
+	date,
 	index,
 	integer,
 	pgTable,
@@ -48,8 +49,8 @@ export const roles = pgTable(
 			.references(() => candidates.candidateId, { onDelete: "cascade" }),
 		company: text("company").notNull(),
 		role: text("role").notNull(),
-		startDate: text("start_date").notNull(),
-		endDate: text("end_date").notNull(),
+		startDate: date("start_date").notNull(),
+		endDate: date("end_date"),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.defaultNow()
 			.notNull(),
@@ -161,8 +162,8 @@ export const credentials = pgTable(
 			.references(() => candidates.candidateId, { onDelete: "cascade" }),
 		institution: text("institution").notNull(),
 		credential: text("credential").notNull(),
-		startDate: text("start_date").notNull(),
-		endDate: text("end_date").notNull(),
+		startDate: date("start_date"),
+		endDate: date("end_date"),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.defaultNow()
 			.notNull(),

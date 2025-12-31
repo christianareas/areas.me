@@ -1,5 +1,5 @@
 // Dependencies.
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 
@@ -17,6 +17,7 @@ export async function getEducationByCandidateId(candidateId: string) {
 		})
 		.from(credentials)
 		.where(eq(credentials.candidateId, candidateId))
+		.orderBy(desc(credentials.endDate), desc(credentials.startDate))
 
 	return education
 }

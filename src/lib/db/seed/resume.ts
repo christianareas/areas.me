@@ -26,7 +26,7 @@ export type Role = {
 	company: string
 	role: string
 	startDate: string
-	endDate: string
+	endDate: string | null
 	accomplishments?: Accomplishment[]
 }
 
@@ -66,8 +66,8 @@ export type Credential = {
 	credentialId: string
 	institution: string
 	credential: string
-	startDate: string
-	endDate: string
+	startDate: string | null
+	endDate: string | null
 }
 
 // Resume.
@@ -100,7 +100,7 @@ export const resume: Resume = {
 			company: "Postman",
 			role: "Senior Technical Writer",
 			startDate: "2024-03-18",
-			endDate: "",
+			endDate: null,
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -116,7 +116,7 @@ export const resume: Resume = {
 					accomplishmentId: "508b3571-95ab-49de-8a9e-ef30806a389f",
 					accomplishment:
 						"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.",
-					sortOrder: 2,
+					sortOrder: 1,
 				},
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -124,7 +124,7 @@ export const resume: Resume = {
 					accomplishmentId: "5ac5331b-7549-45de-b0a3-64cfbeb46cb8",
 					accomplishment:
 						"Built a Next.js site that lists all of Postman’s icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.",
-					sortOrder: 3,
+					sortOrder: 2,
 				},
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -132,7 +132,7 @@ export const resume: Resume = {
 					accomplishmentId: "af61fff1-a32e-43f4-a548-cea6b4181ebc",
 					accomplishment:
 						"Published an NPM package that’s a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman’s style.",
-					sortOrder: 4,
+					sortOrder: 3,
 				},
 			],
 		},
@@ -143,8 +143,8 @@ export const resume: Resume = {
 			roleId: "7b329cf8-5a11-4de8-bdc7-65696dbc1e2c",
 			company: "Apple",
 			role: "Senior Technical Writer, Special Projects",
-			startDate: "2023-09",
-			endDate: "2024-03",
+			startDate: "2023-09-01",
+			endDate: "2024-03-01",
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -171,8 +171,8 @@ export const resume: Resume = {
 			roleId: "3d7d7353-35ef-4be8-b32d-ee8151a13709",
 			company: "Sabbatical",
 			role: "",
-			startDate: "2022-04",
-			endDate: "2023-09",
+			startDate: "2022-04-01",
+			endDate: "2023-09-01",
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -199,8 +199,8 @@ export const resume: Resume = {
 			roleId: "0e6bdabb-10b6-495a-985d-26526faedfa0",
 			company: "Apple",
 			role: "Senior Technical Writer, Apple Pay",
-			startDate: "2019-08",
-			endDate: "2022-04",
+			startDate: "2019-08-01",
+			endDate: "2022-04-01",
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -251,8 +251,8 @@ export const resume: Resume = {
 			roleId: "b985c1d0-0f7f-46d6-a39d-ebbd0a8db7aa",
 			company: "Apple",
 			role: "Senior Technical Writer, Employee Productivity",
-			startDate: "2015-07",
-			endDate: "2019-08",
+			startDate: "2015-07-01",
+			endDate: "2019-08-01",
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -302,8 +302,8 @@ export const resume: Resume = {
 			roleId: "c92724f9-41fe-417e-8f26-e75ef1005ab0",
 			company: "MGT",
 			role: "Documentation Manager",
-			startDate: "2013-10",
-			endDate: "2015-7",
+			startDate: "2013-10-01",
+			endDate: "2015-07-01",
 			accomplishments: [
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
@@ -655,32 +655,32 @@ export const resume: Resume = {
 			credentialId: "c560a09f-e1c0-438b-bdee-40b08193aa71",
 			institution: "University of Michigan (Coursera)",
 			credential: "Specialization Certificate, Python for Everyone",
-			startDate: "",
-			endDate: "",
+			startDate: null,
+			endDate: "2023-06-01",
 		},
 		{
 			candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 			credentialId: "6d2a04b3-3aae-48fe-a96a-95bbc0072d0f",
 			institution: "UC Berkeley Extension",
 			credential: "Certificate of Completion, Full-Stack JavaScript Developer",
-			startDate: "",
-			endDate: "",
+			startDate: null,
+			endDate: "2023-03-01",
 		},
 		{
 			candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 			credentialId: "424c3311-d868-4dae-94be-178bf12602d6",
 			institution: "Emory University",
 			credential: "MPH, Epidemiology (Coursework Complete)",
-			startDate: "",
-			endDate: "",
+			startDate: null,
+			endDate: "2008-05-01",
 		},
 		{
 			candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 			credentialId: "96375c83-3995-48b7-a118-131572b154f3",
 			institution: "UC Berkeley",
 			credential: "BA, English and Premed",
-			startDate: "",
-			endDate: "",
+			startDate: null,
+			endDate: "2005-05-01",
 		},
 	],
 }
