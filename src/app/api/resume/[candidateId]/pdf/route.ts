@@ -3,16 +3,36 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
 import { chromium } from "playwright-chromium"
-import { resume } from "@/lib/db/seed/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
 
-// GET request.
+//
+// GET /resume/[candidateId]/pdf.
+//
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
-	// Candidate ID and name.
+	// Candidate ID.
 	const { candidateId } = await params
-	const { firstName, lastName } = resume.candidate ?? {}
+
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	// Candidate name.
+	const { firstName, lastName } = candidate
 
 	// PDF name and location.
 	const pdfName = `${firstName} ${lastName}.pdf`
@@ -22,11 +42,6 @@ export async function GET(
 		"resume",
 		pdfName,
 	)
-
-	// If there's no candidate ID, return not found.
-	if (resume.candidate?.candidateId !== candidateId) {
-		return NextResponse.json({ error: "Not Found" }, { status: 404 })
-	}
 
 	// Node environment.
 	const nodeEnvironment = process.env.NODE_ENV
@@ -61,7 +76,7 @@ export async function GET(
 				left: "0",
 				right: "0",
 			},
-			scale: 0.89,
+			scale: 0.88,
 		})
 		const pdf = new Uint8Array(pdfBuffer)
 
