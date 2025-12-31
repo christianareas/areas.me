@@ -48,51 +48,55 @@ export async function GET(
 
 	// If in a development environment, generate the PDF.
 	if (nodeEnvironment === "development") {
-		// Create a headless browser.
-		const browser = await chromium.launch({
-			headless: true,
-			args: ["--no-sandbox", "--disable-setuid-sandbox"],
-		})
-		const browserContext = await browser.newContext({
-			viewport: { width: 1280, height: 900 },
-		})
+		let browser: Awaited<ReturnType<typeof chromium.launch>> | null = null
 
-		// Prepare the PDF.
-		const resumePage = await browserContext.newPage()
-		await resumePage.emulateMedia({ media: "screen" })
-		const resumeUrl = new URL("/", request.url).toString()
-		await resumePage.goto(resumeUrl, { waitUntil: "networkidle" })
-		await resumePage.evaluate(() => {
-			document.getElementById("download-button")?.remove()
-			document.querySelector("[data-nextjs-dev-overlay]")?.remove()
-		})
+		try {
+			// Create a headless browser.
+			browser = await chromium.launch({
+				headless: true,
+				args: ["--no-sandbox", "--disable-setuid-sandbox"],
+			})
+			const browserContext = await browser.newContext({
+				viewport: { width: 1280, height: 900 },
+			})
 
-		// Generate the PDF.
-		const pdfBuffer = await resumePage.pdf({
-			format: "A3",
-			margin: {
-				top: "0",
-				bottom: "0",
-				left: "0",
-				right: "0",
-			},
-			scale: 0.88,
-		})
-		const pdf = new Uint8Array(pdfBuffer)
+			// Prepare the PDF.
+			const resumePage = await browserContext.newPage()
+			await resumePage.emulateMedia({ media: "screen" })
+			const resumeUrl = new URL("/", request.url).toString()
+			await resumePage.goto(resumeUrl, { waitUntil: "networkidle" })
+			await resumePage.evaluate(() => {
+				document.getElementById("download-button")?.remove()
+				document.querySelector("[data-nextjs-dev-overlay]")?.remove()
+			})
 
-		// Save the PDF to public/resume/.
-		await fs.writeFile(pathToPublicDirectory, pdf)
+			// Generate the PDF.
+			const pdfBuffer = await resumePage.pdf({
+				format: "A3",
+				margin: {
+					top: "0",
+					bottom: "0",
+					left: "0",
+					right: "0",
+				},
+				scale: 0.88,
+			})
+			const pdf = new Uint8Array(pdfBuffer)
 
-		// Close the browser.
-		await browser.close()
+			// Save the PDF to public/resume/.
+			await fs.mkdir(path.dirname(pathToPublicDirectory), { recursive: true })
+			await fs.writeFile(pathToPublicDirectory, pdf)
 
-		// Return the PDF.
-		return new NextResponse(pdf, {
-			headers: {
-				"Content-Type": "application/pdf",
-				"Content-Disposition": `attachment; filename="${pdfName}"`,
-			},
-		})
+			// Return the PDF.
+			return new NextResponse(pdf, {
+				headers: {
+					"Content-Type": "application/pdf",
+					"Content-Disposition": `attachment; filename="${pdfName}"`,
+				},
+			})
+		} finally {
+			if (browser) await browser.close()
+		}
 
 		// Otherwise, get the PDF from public/resume/.
 	} else {
