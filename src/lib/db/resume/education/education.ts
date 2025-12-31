@@ -1,5 +1,5 @@
 // Dependencies.
-import { desc, eq, sql } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 

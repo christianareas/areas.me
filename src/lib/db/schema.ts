@@ -49,8 +49,8 @@ export const roles = pgTable(
 			.references(() => candidates.candidateId, { onDelete: "cascade" }),
 		company: text("company").notNull(),
 		role: text("role").notNull(),
-		startDate: date("start_date").notNull(),
-		endDate: date("end_date"),
+		startDate: date("start_date", { mode: "string" }).notNull(),
+		endDate: date("end_date", { mode: "string" }),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.defaultNow()
 			.notNull(),
@@ -169,8 +169,8 @@ export const credentials = pgTable(
 			.references(() => candidates.candidateId, { onDelete: "cascade" }),
 		institution: text("institution").notNull(),
 		credential: text("credential").notNull(),
-		startDate: date("start_date"),
-		endDate: date("end_date"),
+		startDate: date("start_date", { mode: "string" }),
+		endDate: date("end_date", { mode: "string" }),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.defaultNow()
 			.notNull(),
