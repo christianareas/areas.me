@@ -1,5 +1,5 @@
 // Dependencies.
-import { and, asc, desc, eq } from "drizzle-orm"
+import { and, asc, desc, eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 
@@ -45,7 +45,7 @@ export async function getExperienceByCandidateId(candidateId: string) {
 		)
 		.where(eq(roles.candidateId, candidateId))
 		.orderBy(
-			desc(roles.endDate),
+			sql`${roles.endDate} DESC NULLS FIRST`,
 			desc(roles.startDate),
 			asc(roles.company),
 			asc(accomplishments.sortOrder),
