@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 // Dependencies.
 import { notFound } from "next/navigation"
 import Resume from "@/components/Resume"
