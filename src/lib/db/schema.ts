@@ -14,7 +14,6 @@ import {
 // Candidate.
 //
 
-// Candidate table.
 export const candidates = pgTable(
 	"candidates",
 	{
@@ -43,7 +42,6 @@ export const candidates = pgTable(
 // Experience.
 //
 
-// Roles table.
 export const roles = pgTable(
 	"roles",
 	{
@@ -72,7 +70,6 @@ export const roles = pgTable(
 	],
 )
 
-// Accomplishments table.
 export const accomplishments = pgTable(
 	"accomplishments",
 	{
@@ -105,7 +102,6 @@ export const accomplishments = pgTable(
 // Skill sets.
 //
 
-// Skill sets table.
 export const skillSets = pgTable(
 	"skill_sets",
 	{
@@ -130,7 +126,6 @@ export const skillSets = pgTable(
 	],
 )
 
-// Skills table.
 export const skills = pgTable(
 	"skills",
 	{
@@ -163,7 +158,6 @@ export const skills = pgTable(
 // Education.
 //
 
-// Credentials table.
 export const credentials = pgTable(
 	"credentials",
 	{

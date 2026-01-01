@@ -12,7 +12,7 @@ export async function getResumeByCandidateId(candidateId: string) {
 	// If there's no candidate, return null.
 	if (!candidate) return null
 
-	// Resume sections.
+	// Resume.
 	const [experience, skillSets, education] = await Promise.all([
 		getExperienceByCandidateId(candidateId),
 		getSkillSetsByCandidateId(candidateId),
