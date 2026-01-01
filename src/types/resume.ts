@@ -1,9 +1,17 @@
+//
+// Resume
+//
+
 export type Resume = {
 	candidate: Candidate
 	experience: Role[]
 	skillSets: SkillSet[]
 	education: Credential[]
 }
+
+//
+// Candidate
+//
 
 export type Candidate = {
 	candidateId: string
@@ -18,6 +26,10 @@ export type Candidate = {
 	linkedIn: string
 	gitHub: string
 }
+
+//
+// Experience
+//
 
 export type Role = {
 	candidateId: string
@@ -35,6 +47,10 @@ export type Accomplishment = {
 	sortOrder: number
 }
 
+//
+// Skill Sets
+//
+
 export type SkillSet = {
 	candidateId: string
 	skillSetId: string
@@ -48,6 +64,10 @@ export type Skill = {
 	skill: string
 	sortOrder: number
 }
+
+//
+// Eduction
+//
 
 export type Credential = {
 	candidateId: string
