@@ -10,14 +10,17 @@ import {
 	skills,
 } from "@/lib/db/schema"
 import { resume } from "@/lib/db/seed/resume"
+import { resumeSchema } from "@/lib/db/seed/resume.schema"
 
 // Environment variables.
 config({ path: ".env.local" })
 
 // Seed the database.
 async function main() {
+	const parsedResume = resumeSchema.parse(resume)
+
 	// Candidate.
-	const candidate = resume.candidate
+	const candidate = parsedResume.candidate
 
 	// If there’s no candidate, throw an error.
 	if (!candidate) {
@@ -25,9 +28,9 @@ async function main() {
 	}
 
 	// Collections.
-	const experience = resume.experience ?? []
-	const skillSetsData = resume.skillSets ?? []
-	const education = resume.education ?? []
+	const experience = parsedResume.experience ?? []
+	const skillSetsData = parsedResume.skillSets ?? []
+	const education = parsedResume.education ?? []
 
 	await db.transaction(async (tx) => {
 		// Upsert candidates.

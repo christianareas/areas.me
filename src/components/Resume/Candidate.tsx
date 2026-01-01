@@ -1,14 +1,16 @@
 // Dependencies.
 import Link from "next/link"
 import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu"
-import { resume } from "@/lib/db/seed/resume"
+import type { Candidate as CandidateType } from "@/types/resume"
 import { formatUrl } from "@/util/candidate"
 
-// Component.
-export default function Candidate() {
-	// Candidate.
-	const candidate = resume.candidate
+// Types.
+type CandidateProps = {
+	candidate: CandidateType
+}
 
+// Component.
+export default function Candidate({ candidate }: CandidateProps) {
 	// Render.
 	return (
 		<section className="mx-auto flex max-w-5xl flex-col justify-center space-y-3 lg:flex-row lg:items-start lg:justify-between lg:space-x-0 lg:space-y-0">
@@ -19,15 +21,15 @@ export default function Candidate() {
 					*******************
 				*/}
 				<h1 className="font-lexend-zetta font-medium text-4xl uppercase lg:text-5xl">
-					{candidate?.firstName} {candidate?.lastName}
+					{candidate.firstName} {candidate.lastName}
 				</h1>
 
 				{/*
-					***
-					Who
-					***
+				***
+				Who
+				***
 				*/}
-				<h2 className="font-extralight text-sm italic">{candidate?.who}</h2>
+				<h2 className="font-extralight text-sm italic">{candidate.who}</h2>
 			</section>
 
 			<section className="text-center text-sm lg:min-w-50 lg:text-right">
@@ -37,7 +39,7 @@ export default function Candidate() {
 						Email
 						*****
 					*/}
-					{candidate?.email && (
+					{candidate.email && (
 						<li className="text-blue-400 text-xs">
 							<Link
 								className="flex justify-center gap-1.5 lg:justify-end"
@@ -54,7 +56,7 @@ export default function Candidate() {
 						LinkedIn
 						********
 					*/}
-					{candidate?.linkedIn && (
+					{candidate.linkedIn && (
 						<li className="text-blue-400 text-xs">
 							<Link
 								className="flex justify-center gap-1.5 lg:justify-end"
@@ -71,7 +73,7 @@ export default function Candidate() {
 						GitHub
 						******
 					*/}
-					{candidate?.gitHub && (
+					{candidate.gitHub && (
 						<li className="text-blue-400 text-xs">
 							<Link
 								className="flex justify-center gap-1.5 lg:justify-end"

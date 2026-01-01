@@ -1,80 +1,9 @@
-// Types.
-export type Resume = {
-	candidate?: Candidate
-	experience?: Role[]
-	skillSets?: SkillSet[]
-	education?: Credential[]
-}
-
-export type Candidate = {
-	candidateId: string
-	firstName: string
-	middleName: string
-	lastName: string
-	who: string
-	email: string
-	phoneCountryCode: number
-	phoneNumber: number
-	website: string
-	linkedIn: string
-	gitHub: string
-}
-
-export type Role = {
-	candidateId: string
-	roleId: string
-	company: string
-	role: string
-	startDate: string
-	endDate: string | null
-	accomplishments?: Accomplishment[]
-}
-
-export type Accomplishment = {
-	candidateId: string
-	roleId: string
-	accomplishmentId: string
-	accomplishment: string
-	sortOrder: number
-}
-
-export type SkillSet = {
-	candidateId: string
-	skillSetId: string
-	skillSetType:
-		| "apps"
-		| "command-line-tools"
-		| "databases"
-		| "frameworks"
-		| "cloud-deployments"
-		| "languages"
-		| "specifications"
-	sortOrder: number
-	skills: Skill[]
-}
-
-export type Skill = {
-	candidateId: string
-	skillSetId: string
-	skillId: string
-	skill: string
-	sortOrder: number
-}
-
-export type Credential = {
-	candidateId: string
-	credentialId: string
-	institution: string
-	credential: string
-	startDate: string | null
-	endDate: string | null
-}
-
 // Resume.
-export const resume: Resume = {
+export const resume = {
 	//
 	// Candidate.
 	//
+
 	candidate: {
 		candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 		firstName: "Christian",
@@ -92,6 +21,7 @@ export const resume: Resume = {
 	//
 	// Experience.
 	//
+
 	experience: [
 		// Postman.
 		{
@@ -336,6 +266,7 @@ export const resume: Resume = {
 	//
 	// Skill sets.
 	//
+
 	skillSets: [
 		// Languages.
 		{
@@ -649,6 +580,7 @@ export const resume: Resume = {
 	//
 	// Education.
 	//
+
 	education: [
 		{
 			candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
