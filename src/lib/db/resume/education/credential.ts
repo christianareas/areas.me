@@ -21,8 +21,8 @@ export async function getCredentialByCandidateIdAndCredentialId(
 		.from(credentials)
 		.where(
 			and(
-				eq(credentials.credentialId, credentialId),
 				eq(credentials.candidateId, candidateId),
+				eq(credentials.credentialId, credentialId),
 			),
 		)
 		.limit(1)

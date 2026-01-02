@@ -19,7 +19,7 @@ export async function getEducationByCandidateId(candidateId: string) {
 		.where(eq(credentials.candidateId, candidateId))
 		.orderBy(
 			sql`${credentials.endDate} DESC NULLS FIRST`,
-			sql`${credentials.startDate} DESC NULLS LAST`,
+			sql`${credentials.startDate} DESC NULLS FIRST`,
 		)
 
 	return education
