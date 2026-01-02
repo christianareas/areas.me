@@ -47,7 +47,7 @@ export async function getRoleByCandidateIdAndRoleId(
 		accomplishments: roleRows
 			.filter(
 				(accomplishmentRow) =>
-					accomplishmentRow.accomplishmentId &&
+					accomplishmentRow.accomplishmentId !== null &&
 					accomplishmentRow.accomplishment !== null &&
 					accomplishmentRow.sortOrder !== null,
 			)
