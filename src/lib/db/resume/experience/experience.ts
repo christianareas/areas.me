@@ -2,28 +2,12 @@
 import { and, desc, eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
-
-// Types.
-type Role = {
-	candidateId: string
-	roleId: string
-	company: string
-	role: string
-	startDate: string
-	endDate: string | null
-	accomplishments: Accomplishment[]
-}
-
-type Accomplishment = {
-	accomplishmentId: string
-	accomplishment: string
-	sortOrder: number
-}
+import type { Role } from "@/types/resume"
 
 // Get experience by candidate ID.
 export async function getExperienceByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
-	const rolesAndAccomplishments = await db
+	const roleRows = await db
 		.select({
 			candidateId: roles.candidateId,
 			roleId: roles.roleId,
@@ -54,39 +38,36 @@ export async function getExperienceByCandidateId(candidateId: string) {
 		)
 
 	// If there are no roles, return an empty array.
-	if (rolesAndAccomplishments.length === 0) return []
+	if (roleRows.length === 0) return []
 
-	const rolesById = new Map<string, Role>()
-	const roleList: Role[] = []
-
-	for (const row of rolesAndAccomplishments) {
-		let role = rolesById.get(row.roleId)
-		if (!role) {
-			role = {
-				candidateId: row.candidateId,
-				roleId: row.roleId,
-				company: row.company,
-				role: row.role,
-				startDate: row.startDate,
-				endDate: row.endDate,
+	// Convert the database rows to an object.
+	const rolesObject = []
+	let currentRoleObject: Role | null = null
+	for (const roleRow of roleRows) {
+		if (!currentRoleObject || currentRoleObject.roleId !== roleRow.roleId) {
+			currentRoleObject = {
+				candidateId: roleRow.candidateId,
+				roleId: roleRow.roleId,
+				company: roleRow.company,
+				role: roleRow.role,
+				startDate: roleRow.startDate,
+				endDate: roleRow.endDate,
 				accomplishments: [],
 			}
-			rolesById.set(row.roleId, role)
-			roleList.push(role)
+			rolesObject.push(currentRoleObject)
 		}
-
 		if (
-			row.accomplishmentId &&
-			row.accomplishment !== null &&
-			row.sortOrder !== null
+			roleRow.accomplishmentId !== null &&
+			roleRow.accomplishment !== null &&
+			roleRow.sortOrder !== null
 		) {
-			role.accomplishments.push({
-				accomplishmentId: row.accomplishmentId,
-				accomplishment: row.accomplishment,
-				sortOrder: row.sortOrder,
+			currentRoleObject.accomplishments.push({
+				accomplishmentId: roleRow.accomplishmentId,
+				accomplishment: roleRow.accomplishment,
+				sortOrder: roleRow.sortOrder,
 			})
 		}
 	}
 
-	return roleList
+	return rolesObject
 }

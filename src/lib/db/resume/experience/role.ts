@@ -37,7 +37,7 @@ export async function getRoleByCandidateIdAndRoleId(
 
 	// Convert the database rows to an object.
 	const firstRow = roleRows[0]
-	const role = {
+	const roleObject = {
 		candidateId: firstRow.candidateId,
 		roleId: firstRow.roleId,
 		company: firstRow.company,
@@ -58,5 +58,5 @@ export async function getRoleByCandidateIdAndRoleId(
 			})),
 	}
 
-	return role
+	return roleObject
 }
