@@ -1,5 +1,5 @@
 // Dependencies.
-import { and, asc, eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 
@@ -8,8 +8,8 @@ export async function getRoleByCandidateIdAndRoleId(
 	candidateId: string,
 	roleId: string,
 ) {
-	// Select role.
-	const [role] = await db
+	// Select role and accomplishments.
+	const roleRows = await db
 		.select({
 			candidateId: roles.candidateId,
 			roleId: roles.roleId,
@@ -17,32 +17,46 @@ export async function getRoleByCandidateIdAndRoleId(
 			role: roles.role,
 			startDate: roles.startDate,
 			endDate: roles.endDate,
-		})
-		.from(roles)
-		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
-		.limit(1)
-
-	// If there’s no role, return null.
-	if (!role) return null
-
-	// Select accomplishments.
-	const roleAccomplishments = await db
-		.select({
 			accomplishmentId: accomplishments.accomplishmentId,
 			accomplishment: accomplishments.accomplishment,
 			sortOrder: accomplishments.sortOrder,
 		})
-		.from(accomplishments)
-		.where(
+		.from(roles)
+		.leftJoin(
+			accomplishments,
 			and(
-				eq(accomplishments.candidateId, candidateId),
-				eq(accomplishments.roleId, roleId),
+				eq(roles.candidateId, accomplishments.candidateId),
+				eq(roles.roleId, accomplishments.roleId),
 			),
 		)
-		.orderBy(asc(accomplishments.sortOrder))
+		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
+		.orderBy(accomplishments.sortOrder)
 
-	return {
-		...role,
-		accomplishments: roleAccomplishments,
+	// If there’s no role, return null.
+	if (roleRows.length === 0) return null
+
+	// Convert the database rows to an object.
+	const firstRow = roleRows[0]
+	const role = {
+		candidateId: firstRow.candidateId,
+		roleId: firstRow.roleId,
+		company: firstRow.company,
+		role: firstRow.role,
+		startDate: firstRow.startDate,
+		endDate: firstRow.endDate,
+		accomplishments: roleRows
+			.filter(
+				(accomplishmentRow) =>
+					accomplishmentRow.accomplishmentId &&
+					accomplishmentRow.accomplishment !== null &&
+					accomplishmentRow.sortOrder !== null,
+			)
+			.map((accomplishmentRow) => ({
+				accomplishmentId: accomplishmentRow.accomplishmentId,
+				accomplishment: accomplishmentRow.accomplishment,
+				sortOrder: accomplishmentRow.sortOrder,
+			})),
 	}
+
+	return role
 }
