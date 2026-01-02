@@ -1,8 +1,10 @@
+export const revalidate = 0
+
 // Dependencies.
 import { notFound } from "next/navigation"
 import Resume from "@/components/Resume"
-import { getResume } from "@/lib/data/resume"
 import { getFirstCandidateId } from "@/lib/db/resume/candidate/candidate"
+import { getResumeByCandidateId } from "@/lib/db/resume/resume"
 
 // Page.
 export default async function Home() {
@@ -11,7 +13,7 @@ export default async function Home() {
 	if (!candidateId) notFound()
 
 	// Resume.
-	const resume = await getResume(candidateId)
+	const resume = await getResumeByCandidateId(candidateId)
 	if (!resume) notFound()
 
 	// Render.
