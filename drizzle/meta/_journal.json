@@ -50,6 +50,13 @@
 			"when": 1767350609989,
 			"tag": "0006_early_meteorite",
 			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "7",
+			"when": 1767398030951,
+			"tag": "0007_yielding_kitty_pryde",
+			"breakpoints": true
 		}
 	]
 }

@@ -7,6 +7,7 @@ import {
 	pgTable,
 	text,
 	timestamp,
+	uniqueIndex,
 	uuid,
 } from "drizzle-orm/pg-core"
 
@@ -61,7 +62,7 @@ export const roles = pgTable(
 			.notNull(),
 	},
 	(roles) => [
-		index("roles_candidate_end_start_company_role_id_index").on(
+		index("roles_candidate_end_start_company_role_index").on(
 			roles.candidateId,
 			roles.endDate.desc().nullsFirst(),
 			roles.startDate.desc(),
@@ -184,5 +185,35 @@ export const credentials = pgTable(
 			credentials.endDate,
 			credentials.startDate,
 		),
+	],
+)
+
+//
+// API tokens.
+//
+
+export const apiTokens = pgTable(
+	"api_tokens",
+	{
+		tokenId: uuid("token_id").primaryKey(), // Primary key.
+		candidateId: uuid("candidate_id")
+			.notNull()
+			.references(() => candidates.candidateId, { onDelete: "cascade" }), // Foreign key.
+		name: text("name").notNull(),
+		prefix: text("prefix").notNull(),
+		hash: text("hash").notNull(),
+		scopes: text("scopes").array().notNull(),
+		expiresAt: timestamp("expires_at", { withTimezone: true }),
+		revokedAt: timestamp("revoked_at", { withTimezone: true }),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.defaultNow()
+			.notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+			.defaultNow()
+			.notNull(),
+	},
+	(api_tokens) => [
+		uniqueIndex("api_tokens_hash_unique_index").on(api_tokens.hash),
+		index("api_tokens_candidate_index").on(api_tokens.candidateId),
 	],
 )
