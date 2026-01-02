@@ -36,14 +36,14 @@ export async function getRoleByCandidateIdAndRoleId(
 	if (roleRows.length === 0) return null
 
 	// Convert the database rows to an object.
-	const firstRow = roleRows[0]
+	const firstRoleRow = roleRows[0]
 	const roleObject = {
-		candidateId: firstRow.candidateId,
-		roleId: firstRow.roleId,
-		company: firstRow.company,
-		role: firstRow.role,
-		startDate: firstRow.startDate,
-		endDate: firstRow.endDate,
+		candidateId: firstRoleRow.candidateId,
+		roleId: firstRoleRow.roleId,
+		company: firstRoleRow.company,
+		role: firstRoleRow.role,
+		startDate: firstRoleRow.startDate,
+		endDate: firstRoleRow.endDate,
 		accomplishments: roleRows
 			.filter(
 				(accomplishmentRow) =>

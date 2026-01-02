@@ -1,5 +1,5 @@
 // Dependencies.
-import { and, asc, eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { skillSets, skills } from "@/lib/db/schema"
 
@@ -8,44 +8,56 @@ export async function getSkillSetByCandidateIdAndSkillSetId(
 	candidateId: string,
 	skillSetId: string,
 ) {
-	// Select skill set.
-	const [skillSet] = await db
+	// Select skill set and skills.
+	const skillSetRows = await db
 		.select({
 			candidateId: skillSets.candidateId,
 			skillSetId: skillSets.skillSetId,
 			skillSetType: skillSets.skillSetType,
 			sortOrder: skillSets.sortOrder,
-		})
-		.from(skillSets)
-		.where(
-			and(
-				eq(skillSets.skillSetId, skillSetId),
-				eq(skillSets.candidateId, candidateId),
-			),
-		)
-		.limit(1)
-
-	// If there’s no skill set, return null.
-	if (!skillSet) return null
-
-	// Select skills.
-	const skillSetSkills = await db
-		.select({
 			skillId: skills.skillId,
 			skill: skills.skill,
-			sortOrder: skills.sortOrder,
+			skillSortOrder: skills.sortOrder,
 		})
-		.from(skills)
-		.where(
+		.from(skillSets)
+		.leftJoin(
+			skills,
 			and(
-				eq(skills.candidateId, candidateId),
-				eq(skills.skillSetId, skillSetId),
+				eq(skills.candidateId, skillSets.candidateId),
+				eq(skills.skillSetId, skillSets.skillSetId),
 			),
 		)
-		.orderBy(asc(skills.sortOrder))
+		.where(
+			and(
+				eq(skillSets.candidateId, candidateId),
+				eq(skillSets.skillSetId, skillSetId),
+			),
+		)
+		.orderBy(skills.sortOrder)
 
-	return {
-		...skillSet,
-		skills: skillSetSkills,
+	// If there’s no skill set, return null.
+	if (skillSetRows.length === 0) return null
+
+	// Convert the database rows to an object.
+	const firstSkillSetRow = skillSetRows[0]
+	const skillSetObject = {
+		candidateId: firstSkillSetRow.candidateId,
+		skillSetId: firstSkillSetRow.skillSetId,
+		skillSetType: firstSkillSetRow.skillSetType,
+		sortOrder: firstSkillSetRow.sortOrder,
+		skills: skillSetRows
+			.filter(
+				(skillRow) =>
+					skillRow.skillId !== null &&
+					skillRow.skill !== null &&
+					skillRow.skillSortOrder !== null,
+			)
+			.map((skillRow) => ({
+				skillId: skillRow.skillId,
+				skill: skillRow.skill,
+				sortOrder: skillRow.skillSortOrder,
+			})),
 	}
+
+	return skillSetObject
 }

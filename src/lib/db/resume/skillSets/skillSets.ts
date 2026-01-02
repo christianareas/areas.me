@@ -1,27 +1,13 @@
 // Dependencies.
-import { and, asc, eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { skillSets, skills } from "@/lib/db/schema"
-
-// Types.
-type SkillSet = {
-	candidateId: string
-	skillSetId: string
-	skillSetType: string
-	sortOrder: number
-	skills: Skill[]
-}
-
-type Skill = {
-	skillId: string
-	skill: string
-	sortOrder: number
-}
+import type { SkillSet } from "@/types/resume"
 
 // Get skill sets by candidate ID.
 export async function getSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets and skills.
-	const skillSetsRows = await db
+	const skillSetRows = await db
 		.select({
 			candidateId: skillSets.candidateId,
 			skillSetId: skillSets.skillSetId,
@@ -40,36 +26,41 @@ export async function getSkillSetsByCandidateId(candidateId: string) {
 			),
 		)
 		.where(eq(skillSets.candidateId, candidateId))
-		.orderBy(asc(skillSets.sortOrder), asc(skills.sortOrder))
+		.orderBy(skillSets.sortOrder, skillSets.skillSetId, skills.sortOrder)
 
 	// If there are no skill sets, return an empty array.
-	if (skillSetsRows.length === 0) return []
+	if (skillSetRows.length === 0) return []
 
-	const skillSetsById = new Map<string, SkillSet>()
-	const skillSetList: SkillSet[] = []
-
-	for (const row of skillSetsRows) {
-		let skillSet = skillSetsById.get(row.skillSetId)
-		if (!skillSet) {
-			skillSet = {
-				candidateId: row.candidateId,
-				skillSetId: row.skillSetId,
-				skillSetType: row.skillSetType,
-				sortOrder: row.skillSetSortOrder,
+	// Convert the database rows to an object.
+	const skillSetsObject: SkillSet[] = []
+	let currentSkillSetObject: SkillSet | null = null
+	for (const skillSetRow of skillSetRows) {
+		if (
+			!currentSkillSetObject ||
+			currentSkillSetObject.skillSetId !== skillSetRow.skillSetId
+		) {
+			currentSkillSetObject = {
+				candidateId: skillSetRow.candidateId,
+				skillSetId: skillSetRow.skillSetId,
+				skillSetType: skillSetRow.skillSetType,
+				sortOrder: skillSetRow.skillSetSortOrder,
 				skills: [],
 			}
-			skillSetsById.set(row.skillSetId, skillSet)
-			skillSetList.push(skillSet)
+			skillSetsObject.push(currentSkillSetObject)
 		}
 
-		if (row.skillId && row.skill !== null && row.skillSortOrder !== null) {
-			skillSet.skills.push({
-				skillId: row.skillId,
-				skill: row.skill,
-				sortOrder: row.skillSortOrder,
+		if (
+			skillSetRow.skillId !== null &&
+			skillSetRow.skill !== null &&
+			skillSetRow.skillSortOrder !== null
+		) {
+			currentSkillSetObject.skills.push({
+				skillId: skillSetRow.skillId,
+				skill: skillSetRow.skill,
+				sortOrder: skillSetRow.skillSortOrder,
 			})
 		}
 	}
 
-	return skillSetList
+	return skillSetsObject
 }
