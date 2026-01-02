@@ -92,7 +92,7 @@ export const accomplishments = pgTable(
 			.notNull(),
 	},
 	(accomplishments) => [
-		index("accomplishments_candidate_id_role_id_sort_order_index").on(
+		index("accomplishments_candidate_role_sort_index").on(
 			accomplishments.candidateId,
 			accomplishments.roleId,
 			accomplishments.sortOrder,
@@ -121,7 +121,7 @@ export const skillSets = pgTable(
 			.notNull(),
 	},
 	(skill_sets) => [
-		index("skill_sets_candidate_id_sort_order_index").on(
+		index("skill_sets_candidate_sort_index").on(
 			skill_sets.candidateId,
 			skill_sets.sortOrder,
 		),
@@ -148,7 +148,7 @@ export const skills = pgTable(
 			.notNull(),
 	},
 	(skills) => [
-		index("skills_candidate_id_skill_set_id_sort_order_index").on(
+		index("skills_candidate_skill_set_sort_index").on(
 			skills.candidateId,
 			skills.skillSetId,
 			skills.sortOrder,
@@ -179,7 +179,7 @@ export const credentials = pgTable(
 			.notNull(),
 	},
 	(credentials) => [
-		index("credentials_candidate_id_end_date_start_date_index").on(
+		index("credentials_candidate_end_start_index").on(
 			credentials.candidateId,
 			credentials.endDate,
 			credentials.startDate,
