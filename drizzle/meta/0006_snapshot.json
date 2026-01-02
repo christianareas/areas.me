@@ -1,6 +1,6 @@
 {
-	"id": "b2a22daa-7b9d-4cd4-a2d4-ad15dd5b729a",
-	"prevId": "72ad2f80-6136-4ebb-aace-1a2a8d47b9cf",
+	"id": "e34dc439-0c23-403a-b200-707e18355dda",
+	"prevId": "b2a22daa-7b9d-4cd4-a2d4-ad15dd5b729a",
 	"version": "7",
 	"dialect": "postgresql",
 	"tables": {
@@ -54,8 +54,8 @@
 				}
 			},
 			"indexes": {
-				"accomplishments_candidate_id_role_id_sort_order_index": {
-					"name": "accomplishments_candidate_id_role_id_sort_order_index",
+				"accomplishments_candidate_role_sort_index": {
+					"name": "accomplishments_candidate_role_sort_index",
 					"columns": [
 						{
 							"expression": "candidate_id",
@@ -257,8 +257,8 @@
 				}
 			},
 			"indexes": {
-				"credentials_candidate_id_end_date_start_date_index": {
-					"name": "credentials_candidate_id_end_date_start_date_index",
+				"credentials_candidate_end_start_index": {
+					"name": "credentials_candidate_end_start_index",
 					"columns": [
 						{
 							"expression": "candidate_id",
@@ -465,8 +465,8 @@
 				}
 			},
 			"indexes": {
-				"skill_sets_candidate_id_sort_order_index": {
-					"name": "skill_sets_candidate_id_sort_order_index",
+				"skill_sets_candidate_sort_index": {
+					"name": "skill_sets_candidate_sort_index",
 					"columns": [
 						{
 							"expression": "candidate_id",
@@ -554,8 +554,8 @@
 				}
 			},
 			"indexes": {
-				"skills_candidate_id_skill_set_id_sort_order_index": {
-					"name": "skills_candidate_id_skill_set_id_sort_order_index",
+				"skills_candidate_skill_set_sort_index": {
+					"name": "skills_candidate_skill_set_sort_index",
 					"columns": [
 						{
 							"expression": "candidate_id",
