@@ -1,5 +1,5 @@
 // Dependencies.
-import { asc, eq } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import type { CandidatePatch } from "@/lib/api/schemas/candidate"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
@@ -12,7 +12,7 @@ export async function getFirstCandidateId() {
 			candidateId: candidates.candidateId,
 		})
 		.from(candidates)
-		.orderBy(asc(candidates.createdAt), asc(candidates.candidateId))
+		.orderBy(candidates.createdAt)
 		.limit(1)
 
 	return candidate?.candidateId ?? null
