@@ -41,7 +41,7 @@ export async function getExperienceByCandidateId(candidateId: string) {
 	if (roleRows.length === 0) return []
 
 	// Convert the database rows to an object.
-	const rolesObject = []
+	const rolesObject: Role[] = []
 	let currentRoleObject: Role | null = null
 	for (const roleRow of roleRows) {
 		if (!currentRoleObject || currentRoleObject.roleId !== roleRow.roleId) {
