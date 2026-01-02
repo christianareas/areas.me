@@ -60,12 +60,14 @@ export const roles = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [
-		index("roles_candidate_id_end_date_start_date_company_index").on(
-			table.candidateId,
-			table.endDate,
-			table.startDate,
-			table.company,
+	(roles) => [
+		index("roles_candidate_end_start_company_role_id_index").on(
+			roles.candidateId,
+			roles.endDate.desc().nullsFirst(),
+			roles.startDate.desc(),
+			roles.company,
+			roles.role,
+			roles.roleId,
 		),
 	],
 )
@@ -89,11 +91,11 @@ export const accomplishments = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [
+	(accomplishments) => [
 		index("accomplishments_candidate_id_role_id_sort_order_index").on(
-			table.candidateId,
-			table.roleId,
-			table.sortOrder,
+			accomplishments.candidateId,
+			accomplishments.roleId,
+			accomplishments.sortOrder,
 		),
 	],
 )
@@ -118,10 +120,10 @@ export const skillSets = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [
+	(skill_sets) => [
 		index("skill_sets_candidate_id_sort_order_index").on(
-			table.candidateId,
-			table.sortOrder,
+			skill_sets.candidateId,
+			skill_sets.sortOrder,
 		),
 	],
 )
@@ -145,11 +147,11 @@ export const skills = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [
+	(skills) => [
 		index("skills_candidate_id_skill_set_id_sort_order_index").on(
-			table.candidateId,
-			table.skillSetId,
-			table.sortOrder,
+			skills.candidateId,
+			skills.skillSetId,
+			skills.sortOrder,
 		),
 	],
 )
@@ -176,11 +178,11 @@ export const credentials = pgTable(
 			.defaultNow()
 			.notNull(),
 	},
-	(table) => [
+	(credentials) => [
 		index("credentials_candidate_id_end_date_start_date_index").on(
-			table.candidateId,
-			table.endDate,
-			table.startDate,
+			credentials.candidateId,
+			credentials.endDate,
+			credentials.startDate,
 		),
 	],
 )

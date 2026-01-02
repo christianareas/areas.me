@@ -1,5 +1,5 @@
 // Dependencies.
-import { and, asc, desc, eq, sql } from "drizzle-orm"
+import { and, desc, eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 
@@ -23,7 +23,7 @@ type Accomplishment = {
 // Get experience by candidate ID.
 export async function getExperienceByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
-	const rows = await db
+	const rolesAndAccomplishments = await db
 		.select({
 			candidateId: roles.candidateId,
 			roleId: roles.roleId,
@@ -33,31 +33,33 @@ export async function getExperienceByCandidateId(candidateId: string) {
 			endDate: roles.endDate,
 			accomplishmentId: accomplishments.accomplishmentId,
 			accomplishment: accomplishments.accomplishment,
-			accomplishmentSortOrder: accomplishments.sortOrder,
+			sortOrder: accomplishments.sortOrder,
 		})
 		.from(roles)
 		.leftJoin(
 			accomplishments,
 			and(
-				eq(accomplishments.candidateId, roles.candidateId),
-				eq(accomplishments.roleId, roles.roleId),
+				eq(roles.candidateId, accomplishments.candidateId),
+				eq(roles.roleId, accomplishments.roleId),
 			),
 		)
 		.where(eq(roles.candidateId, candidateId))
 		.orderBy(
 			sql`${roles.endDate} DESC NULLS FIRST`,
 			desc(roles.startDate),
-			asc(roles.company),
-			asc(accomplishments.sortOrder),
+			roles.company,
+			roles.role,
+			roles.roleId,
+			accomplishments.sortOrder,
 		)
 
 	// If there are no roles, return an empty array.
-	if (rows.length === 0) return []
+	if (rolesAndAccomplishments.length === 0) return []
 
 	const rolesById = new Map<string, Role>()
 	const roleList: Role[] = []
 
-	for (const row of rows) {
+	for (const row of rolesAndAccomplishments) {
 		let role = rolesById.get(row.roleId)
 		if (!role) {
 			role = {
@@ -76,12 +78,12 @@ export async function getExperienceByCandidateId(candidateId: string) {
 		if (
 			row.accomplishmentId &&
 			row.accomplishment !== null &&
-			row.accomplishmentSortOrder !== null
+			row.sortOrder !== null
 		) {
 			role.accomplishments.push({
 				accomplishmentId: row.accomplishmentId,
 				accomplishment: row.accomplishment,
-				sortOrder: row.accomplishmentSortOrder,
+				sortOrder: row.sortOrder,
 			})
 		}
 	}

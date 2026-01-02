@@ -21,7 +21,7 @@ type Skill = {
 // Get skill sets by candidate ID.
 export async function getSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets and skills.
-	const rows = await db
+	const skillSetsRows = await db
 		.select({
 			candidateId: skillSets.candidateId,
 			skillSetId: skillSets.skillSetId,
@@ -43,12 +43,12 @@ export async function getSkillSetsByCandidateId(candidateId: string) {
 		.orderBy(asc(skillSets.sortOrder), asc(skills.sortOrder))
 
 	// If there are no skill sets, return an empty array.
-	if (rows.length === 0) return []
+	if (skillSetsRows.length === 0) return []
 
 	const skillSetsById = new Map<string, SkillSet>()
 	const skillSetList: SkillSet[] = []
 
-	for (const row of rows) {
+	for (const row of skillSetsRows) {
 		let skillSet = skillSetsById.get(row.skillSetId)
 		if (!skillSet) {
 			skillSet = {
