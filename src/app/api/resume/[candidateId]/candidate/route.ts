@@ -1,7 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
-import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
+import { candidatePatchSchema } from "@/lib/api/schemas/resume/candidate/contract"
 import {
 	parseJson,
 	validateDataFound,

@@ -1,6 +1,6 @@
 // Dependencies.
 import { eq } from "drizzle-orm"
-import type { CandidatePatch } from "@/lib/api/schemas/candidate"
+import type { CandidatePatch } from "@/lib/api/schemas/resume/candidate/contract"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
