@@ -14,13 +14,22 @@ const createServer = async () => {
 		)
 
 	// Resume.
-	const resume = await getResumeByCandidateId(candidateId)
-	if (!resume)
+	const initialResume = await getResumeByCandidateId(candidateId)
+	if (!initialResume)
 		throw new Error(`Couldn't find the resume by candidateId (${candidateId}).`)
 
-	const candidateFirstName = resume.candidate.firstName
+	const candidateFirstName = initialResume.candidate.firstName
 	if (!candidateFirstName)
 		throw new Error(`Couldn't find the candidate's first name.`)
+
+	const loadResume = async () => {
+		const resume = await getResumeByCandidateId(candidateId)
+		if (!resume)
+			throw new Error(
+				`Couldn't find the resume by candidateId (${candidateId}).`,
+			)
+		return resume
+	}
 
 	// Server information.
 	const server = new McpServer({
@@ -38,15 +47,18 @@ const createServer = async () => {
 			description: `${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 			mimeType: "application/json",
 		},
-		async (uri) => ({
-			contents: [
-				{
-					uri: uri.href,
-					mimeType: "application/json",
-					text: JSON.stringify(resume, null, 2),
-				},
-			],
-		}),
+		async (uri) => {
+			const resume = await loadResume()
+			return {
+				contents: [
+					{
+						uri: uri.href,
+						mimeType: "application/json",
+						text: JSON.stringify(resume, null, 2),
+					},
+				],
+			}
+		},
 	)
 
 	// Tools.
@@ -56,14 +68,17 @@ const createServer = async () => {
 			title: `Get ${candidateFirstName}'s Resume`,
 			description: `Get ${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 		},
-		async () => ({
-			content: [
-				{
-					type: "text",
-					text: JSON.stringify(resume, null, 2),
-				},
-			],
-		}),
+		async () => {
+			const resume = await loadResume()
+			return {
+				content: [
+					{
+						type: "text",
+						text: JSON.stringify(resume, null, 2),
+					},
+				],
+			}
+		},
 	)
 
 	server.registerTool(
@@ -93,17 +108,21 @@ const createServer = async () => {
 			title: `Who is ${candidateFirstName}?`,
 			description: `Tell me about ${candidateFirstName}, based on their resume.`,
 		},
-		async () => ({
-			messages: [
-				{
-					role: "user",
-					content: {
-						type: "text",
-						text: `Who is ${candidateFirstName}? Tell me more, based on their resume.\n\n${JSON.stringify(resume, null, 2)}`,
+		async () => {
+			const resume = await loadResume()
+			const currentFirstName = resume.candidate.firstName || candidateFirstName
+			return {
+				messages: [
+					{
+						role: "user",
+						content: {
+							type: "text",
+							text: `Who is ${currentFirstName}? Tell me more, based on their resume.\n\n${JSON.stringify(resume, null, 2)}`,
+						},
 					},
-				},
-			],
-		}),
+				],
+			}
+		},
 	)
 
 	return server
