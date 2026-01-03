@@ -23,20 +23,20 @@ export const candidatePatchSchema = z
 
 		// Candidate’s contact.
 		email: z
-			.email({ message: "The candidate's email isn’t a valid email address." })
+			.email({ message: "The candidate's email isn't a valid email address." })
 			.optional(),
 		phoneCountryCode: z.number().int().positive().optional(),
 		phoneNumber: z.number().int().positive().optional(),
 
 		// Candidate’s sites.
 		website: z
-			.url({ message: "The candidate's website URL isn’t a valid URL." })
+			.url({ message: "The candidate's website URL isn't a valid URL." })
 			.optional(),
 		linkedIn: z
-			.url({ message: "The candidate's LinkedIn URL isn’t a valid URL." })
+			.url({ message: "The candidate's LinkedIn URL isn't a valid URL." })
 			.optional(),
 		gitHub: z
-			.url({ message: "The candidate's GitHub URL isn’t a valid URL." })
+			.url({ message: "The candidate's GitHub URL isn't a valid URL." })
 			.optional(),
 	})
 	.strict()

@@ -8,7 +8,7 @@ config({ path: ".env.local" })
 // Database URL.
 const databaseUrl = process.env.POSTGRES_URL
 if (!databaseUrl) {
-	throw new Error("There’s no POSTGRES_URL environment variable.")
+	throw new Error("There's no POSTGRES_URL environment variable.")
 }
 
 export default defineConfig({

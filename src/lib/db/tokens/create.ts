@@ -23,8 +23,8 @@ function throwCliErrorMessage(message: string): never {
 	console.log(
 		[
 			"Usage:",
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token"',
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token" --scopes resume:read,resume:write --expires-at 2025-01-01T00:00:00Z',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token"',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token" --scopes resume:read,resume:write --expires-at 2025-01-01T00:00:00Z',
 		].join("\n"),
 	)
 
@@ -54,7 +54,7 @@ function parseCliArgs(argv: string[]): Args {
 
 	// If the candidate ID isn’t a valid UUID, throw an error.
 	if (!validateUuid(candidateId)) {
-		throwCliErrorMessage(`The UUID ${candidateId} isn’t valid.`)
+		throwCliErrorMessage(`The UUID ${candidateId} isn't valid.`)
 	}
 
 	// Token name.
@@ -118,7 +118,7 @@ async function main() {
 
 	// If there’s no candidate, throw an error.
 	if (!candidate) {
-		throw new Error(`Couldn’t find the candidate by ${candidateId}.`)
+		throw new Error(`Couldn't find the candidate by ${candidateId}.`)
 	}
 
 	// Token.

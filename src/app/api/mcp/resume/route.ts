@@ -9,14 +9,14 @@ const createServer = () => {
 	const { candidate } = resume
 
 	const candidateId = candidate?.candidateId
-	if (!candidateId) throw new Error("There’s no candidate.candidateId.")
+	if (!candidateId) throw new Error("There's no candidate.candidateId.")
 
 	const candidateFirstName = candidate?.firstName
-	if (!candidateFirstName) throw new Error("There’s no candidate.firstName.")
+	if (!candidateFirstName) throw new Error("There's no candidate.firstName.")
 
 	// Server information.
 	const server = new McpServer({
-		name: `${candidateFirstName}’s Resume MCP Server`,
+		name: `${candidateFirstName}'s Resume MCP Server`,
 		version: "0.1.0",
 		websiteUrl: "https://www.areas.me/api/mcp/resume",
 	})
@@ -26,8 +26,8 @@ const createServer = () => {
 		"resume",
 		`resume://${candidateId}`,
 		{
-			title: `${candidateFirstName}’s Resume`,
-			description: `${candidateFirstName}’s resume, including their who, contact details, experience, skill sets, and education.`,
+			title: `${candidateFirstName}'s Resume`,
+			description: `${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 			mimeType: "application/json",
 		},
 		async (uri) => ({
@@ -45,8 +45,8 @@ const createServer = () => {
 	server.registerTool(
 		"get-resume",
 		{
-			title: `Get ${candidateFirstName}’s Resume`,
-			description: `Get ${candidateFirstName}’s resume, including their who, contact details, experience, skill sets, and education.`,
+			title: `Get ${candidateFirstName}'s Resume`,
+			description: `Get ${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 		},
 		async () => ({
 			content: [
@@ -61,7 +61,7 @@ const createServer = () => {
 	server.registerTool(
 		"get-resume-pdf-download-link",
 		{
-			title: `Get ${candidateFirstName}’s Resume (PDF)`,
+			title: `Get ${candidateFirstName}'s Resume (PDF)`,
 			description: `Get ${candidateFirstName}'s resume as a PDF.`,
 		},
 		async () => {

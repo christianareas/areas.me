@@ -81,7 +81,7 @@ export async function authorizeApiToken(
 	if (apiToken.candidateId !== candidateId) {
 		return NextResponse.json(
 			{
-				error: `Couldn’t find the candidate by candidateId (${candidateId}).`,
+				error: `Couldn't find the candidate by candidateId (${candidateId}).`,
 			},
 			{ status: 404 },
 		)

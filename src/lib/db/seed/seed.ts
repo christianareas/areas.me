@@ -24,7 +24,7 @@ async function main() {
 
 	// If there’s no candidate, throw an error.
 	if (!candidate) {
-		throw new Error("There’s no candidate.")
+		throw new Error("There's no candidate.")
 	}
 
 	// Collections.

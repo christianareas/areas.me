@@ -12,7 +12,7 @@ export function validateUuidFormat(uuid: string | string[]) {
 		if (!validate(uuid)) {
 			return NextResponse.json(
 				{
-					error: `The UUID ${uuid} isn’t valid.`,
+					error: `The UUID ${uuid} isn't valid.`,
 				},
 				{ status: 400 },
 			)
@@ -35,7 +35,7 @@ export function validateDataFound<T>(
 
 		return NextResponse.json(
 			{
-				error: `Couldn’t find the ${dataName} by ${identifierMessage}.`,
+				error: `Couldn't find the ${dataName} by ${identifierMessage}.`,
 			},
 			{ status: 404 },
 		)
@@ -86,7 +86,7 @@ export function validateRequestBodyAgainstSchema<T>(
 		})
 
 		return NextResponse.json(
-			{ error: "The request body doesn’t match the schema.", issues },
+			{ error: "The request body doesn't match the schema.", issues },
 			{ status: 400 },
 		)
 	}

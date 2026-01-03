@@ -37,7 +37,7 @@ export const resume = {
 					roleId: "637f9a15-ea20-4597-990b-d67bd20db1c1",
 					accomplishmentId: "7f4d6d8b-56c4-40a7-9c75-9d48f34a5161",
 					accomplishment:
-						"Wrote much of Postman’s public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
+						"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.",
 					sortOrder: 0,
 				},
 				{
@@ -53,7 +53,7 @@ export const resume = {
 					roleId: "637f9a15-ea20-4597-990b-d67bd20db1c1",
 					accomplishmentId: "5ac5331b-7549-45de-b0a3-64cfbeb46cb8",
 					accomplishment:
-						"Built a Next.js site that lists all of Postman’s icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.",
+						"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.",
 					sortOrder: 2,
 				},
 				{
@@ -61,7 +61,7 @@ export const resume = {
 					roleId: "637f9a15-ea20-4597-990b-d67bd20db1c1",
 					accomplishmentId: "af61fff1-a32e-43f4-a548-cea6b4181ebc",
 					accomplishment:
-						"Published an NPM package that’s a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman’s style.",
+						"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.",
 					sortOrder: 3,
 				},
 			],
@@ -81,7 +81,7 @@ export const resume = {
 					roleId: "7b329cf8-5a11-4de8-bdc7-65696dbc1e2c",
 					accomplishmentId: "26c0fffc-9ce8-49c6-84ff-d404b6bc384d",
 					accomplishment:
-						"Designed a comprehensive workflow that manages the team’s documentation lifecycle. The workflow includes a two-step review process and an automated method to flag outdated content.",
+						"Designed a comprehensive workflow that manages the team's documentation lifecycle. The workflow includes a two-step review process and an automated method to flag outdated content.",
 					sortOrder: 0,
 				},
 				{
@@ -89,7 +89,7 @@ export const resume = {
 					roleId: "7b329cf8-5a11-4de8-bdc7-65696dbc1e2c",
 					accomplishmentId: "28780fdb-38d3-487c-a84b-d05b05f0f5ef",
 					accomplishment:
-						"Worked with cross-functional partners to write how-tos for users who collect data and test in-development products for Apple’s research and development organization.",
+						"Worked with cross-functional partners to write how-tos for users who collect data and test in-development products for Apple's research and development organization.",
 					sortOrder: 1,
 				},
 			],
@@ -137,7 +137,7 @@ export const resume = {
 					roleId: "0e6bdabb-10b6-495a-985d-26526faedfa0",
 					accomplishmentId: "2107ad23-c1ae-4a8e-be58-38dd5c2eb612",
 					accomplishment:
-						"Functioned as Apple Pay server engineering’s sole technical writer.",
+						"Functioned as Apple Pay server engineering's sole technical writer.",
 					sortOrder: 0,
 				},
 				{
@@ -153,7 +153,7 @@ export const resume = {
 					roleId: "0e6bdabb-10b6-495a-985d-26526faedfa0",
 					accomplishmentId: "4ffd34d2-9d96-4f5f-a847-b4a1d3e8460c",
 					accomplishment:
-						"Worked with engineering managers and engineers across Apple Pay to gather requirements for a new docs-as-code solution to centralize Apple Pay’s API specifications.",
+						"Worked with engineering managers and engineers across Apple Pay to gather requirements for a new docs-as-code solution to centralize Apple Pay's API specifications.",
 					sortOrder: 2,
 				},
 				{
@@ -169,7 +169,7 @@ export const resume = {
 					roleId: "0e6bdabb-10b6-495a-985d-26526faedfa0",
 					accomplishmentId: "2b4bc481-c06e-40b6-8c5f-56bac31e6ca0",
 					accomplishment:
-						"Interviewed nearly 50 candidates to hire Apple Pay server engineering’s second technical writer.",
+						"Interviewed nearly 50 candidates to hire Apple Pay server engineering's second technical writer.",
 					sortOrder: 4,
 				},
 			],
@@ -212,7 +212,7 @@ export const resume = {
 					roleId: "b985c1d0-0f7f-46d6-a39d-ebbd0a8db7aa",
 					accomplishmentId: "5331572b-e99f-4c63-8a01-4d7ac5b24318",
 					accomplishment:
-						"Led major, cross-functional projects — such as the complete overhaul of one of Apple’s main internal sites — and subsequently iterated to improve the user experience.",
+						"Led major, cross-functional projects — such as the complete overhaul of one of Apple's main internal sites — and subsequently iterated to improve the user experience.",
 					sortOrder: 3,
 				},
 				{
