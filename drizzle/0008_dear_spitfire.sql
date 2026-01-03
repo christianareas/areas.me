@@ -1,0 +1,1 @@
+ALTER TABLE "api_tokens" RENAME COLUMN "token_name" TO "name";
