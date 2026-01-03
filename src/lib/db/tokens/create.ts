@@ -12,7 +12,7 @@ type Args = {
 	candidateId: string
 	tokenName: string
 	tokenScopes: string[]
-	tokenExpiresAt: Date | null
+	tokenExpiresAt: Date
 }
 
 // Environment variables.
@@ -54,7 +54,7 @@ function parseCliArgs(argv: string[]): Args {
 
 	// If the candidate ID isn’t a valid UUID, throw an error.
 	if (!validateUuid(candidateId)) {
-		throwCliErrorMessage(`The UUID ${candidateId} isn't valid.`)
+		throwCliErrorMessage(`Your UUID ${candidateId} isn't valid.`)
 	}
 
 	// Token name.
@@ -88,11 +88,11 @@ function parseCliArgs(argv: string[]): Args {
 	// Expiration date.
 	const tokenExpiresAt = argValues["expires-at"]
 		? new Date(argValues["expires-at"])
-		: null
+		: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
 
 	// If expiration date isn't a date, throw an error.
-	if (tokenExpiresAt && Number.isNaN(tokenExpiresAt.getTime())) {
-		throwCliErrorMessage("You must pass an --expires-at value that's a date.")
+	if (Number.isNaN(tokenExpiresAt.getTime())) {
+		throwCliErrorMessage("Your --expires-at value isn't a valid date.")
 	}
 
 	return {
@@ -140,9 +140,10 @@ async function main() {
 	// Console log token.
 	console.log("Candidate ID:", candidateId)
 	console.log("Token:", token)
+	console.log("Name:", tokenName)
 	console.log("Prefix:", tokenPrefix)
 	console.log("Scopes:", tokenScopes.join(", "))
-	if (tokenExpiresAt) console.log("Expires:", tokenExpiresAt.toISOString())
+	console.log("Expires:", tokenExpiresAt.toISOString())
 }
 
 main().catch((error) => {
