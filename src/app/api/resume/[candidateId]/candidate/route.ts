@@ -1,5 +1,6 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
 import { candidatePatchSchema } from "@/lib/api/schemas/candidate"
 import {
 	parseJson,
@@ -53,6 +54,13 @@ export async function PATCH(
 	// Validate the candidate ID is a valid UUID.
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Authorize the API token.
+	const authorizationResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationResponse) return authorizationResponse
 
 	// Parse the request body JSON.
 	const requestBodyOrResponse = await parseJson(request)

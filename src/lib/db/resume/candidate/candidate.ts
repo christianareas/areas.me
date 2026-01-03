@@ -4,6 +4,21 @@ import type { CandidatePatch } from "@/lib/api/schemas/candidate"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
+// Candidate fields.
+const candidateFields = {
+	candidateId: candidates.candidateId,
+	firstName: candidates.firstName,
+	middleName: candidates.middleName,
+	lastName: candidates.lastName,
+	who: candidates.who,
+	email: candidates.email,
+	phoneCountryCode: candidates.phoneCountryCode,
+	phoneNumber: candidates.phoneNumber,
+	website: candidates.website,
+	linkedIn: candidates.linkedIn,
+	gitHub: candidates.gitHub,
+}
+
 // Get first candidate ID.
 export async function getFirstCandidateId() {
 	// Select candidate.
@@ -22,19 +37,7 @@ export async function getFirstCandidateId() {
 export async function getCandidateByCandidateId(candidateId: string) {
 	// Select candidate.
 	const [candidate] = await db
-		.select({
-			candidateId: candidates.candidateId,
-			firstName: candidates.firstName,
-			middleName: candidates.middleName,
-			lastName: candidates.lastName,
-			who: candidates.who,
-			email: candidates.email,
-			phoneCountryCode: candidates.phoneCountryCode,
-			phoneNumber: candidates.phoneNumber,
-			website: candidates.website,
-			linkedIn: candidates.linkedIn,
-			gitHub: candidates.gitHub,
-		})
+		.select(candidateFields)
 		.from(candidates)
 		.where(eq(candidates.candidateId, candidateId))
 		.limit(1)
@@ -53,17 +56,8 @@ export async function updateCandidateByCandidateId(
 		.set({ ...candidatePatch, updatedAt: new Date() })
 		.where(eq(candidates.candidateId, candidateId))
 		.returning({
-			candidateId: candidates.candidateId,
-			firstName: candidates.firstName,
-			middleName: candidates.middleName,
-			lastName: candidates.lastName,
-			who: candidates.who,
-			email: candidates.email,
-			phoneCountryCode: candidates.phoneCountryCode,
-			phoneNumber: candidates.phoneNumber,
-			website: candidates.website,
-			linkedIn: candidates.linkedIn,
-			gitHub: candidates.gitHub,
+			...candidateFields,
+			updatedAt: candidates.updatedAt,
 		})
 
 	return updatedCandidate ?? null
