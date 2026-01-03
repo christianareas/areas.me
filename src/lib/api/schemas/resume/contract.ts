@@ -1,7 +1,7 @@
 // Dependencies.
 import { z } from "zod"
 
-// Common schemas.
+// Primitives.
 const uuidSchema = z.uuid()
 const dateStringSchema = z.iso.date()
 
@@ -9,22 +9,37 @@ const dateStringSchema = z.iso.date()
 // Candidate.
 //
 
+// Candidate fields.
+export const candidateFields = {
+	candidateId: uuidSchema,
+	firstName: z
+		.string()
+		.min(1, "The candidate's first name must contain at least one character."),
+	middleName: z.string(),
+	lastName: z
+		.string()
+		.min(1, "The candidate's last name must contain at least one character."),
+	who: z
+		.string()
+		.min(1, "The candidate's who must contain at least one character."),
+	email: z.email({
+		message: "The candidate's email isn't a valid email address.",
+	}),
+	phoneCountryCode: z.number().int().positive(),
+	phoneNumber: z.number().int().positive(),
+	website: z.url({
+		message: "The candidate's website URL isn't a valid URL.",
+	}),
+	linkedIn: z.url({
+		message: "The candidate's LinkedIn URL isn't a valid URL.",
+	}),
+	gitHub: z.url({
+		message: "The candidate's GitHub URL isn't a valid URL.",
+	}),
+}
+
 // Candidate schema.
-export const candidateSchema = z
-	.object({
-		candidateId: uuidSchema,
-		firstName: z.string().min(1),
-		middleName: z.string(),
-		lastName: z.string().min(1),
-		who: z.string().min(1),
-		email: z.email(),
-		phoneCountryCode: z.number().int().positive(),
-		phoneNumber: z.number().int().positive(),
-		website: z.url(),
-		linkedIn: z.url(),
-		gitHub: z.url(),
-	})
-	.strict()
+export const candidateSchema = z.object(candidateFields).strict()
 
 //
 // Experience.
