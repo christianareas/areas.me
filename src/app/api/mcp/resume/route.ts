@@ -1,18 +1,26 @@
 // Dependencies.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
-import { resume } from "@/lib/db/seed/resume"
+import { getFirstCandidateId } from "@/lib/db/resume/candidate/candidate"
+import { getResumeByCandidateId } from "@/lib/db/resume/resume"
 
 // Server.
-const createServer = () => {
-	// Candidate.
-	const { candidate } = resume
+const createServer = async () => {
+	// Candidate ID.
+	const candidateId = await getFirstCandidateId()
+	if (!candidateId)
+		throw new Error(
+			`Couldn't find the candidate by candidateId (${candidateId}).`,
+		)
 
-	const candidateId = candidate?.candidateId
-	if (!candidateId) throw new Error("There's no candidate.candidateId.")
+	// Resume.
+	const resume = await getResumeByCandidateId(candidateId)
+	if (!resume)
+		throw new Error(`Couldn't find the resume by candidateId (${candidateId}).`)
 
-	const candidateFirstName = candidate?.firstName
-	if (!candidateFirstName) throw new Error("There's no candidate.firstName.")
+	const candidateFirstName = resume.candidate.firstName
+	if (!candidateFirstName)
+		throw new Error(`Couldn't find the candidate's first name.`)
 
 	// Server information.
 	const server = new McpServer({
@@ -102,7 +110,7 @@ const createServer = () => {
 }
 
 export async function POST(req: Request) {
-	const server = createServer()
+	const server = await createServer()
 
 	const transport = new WebStandardStreamableHTTPServerTransport({
 		sessionIdGenerator: undefined,
