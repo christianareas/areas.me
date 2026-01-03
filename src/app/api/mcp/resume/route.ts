@@ -1,8 +1,8 @@
 // Dependencies.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
-import { getResumeByCandidateId } from "@/lib/db/resume"
 import { getFirstCandidateId } from "@/lib/db/resume/candidate/candidate"
+import { getResumeByCandidateId } from "@/lib/db/resume/resume"
 
 // Server.
 const createServer = async () => {
