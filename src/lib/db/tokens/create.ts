@@ -3,6 +3,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { parseArgs } from "node:util"
 import { config } from "dotenv"
 import { eq } from "drizzle-orm"
+import { validate as validateUuid } from "uuid"
 import { db } from "@/lib/db"
 import { apiTokens, candidates } from "@/lib/db/schema"
 
@@ -17,20 +18,20 @@ type Args = {
 // Environment variables.
 config({ path: ".env.local" })
 
-// Throw CLI error message.
+// Throw a CLI error message.
 function throwCliErrorMessage(message: string): never {
 	console.log(
 		[
 			"Usage:",
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token" --scopes resume:read,resume:write',
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token" --scopes resume:read --expires-at 2025-01-01T00:00:00Z',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token"',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian’s Resume API Token" --scopes resume:read,resume:write --expires-at 2025-01-01T00:00:00Z',
 		].join("\n"),
 	)
 
 	throw new Error(message)
 }
 
-// Parse CLI arguments.
+// Parse the CLI arguments.
 function parseCliArgs(argv: string[]): Args {
 	// Parse arguments.
 	const { values: argValues } = parseArgs({
@@ -41,45 +42,68 @@ function parseCliArgs(argv: string[]): Args {
 			scopes: { type: "string" },
 			"expires-at": { type: "string" },
 		},
-		allowPositionals: true,
 	})
 
 	// Candidate ID.
 	const candidateId = argValues["candidate-id"]
 
+	// If there’s no candidate ID, throw an error.
 	if (!candidateId) {
 		throwCliErrorMessage("You must pass a --candidate-id value.")
+	}
+
+	// If the candidate ID isn’t a valid UUID, throw an error.
+	if (!validateUuid(candidateId)) {
+		throwCliErrorMessage(`The UUID ${candidateId} isn’t valid.`)
 	}
 
 	// Token name.
 	const tokenName = argValues["token-name"]
 
+	// If there’s no token name, throw an error.
 	if (!tokenName) {
 		throwCliErrorMessage("You must pass a --token-name value.")
 	}
 
-	// Scopes.
-	const scopesValue = argValues.scopes
-
-	const tokenScopes = (scopesValue ?? "resume:read")
+	// Unnormalized token scopes.
+	const unnormalizedTokenScopes = (argValues.scopes ?? "resume:read")
 		.split(",")
 		.map((scopes) => scopes.trim())
 		.filter(Boolean)
 
-	// Expires at.
-	const tokenExpiresAtValue = argValues["expires-at"]
-	const tokenExpiresAt = tokenExpiresAtValue
-		? new Date(tokenExpiresAtValue)
-		: null
+	// Normalized token scopes.
+	const tokenScopes = Array.from(
+		new Set(
+			unnormalizedTokenScopes.includes("resume:write")
+				? [...unnormalizedTokenScopes, "resume:read"]
+				: unnormalizedTokenScopes,
+		),
+	)
 
-	if (tokenExpiresAt && Number.isNaN(tokenExpiresAt.getTime())) {
-		throwCliErrorMessage("You must pass a valid --expires-at value.")
+	// If there are no token scopes, throw an error.
+	if (tokenScopes.length === 0) {
+		throwCliErrorMessage("You must pass at least one scope.")
 	}
 
-	return { candidateId, tokenName, tokenScopes, tokenExpiresAt }
+	// Expiration date.
+	const tokenExpiresAt = argValues["expires-at"]
+		? new Date(argValues["expires-at"])
+		: null
+
+	// If expiration date isn't a date, throw an error.
+	if (tokenExpiresAt && Number.isNaN(tokenExpiresAt.getTime())) {
+		throwCliErrorMessage("You must pass an --expires-at value that's a date.")
+	}
+
+	return {
+		candidateId,
+		tokenName,
+		tokenScopes,
+		tokenExpiresAt,
+	}
 }
 
-// Main.
+// Create the API token.
 async function main() {
 	const { candidateId, tokenName, tokenScopes, tokenExpiresAt } = parseCliArgs(
 		process.argv.slice(2),
