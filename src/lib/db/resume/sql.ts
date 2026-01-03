@@ -1,8 +1,8 @@
 // Dependencies.
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
-import { getEducationByCandidateId } from "@/lib/db/resume/education/education"
-import { getExperienceByCandidateId } from "@/lib/db/resume/experience/experience"
-import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/skillSets"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getEducationByCandidateId } from "@/lib/db/resume/education/sql"
+import { getExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
+import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 
 // Get resume by candidate ID.
 export async function getResumeByCandidateId(candidateId: string) {

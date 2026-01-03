@@ -3,8 +3,8 @@ export const revalidate = 0
 // Dependencies.
 import { notFound } from "next/navigation"
 import Resume from "@/components/Resume"
-import { getFirstCandidateId } from "@/lib/db/resume/candidate/candidate"
-import { getResumeByCandidateId } from "@/lib/db/resume/resume"
+import { getFirstCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getResumeByCandidateId } from "@/lib/db/resume/sql"
 
 // Page.
 export default async function Home() {

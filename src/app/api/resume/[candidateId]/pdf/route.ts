@@ -4,7 +4,7 @@ import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
 import { chromium } from "playwright-chromium"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/candidate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 
 //
 // GET /resume/[candidateId]/pdf.

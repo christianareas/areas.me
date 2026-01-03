@@ -11,7 +11,7 @@ import {
 import {
 	getCandidateByCandidateId,
 	updateCandidateByCandidateId,
-} from "@/lib/db/resume/candidate/candidate"
+} from "@/lib/db/resume/candidate/sql"
 
 //
 // GET /api/resume/[candidateId]/candidate.
