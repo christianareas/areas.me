@@ -56,7 +56,7 @@ export async function authorizeApiToken(
 	// If there’s no API token, return an error.
 	if (!apiToken) {
 		return NextResponse.json(
-			{ error: "Your API token is not valid." },
+			{ error: "Your API token isn't valid." },
 			{ status: 401 },
 		)
 	}
@@ -64,7 +64,7 @@ export async function authorizeApiToken(
 	// If the API token is revoked, return an error.
 	if (apiToken.revokedAt) {
 		return NextResponse.json(
-			{ error: "Your API token is revoked." },
+			{ error: "Someone revoked your API token." },
 			{ status: 401 },
 		)
 	}
@@ -72,7 +72,7 @@ export async function authorizeApiToken(
 	// If the API token is expired, return an error.
 	if (apiToken.expiresAt && apiToken.expiresAt <= new Date()) {
 		return NextResponse.json(
-			{ error: "Your API token is expired." },
+			{ error: "Your API token expired." },
 			{ status: 401 },
 		)
 	}
