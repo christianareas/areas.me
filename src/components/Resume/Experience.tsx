@@ -1,5 +1,6 @@
 // Dependencies.
 import type { Role as RoleType } from "@/types/resume"
+import { formatDate } from "@/util/resume"
 
 // Types.
 type ExperienceProps = {
@@ -62,7 +63,8 @@ export default function Experience({
 									*****
 								*/}
 								<h6 className="font-extralight text-sm italic">
-									{role.startDate} – {role.endDate || "Present"}
+									{formatDate(role.startDate)} –{" "}
+									{role.endDate ? formatDate(role.endDate) : "Present"}
 								</h6>
 							</section>
 

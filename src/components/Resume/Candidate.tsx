@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { LuGithub, LuLinkedin, LuMail } from "react-icons/lu"
 import type { Candidate as CandidateType } from "@/types/resume"
-import { formatUrl } from "@/util/candidate"
+import { formatUrl } from "@/util/resume"
 
 // Types.
 type CandidateProps = {
