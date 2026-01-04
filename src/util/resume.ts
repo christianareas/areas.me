@@ -30,3 +30,23 @@ export function formatUrl(url: string) {
 		return url
 	}
 }
+
+// Format a date.
+const monthYearFormatter = new Intl.DateTimeFormat("en-US", {
+	month: "short",
+	year: "numeric",
+	timeZone: "UTC",
+})
+
+export function formatDate(date?: string | null) {
+	if (!date) {
+		return ""
+	}
+
+	const parsedDate = new Date(date)
+	if (Number.isNaN(parsedDate.getTime())) {
+		return date
+	}
+
+	return monthYearFormatter.format(parsedDate).replace(/ /g, "\u00A0")
+}
