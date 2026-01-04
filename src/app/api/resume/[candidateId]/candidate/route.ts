@@ -15,10 +15,6 @@ import {
 } from "@/lib/db/resume/candidate/sql"
 
 //
-// POST /api/resume/[candidateId]/candidate.
-//
-
-//
 // GET /api/resume/[candidateId]/candidate.
 //
 export async function GET(
