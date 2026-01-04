@@ -3,8 +3,8 @@ import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 
-// Get accomplishment by candidate ID, role ID, and accomplishment ID.
-export async function getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
+// Find accomplishment by candidate ID, role ID, and accomplishment ID.
+export async function findAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
 	accomplishmentId: string,

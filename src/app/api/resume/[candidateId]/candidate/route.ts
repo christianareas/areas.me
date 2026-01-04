@@ -10,7 +10,7 @@ import {
 } from "@/lib/api/validate"
 import {
 	deleteCandidateByCandidateId,
-	getCandidateByCandidateId,
+	findCandidateByCandidateId,
 	updateCandidateByCandidateId,
 } from "@/lib/db/resume/candidate/sql"
 
@@ -29,7 +29,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFound(

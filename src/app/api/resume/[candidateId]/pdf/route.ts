@@ -4,7 +4,7 @@ import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
 import { chromium } from "playwright-chromium"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 
 //
 // GET /resume/[candidateId]/pdf.
@@ -21,7 +21,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFound(

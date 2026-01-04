@@ -3,8 +3,8 @@ import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 
-// Get credential by candidate ID and credential ID.
-export async function getCredentialByCandidateIdAndCredentialId(
+// Find credential by candidate ID and credential ID.
+export async function findCredentialByCandidateIdAndCredentialId(
 	candidateId: string,
 	credentialId: string,
 ) {

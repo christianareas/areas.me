@@ -1,22 +1,22 @@
 // Dependencies.
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getEducationByCandidateId } from "@/lib/db/resume/education/sql"
-import { getExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
-import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findEducationByCandidateId } from "@/lib/db/resume/education/sql"
+import { findExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
+import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 
-// Get resume by candidate ID.
-export async function getResumeByCandidateId(candidateId: string) {
+// Find resume by candidate ID.
+export async function findResumeByCandidateId(candidateId: string) {
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// If there's no candidate, return null.
 	if (!candidate) return null
 
 	// Resume.
 	const [experience, skillSets, education] = await Promise.all([
-		getExperienceByCandidateId(candidateId),
-		getSkillSetsByCandidateId(candidateId),
-		getEducationByCandidateId(candidateId),
+		findExperienceByCandidateId(candidateId),
+		findSkillSetsByCandidateId(candidateId),
+		findEducationByCandidateId(candidateId),
 	])
 
 	return {

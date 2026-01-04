@@ -1,8 +1,8 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/education/credential/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/education/credential/sql"
 
 //
 // GET /api/resume/[candidateId]/education/[credentialId].
@@ -24,7 +24,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFound(
@@ -35,7 +35,7 @@ export async function GET(
 	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Credential.
-	const credential = await getCredentialByCandidateIdAndCredentialId(
+	const credential = await findCredentialByCandidateIdAndCredentialId(
 		candidateId,
 		credentialId,
 	)

@@ -3,8 +3,8 @@ import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { skillSets, skills } from "@/lib/db/schema"
 
-// Get skill set by candidate ID and skill set ID.
-export async function getSkillSetByCandidateIdAndSkillSetId(
+// Find skill set by candidate ID and skill set ID.
+export async function findSkillSetByCandidateIdAndSkillSetId(
 	candidateId: string,
 	skillSetId: string,
 ) {

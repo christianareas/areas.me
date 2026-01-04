@@ -4,8 +4,8 @@ import { db } from "@/lib/db"
 import { skillSets, skills } from "@/lib/db/schema"
 import type { SkillSet } from "@/types/resume"
 
-// Get skill sets by candidate ID.
-export async function getSkillSetsByCandidateId(candidateId: string) {
+// Find skill sets by candidate ID.
+export async function findSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets and skills.
 	const skillSetRows = await db
 		.select({

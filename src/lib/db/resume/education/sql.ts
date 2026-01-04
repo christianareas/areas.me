@@ -3,8 +3,8 @@ import { eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 
-// Get education by candidate ID.
-export async function getEducationByCandidateId(candidateId: string) {
+// Find education by candidate ID.
+export async function findEducationByCandidateId(candidateId: string) {
 	// Select credentials.
 	const education = await db
 		.select({

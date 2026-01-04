@@ -4,8 +4,8 @@ import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 import type { Role } from "@/types/resume"
 
-// Get experience by candidate ID.
-export async function getExperienceByCandidateId(candidateId: string) {
+// Find experience by candidate ID.
+export async function findExperienceByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
 	const roleRows = await db
 		.select({

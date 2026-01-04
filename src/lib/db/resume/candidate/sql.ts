@@ -19,8 +19,8 @@ const candidateFields = {
 	gitHub: candidates.gitHub,
 }
 
-// Get first candidate ID.
-export async function getFirstCandidateId() {
+// Find first candidate ID.
+export async function findFirstCandidateId() {
 	// Select candidate.
 	const [candidate] = await db
 		.select({
@@ -33,8 +33,8 @@ export async function getFirstCandidateId() {
 	return candidate?.candidateId ?? null
 }
 
-// Get candidate by candidate ID.
-export async function getCandidateByCandidateId(candidateId: string) {
+// Find candidate by candidate ID.
+export async function findCandidateByCandidateId(candidateId: string) {
 	// Select candidate.
 	const [candidate] = await db
 		.select(candidateFields)
