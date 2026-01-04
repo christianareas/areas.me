@@ -69,7 +69,7 @@ export async function deleteCandidateByCandidateId(candidateId: string) {
 	const [deletedCandidate] = await db
 		.delete(candidates)
 		.where(eq(candidates.candidateId, candidateId))
-		.returning(candidateFields)
+		.returning({ candidateId: candidates.candidateId })
 
 	return deletedCandidate ?? null
 }
