@@ -1,26 +1,36 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId, validateResumeSection } from "@/lib/api/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/skillSets/.
+//
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Skills.
-	const skillSets = resume.skillSets
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
 
-	// Validate skills.
-	const skillsError = validateResumeSection(skillSets, "skillSets")
-	if (skillsError) return skillsError
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	// Skill sets.
+	const skillSets = await getSkillSetsByCandidateId(candidateId)
 
 	return NextResponse.json({ skillSets }, { status: 200 })
 }

@@ -1,11 +1,14 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getCredentialByCandidateIdAndCredentialId } from "@/lib/db/resume/education/credential/sql"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/education/[credentialId].
+//
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{
 		params,
 	}: { params: Promise<{ candidateId: string; credentialId: string }> },
@@ -13,23 +16,37 @@ export async function GET(
 	// Candidate and credential IDs.
 	const { candidateId, credentialId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate and credential IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([
+		candidateId,
+		credentialId,
+	])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Credential.
-	const credential = resume.education?.find(
-		(credential) => credential.credentialId === credentialId,
+	const credential = await getCredentialByCandidateIdAndCredentialId(
+		candidateId,
+		credentialId,
 	)
 
-	// Validate credential.
-	const credentialError = validateResumeItem(
+	// Validate the credential found.
+	const credentialValidationResponse = validateDataFound(
 		credential,
 		"credential",
-		credentialId,
-		"credentialId",
+		{ candidateId, credentialId },
 	)
-	if (credentialError) return credentialError
+	if (credentialValidationResponse) return credentialValidationResponse
 
 	return NextResponse.json({ credential }, { status: 200 })
 }

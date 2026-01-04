@@ -1,22 +1,39 @@
 // Dependencies.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
-import { resume } from "@/data/resume"
+import { getFirstCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getResumeByCandidateId } from "@/lib/db/resume/sql"
 
 // Server.
-const createServer = () => {
-	// Candidate.
-	const { candidate } = resume
+const createServer = async () => {
+	// Candidate ID.
+	const candidateId = await getFirstCandidateId()
+	if (!candidateId)
+		throw new Error(
+			`Couldn't find the candidate by candidateId (${candidateId}).`,
+		)
 
-	const candidateId = candidate?.candidateId
-	if (!candidateId) throw new Error("There’s no candidate.candidateId.")
+	// Resume.
+	const initialResume = await getResumeByCandidateId(candidateId)
+	if (!initialResume)
+		throw new Error(`Couldn't find the resume by candidateId (${candidateId}).`)
 
-	const candidateFirstName = candidate?.firstName
-	if (!candidateFirstName) throw new Error("There’s no candidate.firstName.")
+	const candidateFirstName = initialResume.candidate.firstName
+	if (!candidateFirstName)
+		throw new Error(`Couldn't find the candidate's first name.`)
+
+	const loadResume = async () => {
+		const resume = await getResumeByCandidateId(candidateId)
+		if (!resume)
+			throw new Error(
+				`Couldn't find the resume by candidateId (${candidateId}).`,
+			)
+		return resume
+	}
 
 	// Server information.
 	const server = new McpServer({
-		name: `${candidateFirstName}’s Resume MCP Server`,
+		name: `${candidateFirstName}'s Resume MCP Server`,
 		version: "0.1.0",
 		websiteUrl: "https://www.areas.me/api/mcp/resume",
 	})
@@ -26,42 +43,48 @@ const createServer = () => {
 		"resume",
 		`resume://${candidateId}`,
 		{
-			title: `${candidateFirstName}’s Resume`,
-			description: `${candidateFirstName}’s resume, including their who, contact details, experience, skill sets, and education.`,
+			title: `${candidateFirstName}'s Resume`,
+			description: `${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 			mimeType: "application/json",
 		},
-		async (uri) => ({
-			contents: [
-				{
-					uri: uri.href,
-					mimeType: "application/json",
-					text: JSON.stringify(resume, null, 2),
-				},
-			],
-		}),
+		async (uri) => {
+			const resume = await loadResume()
+			return {
+				contents: [
+					{
+						uri: uri.href,
+						mimeType: "application/json",
+						text: JSON.stringify(resume, null, 2),
+					},
+				],
+			}
+		},
 	)
 
 	// Tools.
 	server.registerTool(
 		"get-resume",
 		{
-			title: `Get ${candidateFirstName}’s Resume`,
-			description: `Get ${candidateFirstName}’s resume, including their who, contact details, experience, skill sets, and education.`,
+			title: `Get ${candidateFirstName}'s Resume`,
+			description: `Get ${candidateFirstName}'s resume, including their who, contact details, experience, skill sets, and education.`,
 		},
-		async () => ({
-			content: [
-				{
-					type: "text",
-					text: JSON.stringify(resume, null, 2),
-				},
-			],
-		}),
+		async () => {
+			const resume = await loadResume()
+			return {
+				content: [
+					{
+						type: "text",
+						text: JSON.stringify(resume, null, 2),
+					},
+				],
+			}
+		},
 	)
 
 	server.registerTool(
 		"get-resume-pdf-download-link",
 		{
-			title: `Get ${candidateFirstName}’s Resume (PDF)`,
+			title: `Get ${candidateFirstName}'s Resume (PDF)`,
 			description: `Get ${candidateFirstName}'s resume as a PDF.`,
 		},
 		async () => {
@@ -85,24 +108,28 @@ const createServer = () => {
 			title: `Who is ${candidateFirstName}?`,
 			description: `Tell me about ${candidateFirstName}, based on their resume.`,
 		},
-		async () => ({
-			messages: [
-				{
-					role: "user",
-					content: {
-						type: "text",
-						text: `Who is ${candidateFirstName}? Tell me more, based on their resume.\n\n${JSON.stringify(resume, null, 2)}`,
+		async () => {
+			const resume = await loadResume()
+			const currentFirstName = resume.candidate.firstName || candidateFirstName
+			return {
+				messages: [
+					{
+						role: "user",
+						content: {
+							type: "text",
+							text: `Who is ${currentFirstName}? Tell me more, based on their resume.\n\n${JSON.stringify(resume, null, 2)}`,
+						},
 					},
-				},
-			],
-		}),
+				],
+			}
+		},
 	)
 
 	return server
 }
 
 export async function POST(req: Request) {
-	const server = createServer()
+	const server = await createServer()
 
 	const transport = new WebStandardStreamableHTTPServerTransport({
 		sessionIdGenerator: undefined,

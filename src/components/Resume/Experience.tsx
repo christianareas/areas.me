@@ -1,12 +1,19 @@
 // Dependencies.
-import { resume } from "@/data/resume"
+import type { Role as RoleType } from "@/types/resume"
+
+// Types.
+type ExperienceProps = {
+	experience: RoleType[]
+}
 
 // Component.
-export default function Experience() {
-	// Experience.
-	const experience = (resume.experience ?? [])
-		.slice()
-		.sort((a, b) => b.startDate.localeCompare(a.startDate))
+export default function Experience({
+	experience: unsortedExperience,
+}: ExperienceProps) {
+	// Sort experience by start date (newest to oldest).
+	const experience = [...unsortedExperience].sort((a, b) =>
+		b.startDate.localeCompare(a.startDate),
+	)
 
 	// Render.
 	return (
@@ -17,7 +24,7 @@ export default function Experience() {
 
 			<section className="space-y-10">
 				{experience.map((role, index) => {
-					const accomplishments = (role.accomplishments ?? [])
+					const accomplishments = role.accomplishments
 						.slice()
 						.sort((a, b) => a.sortOrder - b.sortOrder)
 

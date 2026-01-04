@@ -1,11 +1,17 @@
 // Dependencies.
-import type { SkillSet } from "@/data/resume"
-import { resume } from "@/data/resume"
+import type { SkillSet as SkillSetType } from "@/types/resume"
+
+// Types.
+type SkillSetsProps = {
+	skillSets: SkillSetType[]
+}
 
 // Component.
-export default function SkillSets() {
+export default function SkillSets({
+	skillSets: unsortedSkillSets,
+}: SkillSetsProps) {
 	// Skill sets.
-	const skillSets = (resume.skillSets ?? [])
+	const skillSets = unsortedSkillSets
 		.map((skillSet) => ({
 			...skillSet,
 			skills: [...skillSet.skills].sort((a, b) => a.sortOrder - b.sortOrder),
@@ -13,7 +19,7 @@ export default function SkillSets() {
 		.sort((a, b) => a.sortOrder - b.sortOrder)
 
 	// Skill set labels.
-	const skillSetLabels: Record<SkillSet["skillSetType"], string> = {
+	const skillSetLabels: Record<string, string> = {
 		apps: "Apps",
 		"command-line-tools": "Command-Line Tools",
 		databases: "Databases",

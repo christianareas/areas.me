@@ -1,22 +1,135 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId } from "@/lib/api/resume"
+import { authorizeApiToken } from "@/lib/api/auth"
+import { candidatePatchSchema } from "@/lib/api/schemas/resume/candidate/contract"
+import {
+	parseJson,
+	validateDataFound,
+	validateRequestBodyAgainstSchema,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import {
+	deleteCandidateByCandidateId,
+	getCandidateByCandidateId,
+	updateCandidateByCandidateId,
+} from "@/lib/db/resume/candidate/sql"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/candidate.
+//
 export async function GET(
+	_request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	return NextResponse.json({ candidate }, { status: 200 })
+}
+
+//
+// PATCH /api/resume/[candidateId]/candidate.
+//
+export async function PATCH(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
-	// Candidate.
-	const candidate = resume.candidate
+	// Authorize the API token.
+	const authorizationResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationResponse) return authorizationResponse
 
-	return NextResponse.json({ candidate }, { status: 200 })
+	// Parse the request body JSON.
+	const requestBodyOrResponse = await parseJson(request)
+	if (requestBodyOrResponse instanceof NextResponse)
+		return requestBodyOrResponse
+
+	// Request body.
+	const requestBody = requestBodyOrResponse
+
+	// Validate the request body against the schema.
+	const candidatePatchOrResponse = validateRequestBodyAgainstSchema(
+		requestBody,
+		candidatePatchSchema,
+	)
+	if (candidatePatchOrResponse instanceof NextResponse)
+		return candidatePatchOrResponse
+
+	// Candidate patch.
+	const candidatePatch = candidatePatchOrResponse
+
+	// Updated candidate.
+	const updatedCandidate = await updateCandidateByCandidateId(
+		candidateId,
+		candidatePatch,
+	)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		updatedCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
+}
+
+//
+// DELETE /api/resume/[candidateId]/candidate.
+//
+export async function DELETE(
+	request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// Validate the candidate ID is a valid UUID.
+	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Authorize the API token.
+	const authorizationResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationResponse) return authorizationResponse
+
+	// Deleted candidate.
+	const deletedCandidate = await deleteCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		deletedCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
+
+	return new NextResponse(null, { status: 204 })
 }

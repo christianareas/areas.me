@@ -1,33 +1,49 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { resume } from "@/data/resume"
-import { validateCandidateId, validateResumeItem } from "@/lib/api/resume"
+import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
+import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { getSkillSetByCandidateIdAndSkillSetId } from "@/lib/db/resume/skillSets/skillSet/sql"
 
-// GET request.
+//
+// GET /api/resume/[candidateId]/skillSets/[skillSetId].
+//
 export async function GET(
-	request: NextRequest,
+	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string; skillSetId: string }> },
 ) {
 	// Candidate and skill set IDs.
 	const { candidateId, skillSetId } = await params
 
-	// Validate candidate ID.
-	const candidateIdError = validateCandidateId(candidateId)
-	if (candidateIdError) return candidateIdError
+	// Validate the candidate and skill set IDs are valid UUIDs.
+	const uuidFormatValidationResponse = validateUuidFormat([
+		candidateId,
+		skillSetId,
+	])
+	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+
+	// Candidate.
+	const candidate = await getCandidateByCandidateId(candidateId)
+
+	// Validate the candidate found.
+	const candidateValidationResponse = validateDataFound(
+		candidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Skill set.
-	const skillSet = resume.skillSets?.find(
-		(skillSet) => skillSet.skillSetId === skillSetId,
+	const skillSet = await getSkillSetByCandidateIdAndSkillSetId(
+		candidateId,
+		skillSetId,
 	)
 
-	// Validate skill set.
-	const skillSetError = validateResumeItem(
-		skillSet,
-		"skillSet",
+	// Validate the skill set found.
+	const skillSetValidationResponse = validateDataFound(skillSet, "skill set", {
+		candidateId,
 		skillSetId,
-		"skillSetId",
-	)
-	if (skillSetError) return skillSetError
+	})
+	if (skillSetValidationResponse) return skillSetValidationResponse
 
 	return NextResponse.json({ skillSet }, { status: 200 })
 }

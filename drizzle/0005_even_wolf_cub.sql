@@ -1,0 +1,2 @@
+DROP INDEX "roles_candidate_id_end_date_start_date_company_index";--> statement-breakpoint
+CREATE INDEX "roles_candidate_end_start_company_role_id_index" ON "roles" USING btree ("candidate_id","end_date" DESC NULLS FIRST,"start_date" DESC NULLS LAST,"company","role","role_id");
