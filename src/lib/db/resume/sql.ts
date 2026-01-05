@@ -1,8 +1,14 @@
 // Dependencies.
+import { eq } from "drizzle-orm"
+import { db } from "@/lib/db"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findEducationByCandidateId } from "@/lib/db/resume/education/sql"
 import { findExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
 import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
+import { candidates } from "@/lib/db/schema"
+
+// Create resume.
+export async function createResume() {}
 
 // Find resume by candidate ID.
 export async function findResumeByCandidateId(candidateId: string) {
@@ -25,4 +31,21 @@ export async function findResumeByCandidateId(candidateId: string) {
 		skillSets,
 		education,
 	}
+}
+
+// Replace resume by candidate ID.
+export async function replaceResumeByCandidateId(candidateId: string) {
+	// Stub.
+	return { candidate: { candidateId } }
+}
+
+// Delete resume by candidate ID.
+export async function deleteResumeByCandidateId(candidateId: string) {
+	// Delete candidate.
+	const [deletedCandidate] = await db
+		.delete(candidates)
+		.where(eq(candidates.candidateId, candidateId))
+		.returning({ candidateId: candidates.candidateId })
+
+	return deletedCandidate ?? null
 }

@@ -9,7 +9,6 @@ import {
 	validateUuidFormat,
 } from "@/lib/api/validate"
 import {
-	deleteCandidateByCandidateId,
 	findCandidateByCandidateId,
 	updateCandidateByCandidateId,
 } from "@/lib/db/resume/candidate/sql"
@@ -97,39 +96,4 @@ export async function PATCH(
 	if (candidateValidationResponse) return candidateValidationResponse
 
 	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
-}
-
-//
-// DELETE /api/resume/[candidateId]/candidate.
-//
-export async function DELETE(
-	request: NextRequest,
-	{ params }: { params: Promise<{ candidateId: string }> },
-) {
-	// Candidate ID.
-	const { candidateId } = await params
-
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
-
-	// Authorize the API token.
-	const authorizationResponse = await authorizeApiToken(request, {
-		candidateId,
-		scopeRequirement: "resume:write",
-	})
-	if (authorizationResponse) return authorizationResponse
-
-	// Deleted candidate.
-	const deletedCandidate = await deleteCandidateByCandidateId(candidateId)
-
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		deletedCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
-
-	return new NextResponse(null, { status: 204 })
 }

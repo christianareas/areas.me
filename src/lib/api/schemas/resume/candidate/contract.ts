@@ -1,6 +1,6 @@
 // Dependencies.
 import { z } from "zod"
-import { candidateFields } from "@/lib/api/schemas/resume/contract"
+import { candidateFields } from "@/lib/api/schemas/contract"
 
 // Candidate POST schema.
 export const candidateCreateSchema = z

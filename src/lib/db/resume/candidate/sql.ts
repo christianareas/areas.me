@@ -62,14 +62,3 @@ export async function updateCandidateByCandidateId(
 
 	return updatedCandidate ?? null
 }
-
-// Delete candidate by candidate ID.
-export async function deleteCandidateByCandidateId(candidateId: string) {
-	// Delete candidate.
-	const [deletedCandidate] = await db
-		.delete(candidates)
-		.where(eq(candidates.candidateId, candidateId))
-		.returning({ candidateId: candidates.candidateId })
-
-	return deletedCandidate ?? null
-}
