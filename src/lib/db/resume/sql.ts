@@ -7,9 +7,6 @@ import { findExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
 import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 import { candidates } from "@/lib/db/schema"
 
-// Create resume.
-export async function createResume() {}
-
 // Find resume by candidate ID.
 export async function findResumeByCandidateId(candidateId: string) {
 	// Candidate.
