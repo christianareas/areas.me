@@ -84,7 +84,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 			candidateId: skillSets.candidateId,
 			skillSetId: skillSets.skillSetId,
 			skillSetType: skillSets.skillSetType,
-			sortOrder: skillSets.sortOrder,
+			skillSetSortOrder: skillSets.sortOrder,
 			skillId: skills.skillId,
 			skill: skills.skill,
 			skillSortOrder: skills.sortOrder,
@@ -114,7 +114,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 		candidateId: firstSkillSetRow.candidateId,
 		skillSetId: firstSkillSetRow.skillSetId,
 		skillSetType: firstSkillSetRow.skillSetType,
-		sortOrder: firstSkillSetRow.sortOrder,
+		sortOrder: firstSkillSetRow.skillSetSortOrder,
 		skills: skillSetRows
 			.filter(
 				(skillRow) =>
@@ -136,7 +136,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 // Skills.
 //
 
-// Get skill by candidate ID, skill set ID, and skill ID.
+// Find skill by candidate ID, skill set ID, and skill ID.
 export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
