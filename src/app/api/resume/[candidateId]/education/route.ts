@@ -1,8 +1,12 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { findEducationByCandidateId } from "@/lib/db/resume/education/sql"
+import {
+	deleteEducationByCandidateId,
+	findEducationByCandidateId,
+} from "@/lib/db/resume/education/sql"
 
 //
 // GET /api/resume/[candidateId]/education.
@@ -14,23 +18,71 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await findCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
-	// Education.
-	const education = await findEducationByCandidateId(candidateId)
+	// Found education.
+	const foundEducation = await findEducationByCandidateId(candidateId)
 
-	return NextResponse.json({ education }, { status: 200 })
+	// If the education’s not found, return 404.
+	const educationErrorResponse = validateDataFound(
+		foundEducation,
+		"education",
+		{ candidateId },
+	)
+	if (educationErrorResponse) return educationErrorResponse
+
+	// If the education’s found, return 200.
+	return NextResponse.json({ education: foundEducation }, { status: 200 })
+}
+
+//
+// DELETE /api/resume/[candidateId]/education.
+//
+export async function DELETE(
+	request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateErrorResponse) return candidateErrorResponse
+
+	// Deleted education.
+	await deleteEducationByCandidateId(candidateId)
+
+	// If the education’s deleted, return 204.
+	return new NextResponse(null, { status: 204 })
 }
