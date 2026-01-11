@@ -37,19 +37,6 @@ export async function findEducationByCandidateId(candidateId: string) {
 	return education
 }
 
-// Replace education by candidate ID.
-
-// Delete education by candidate ID.
-export async function deleteEducationByCandidateId(candidateId: string) {
-	// Delete credentials.
-	const deletedEducation = await db
-		.delete(credentials)
-		.where(eq(credentials.candidateId, candidateId))
-		.returning({ candidateId: credentials.candidateId })
-
-	return deletedEducation
-}
-
 //
 // Credential.
 //
