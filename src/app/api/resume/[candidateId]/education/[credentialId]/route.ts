@@ -16,7 +16,7 @@ import {
 } from "@/lib/db/resume/education/sql"
 
 //
-// GET /api/resume/[candidateId]/education/credentials/[credentialId].
+// GET /api/resume/[candidateId]/education/[credentialId].
 //
 export async function GET(
 	_request: NextRequest,
@@ -64,7 +64,7 @@ export async function GET(
 }
 
 //
-// PATCH /api/resume/[candidateId]/education/credentials/[credentialId].
+// PATCH /api/resume/[candidateId]/education/[credentialId].
 //
 export async function PATCH(
 	request: NextRequest,
@@ -139,7 +139,7 @@ export async function PATCH(
 }
 
 //
-// DELETE /api/resume/[candidateId]/education/credentials/[credentialId].
+// DELETE /api/resume/[candidateId]/education/[credentialId].
 //
 export async function DELETE(
 	request: NextRequest,
