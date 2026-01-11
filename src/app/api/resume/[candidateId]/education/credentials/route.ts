@@ -1,7 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
-import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/credential/contract"
+import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/contract"
 import {
 	parseJson,
 	validateDataFound,
@@ -9,7 +9,7 @@ import {
 	validateUuidFormat,
 } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { createCredentialByCandidateId } from "@/lib/db/resume/education/credential/sql"
+import { createCredentialByCandidateId } from "@/lib/db/resume/education/sql"
 
 //
 // POST /api/resume/[candidateId]/education/credentials.

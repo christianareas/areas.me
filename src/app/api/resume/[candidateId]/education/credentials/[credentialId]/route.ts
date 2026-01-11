@@ -1,7 +1,7 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
-import { credentialUpdateSchema } from "@/lib/api/schemas/resume/education/credential/contract"
+import { credentialUpdateSchema } from "@/lib/api/schemas/resume/education/contract"
 import {
 	parseJson,
 	validateDataFound,
@@ -13,7 +13,7 @@ import {
 	deleteCredentialByCandidateIdAndCredentialId,
 	findCredentialByCandidateIdAndCredentialId,
 	updateCredentialByCandidateIdAndCredentialId,
-} from "@/lib/db/resume/education/credential/sql"
+} from "@/lib/db/resume/education/sql"
 
 //
 // GET /api/resume/[candidateId]/education/credentials/[credentialId].

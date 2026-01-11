@@ -49,6 +49,10 @@ export async function GET(
 }
 
 //
+// PUT /api/resume/[candidateId]/education.
+//
+
+//
 // DELETE /api/resume/[candidateId]/education.
 //
 export async function DELETE(
