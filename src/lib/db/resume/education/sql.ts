@@ -41,34 +41,23 @@ export async function findEducationByCandidateId(candidateId: string) {
 // Credential.
 //
 
-// Create credentials by candidate ID.
-export async function createCredentialsByCandidateId(
-	candidateId: string,
-	credentialCreates: CredentialCreate[],
-) {
-	// **
-	if (credentialCreates.length === 0) return []
-
-	return db
-		.insert(credentials)
-		.values(
-			credentialCreates.map((credential) => ({
-				...credential,
-				candidateId,
-				credentialId: randomUUID(),
-			})),
-		)
-		.returning(credentialFields)
-}
-
 // Create credential by candidate ID.
 export async function createCredentialByCandidateId(
 	candidateId: string,
 	credentialCreate: CredentialCreate,
 ) {
-	const [newCredential] = await createCredentialsByCandidateId(candidateId, [
-		credentialCreate,
-	])
+	// Insert credential.
+	const [newCredential] = await db
+		.insert(credentials)
+		.values({
+			...credentialCreate,
+			candidateId,
+			credentialId: randomUUID(),
+		})
+		.returning({
+			...credentialFields,
+			createdAt: credentials.createdAt,
+		})
 
 	return newCredential ?? null
 }
