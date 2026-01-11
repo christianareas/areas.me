@@ -24,19 +24,20 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID is not a valid UUID, return 400 Bad Request.
+	const uuidFormatBadRequestResponse = validateUuidFormat(candidateId)
+	if (uuidFormatBadRequestResponse) return uuidFormatBadRequestResponse
 
 	// Resume.
 	const resume = await findResumeByCandidateId(candidateId)
 
-	// Validate the resume found.
-	const resumeValidationResponse = validateDataFound(resume, "resume", {
+	// If there's no resume, return 404 Not Found.
+	const resumeNotFoundResponse = validateDataFound(resume, "resume", {
 		candidateId,
 	})
-	if (resumeValidationResponse) return resumeValidationResponse
+	if (resumeNotFoundResponse) return resumeNotFoundResponse
 
+	// If there's a resume, return 200 OK.
 	return NextResponse.json({ resume }, { status: 200 })
 }
 
@@ -50,18 +51,18 @@ export async function PUT(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID is not a valid UUID, return 400 Bad Request.
+	const uuidFormatBadRequestResponse = validateUuidFormat(candidateId)
+	if (uuidFormatBadRequestResponse) return uuidFormatBadRequestResponse
 
-	// Authorize the API token.
-	const authorizationResponse = await authorizeApiToken(request, {
+	// If authorization fails, return 401 Unauthorized, 403 Forbidden, or 404 Not Found.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
 		candidateId,
 		scopeRequirement: "resume:write",
 	})
-	if (authorizationResponse) return authorizationResponse
+	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Parse the request body JSON.
+	// If parsing the request body fails, return 400 Bad Request.
 	const requestBodyOrResponse = await parseJson(request)
 	if (requestBodyOrResponse instanceof NextResponse)
 		return requestBodyOrResponse
@@ -69,22 +70,24 @@ export async function PUT(
 	// Request body.
 	const requestBody = requestBodyOrResponse
 
-	// Validate the request body against the schema.
-	const resumePutOrResponse = validateRequestBodyAgainstSchema(
+	// If validating the request body against the schema fails, return 400 Bad Request.
+	const resumeReplaceBadRequestResponse = validateRequestBodyAgainstSchema(
 		requestBody,
 		resumePutSchema,
 	)
-	if (resumePutOrResponse instanceof NextResponse) return resumePutOrResponse
+	if (resumeReplaceBadRequestResponse instanceof NextResponse)
+		return resumeReplaceBadRequestResponse
 
 	// Replaced resume.
 	const replacedResume = await replaceResumeByCandidateId(candidateId)
 
-	// Validate the resume found.
-	const resumeValidationResponse = validateDataFound(replacedResume, "resume", {
+	// If resume replacement fails, return 404 Not Found.
+	const resumeNotFoundResponse = validateDataFound(replacedResume, "resume", {
 		candidateId,
 	})
-	if (resumeValidationResponse) return resumeValidationResponse
+	if (resumeNotFoundResponse) return resumeNotFoundResponse
 
+	// If resume replacement succeeds, return 200 OK.
 	return NextResponse.json({ resume: replacedResume }, { status: 200 })
 }
 
@@ -98,25 +101,26 @@ export async function DELETE(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID is not a valid UUID, return 400 Bad Request.
+	const uuidFormatBadRequestResponse = validateUuidFormat(candidateId)
+	if (uuidFormatBadRequestResponse) return uuidFormatBadRequestResponse
 
-	// Authorize the API token.
-	const authorizationResponse = await authorizeApiToken(request, {
+	// If authorization fails, return 401 Unauthorized, 403 Forbidden, or 404 Not Found.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
 		candidateId,
 		scopeRequirement: "resume:write",
 	})
-	if (authorizationResponse) return authorizationResponse
+	if (authorizationErrorResponse) return authorizationErrorResponse
 
 	// Deleted resume.
 	const deletedResume = await deleteResumeByCandidateId(candidateId)
 
-	// Validate the resume found.
-	const resumeValidationResponse = validateDataFound(deletedResume, "resume", {
+	// If resume deletion fails, return 404 Not Found.
+	const resumeNotFoundResponse = validateDataFound(deletedResume, "resume", {
 		candidateId,
 	})
-	if (resumeValidationResponse) return resumeValidationResponse
+	if (resumeNotFoundResponse) return resumeNotFoundResponse
 
+	// If resume deletion succeeds, return 204 No Content.
 	return new NextResponse(null, { status: 204 })
 }

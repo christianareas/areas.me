@@ -1,6 +1,6 @@
 // Dependencies.
 import { eq } from "drizzle-orm"
-import type { CandidatePatch } from "@/lib/api/schemas/resume/candidate/contract"
+import type { CandidateUpdate } from "@/lib/api/schemas/resume/candidate/contract"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
@@ -48,12 +48,12 @@ export async function findCandidateByCandidateId(candidateId: string) {
 // Update candidate by candidate ID.
 export async function updateCandidateByCandidateId(
 	candidateId: string,
-	candidatePatch: CandidatePatch,
+	candidateUpdate: CandidateUpdate,
 ) {
 	// Update candidate.
 	const [updatedCandidate] = await db
 		.update(candidates)
-		.set({ ...candidatePatch, updatedAt: new Date() })
+		.set({ ...candidateUpdate, updatedAt: new Date() })
 		.where(eq(candidates.candidateId, candidateId))
 		.returning({
 			...candidateFields,

@@ -1,51 +1,20 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
-import { candidateUpdateSchema } from "@/lib/api/schemas/resume/candidate/contract"
+import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/credential/contract"
 import {
 	parseJson,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
 } from "@/lib/api/validate"
-import {
-	findCandidateByCandidateId,
-	updateCandidateByCandidateId,
-} from "@/lib/db/resume/candidate/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { createCredentialByCandidateId } from "@/lib/db/resume/education/credential/sql"
 
 //
-// GET /api/resume/[candidateId]/candidate.
+// POST /api/resume/[candidateId]/education/credentials.
 //
-export async function GET(
-	_request: NextRequest,
-	{ params }: { params: Promise<{ candidateId: string }> },
-) {
-	// Candidate ID.
-	const { candidateId } = await params
-
-	// If the candidate ID isn’t a valid UUID, return 400.
-	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
-	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
-
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// If the candidate’s found, return 200.
-	return NextResponse.json({ candidate: foundCandidate }, { status: 200 })
-}
-
-//
-// PATCH /api/resume/[candidateId]/candidate.
-//
-export async function PATCH(
+export async function POST(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
@@ -63,6 +32,17 @@ export async function PATCH(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateErrorResponse) return candidateErrorResponse
+
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -74,7 +54,7 @@ export async function PATCH(
 	// If validating the request body against the schema fails, return 400.
 	const validatedRequestBodyOrErrorResponse = validateRequestBodyAgainstSchema(
 		requestBody,
-		candidateUpdateSchema,
+		credentialCreateSchema,
 	)
 	if (validatedRequestBodyOrErrorResponse instanceof NextResponse)
 		return validatedRequestBodyOrErrorResponse
@@ -82,20 +62,12 @@ export async function PATCH(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Updated candidate.
-	const updatedCandidate = await updateCandidateByCandidateId(
+	// Created credential.
+	const createdCredential = await createCredentialByCandidateId(
 		candidateId,
 		validatedRequestBody,
 	)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		updatedCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// If the candidate’s found and updated, return 200.
-	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
+	// If the credential’s created, return 201.
+	return NextResponse.json({ credential: createdCredential }, { status: 201 })
 }

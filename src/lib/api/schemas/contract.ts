@@ -107,17 +107,22 @@ export const skillSetSchema = z
 // Education.
 //
 
+// Credential fields.
+export const credentialFields = {
+	candidateId: uuidSchema,
+	credentialId: uuidSchema,
+	institution: z
+		.string()
+		.min(1, "The candidate's institution must contain at least one character."),
+	credential: z
+		.string()
+		.min(1, "The candidate's credential must contain at least one character."),
+	startDate: dateStringSchema.nullable(),
+	endDate: dateStringSchema.nullable(),
+}
+
 // Credential schema.
-export const credentialSchema = z
-	.object({
-		candidateId: uuidSchema,
-		credentialId: uuidSchema,
-		institution: z.string(),
-		credential: z.string(),
-		startDate: dateStringSchema.nullable(),
-		endDate: dateStringSchema.nullable(),
-	})
-	.strict()
+export const credentialSchema = z.object(credentialFields).strict()
 
 //
 // Resume.
