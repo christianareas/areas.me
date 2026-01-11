@@ -137,7 +137,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 //
 
 // Get skill by candidate ID, skill set ID, and skill ID.
-export async function findSkillByCandidateIdSkillSetIdAndSkillId(
+export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
 	skillId: string,

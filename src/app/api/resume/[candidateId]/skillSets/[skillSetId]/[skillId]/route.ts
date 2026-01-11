@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import {
-	findSkillByCandidateIdSkillSetIdAndSkillId,
+	findSkillByCandidateIdAndSkillSetIdAndSkillId,
 	findSkillSetByCandidateIdAndSkillSetId,
 } from "@/lib/db/resume/skillSets/sql"
 
@@ -58,7 +58,7 @@ export async function GET(
 	if (skillSetValidationResponse) return skillSetValidationResponse
 
 	// Skill.
-	const skill = await findSkillByCandidateIdSkillSetIdAndSkillId(
+	const skill = await findSkillByCandidateIdAndSkillSetIdAndSkillId(
 		candidateId,
 		skillSetId,
 		skillId,
