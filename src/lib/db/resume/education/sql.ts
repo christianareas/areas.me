@@ -22,25 +22,6 @@ const credentialFields = {
 // Education.
 //
 
-// Find education by candidate ID.
-export async function findEducationByCandidateId(candidateId: string) {
-	// Select credentials.
-	const education = await db
-		.select(credentialFields)
-		.from(credentials)
-		.where(eq(credentials.candidateId, candidateId))
-		.orderBy(
-			sql`${credentials.endDate} DESC NULLS FIRST`,
-			sql`${credentials.startDate} DESC NULLS FIRST`,
-		)
-
-	return education
-}
-
-//
-// Credential.
-//
-
 // Create credential by candidate ID.
 export async function createCredentialByCandidateId(
 	candidateId: string,
@@ -61,6 +42,25 @@ export async function createCredentialByCandidateId(
 
 	return newCredential ?? null
 }
+
+// Find education by candidate ID.
+export async function findEducationByCandidateId(candidateId: string) {
+	// Select credentials.
+	const education = await db
+		.select(credentialFields)
+		.from(credentials)
+		.where(eq(credentials.candidateId, candidateId))
+		.orderBy(
+			sql`${credentials.endDate} DESC NULLS FIRST`,
+			sql`${credentials.startDate} DESC NULLS FIRST`,
+		)
+
+	return education
+}
+
+//
+// Credential.
+//
 
 // Find credential by candidate ID and credential ID.
 export async function findCredentialByCandidateIdAndCredentialId(

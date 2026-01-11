@@ -2,8 +2,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getSkillByCandidateIdSkillSetIdAndSkillId as findSkillByCandidateIdSkillSetIdAndSkillId } from "@/lib/db/resume/skillSets/skillSet/skill/sql"
-import { findSkillSetByCandidateIdAndSkillSetId } from "@/lib/db/resume/skillSets/skillSet/sql"
+import {
+	findSkillByCandidateIdSkillSetIdAndSkillId,
+	findSkillSetByCandidateIdAndSkillSetId,
+} from "@/lib/db/resume/skillSets/sql"
 
 //
 // GET /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
