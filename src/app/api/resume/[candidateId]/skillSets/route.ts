@@ -1,8 +1,8 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 
 //
 // GET /api/resume/[candidateId]/skillSets/.
@@ -19,7 +19,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFound(
@@ -30,7 +30,7 @@ export async function GET(
 	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Skill sets.
-	const skillSets = await getSkillSetsByCandidateId(candidateId)
+	const skillSets = await findSkillSetsByCandidateId(candidateId)
 
 	return NextResponse.json({ skillSets }, { status: 200 })
 }

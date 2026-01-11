@@ -1,5 +1,6 @@
 // Dependencies.
 import { config } from "dotenv"
+import { resumeSchema } from "@/lib/api/schemas/contract"
 import { db } from "@/lib/db"
 import {
 	accomplishments,
@@ -10,7 +11,6 @@ import {
 	skills,
 } from "@/lib/db/schema"
 import { resume } from "@/lib/db/seed/resume"
-import { resumeSchema } from "@/lib/api/schemas/resume/contract"
 
 // Environment variables.
 config({ path: ".env.local" })

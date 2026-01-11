@@ -1,20 +1,20 @@
 // Dependencies.
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
-import { getFirstCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getResumeByCandidateId } from "@/lib/db/resume/sql"
+import { findFirstCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findResumeByCandidateId } from "@/lib/db/resume/sql"
 
 // Server.
 const createServer = async () => {
 	// Candidate ID.
-	const candidateId = await getFirstCandidateId()
+	const candidateId = await findFirstCandidateId()
 	if (!candidateId)
 		throw new Error(
 			`Couldn't find the candidate by candidateId (${candidateId}).`,
 		)
 
 	// Resume.
-	const initialResume = await getResumeByCandidateId(candidateId)
+	const initialResume = await findResumeByCandidateId(candidateId)
 	if (!initialResume)
 		throw new Error(`Couldn't find the resume by candidateId (${candidateId}).`)
 
@@ -23,7 +23,7 @@ const createServer = async () => {
 		throw new Error(`Couldn't find the candidate's first name.`)
 
 	const loadResume = async () => {
-		const resume = await getResumeByCandidateId(candidateId)
+		const resume = await findResumeByCandidateId(candidateId)
 		if (!resume)
 			throw new Error(
 				`Couldn't find the resume by candidateId (${candidateId}).`,

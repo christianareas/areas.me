@@ -12,7 +12,7 @@ export function validateUuidFormat(uuid: string | string[]) {
 		if (!validate(uuid)) {
 			return NextResponse.json(
 				{
-					error: `The UUID ${uuid} isn't valid.`,
+					error: `The UUID ${uuid} isn't a valid UUID.`,
 				},
 				{ status: 400 },
 			)
@@ -22,7 +22,7 @@ export function validateUuidFormat(uuid: string | string[]) {
 	return null
 }
 
-// Validate data found by candidate ID.
+// Validate data found by ID.
 export function validateDataFound<T>(
 	data: T | null,
 	dataName: string,

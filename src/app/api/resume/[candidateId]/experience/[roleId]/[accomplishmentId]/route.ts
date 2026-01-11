@@ -1,9 +1,9 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/role/accomplishment/sql"
-import { getRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findAccomplishmentByCandidateIdRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/role/accomplishment/sql"
+import { findRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role/sql"
 
 //
 // GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
@@ -32,7 +32,7 @@ export async function GET(
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	const candidate = await findCandidateByCandidateId(candidateId)
 
 	// Validate the candidate found.
 	const candidateValidationResponse = validateDataFound(
@@ -43,7 +43,7 @@ export async function GET(
 	if (candidateValidationResponse) return candidateValidationResponse
 
 	// Role.
-	const role = await getRoleByCandidateIdAndRoleId(candidateId, roleId)
+	const role = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
 	// Validate the role found.
 	const roleValidationResponse = validateDataFound(role, "role", {
@@ -54,7 +54,7 @@ export async function GET(
 
 	// Accomplishment.
 	const accomplishment =
-		await getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
+		await findAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
 			candidateId,
 			roleId,
 			accomplishmentId,
