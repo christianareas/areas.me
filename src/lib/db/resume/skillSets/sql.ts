@@ -82,7 +82,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 }
 
 //
-// Skills.
+// Skill.
 //
 
 // Find skill by candidate ID, skill set ID, and skill ID.

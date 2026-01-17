@@ -2,7 +2,7 @@
 import type { Role, SkillSet } from "@/types/resume"
 
 // Types.
-type ExperienceRow = {
+type RoleRow = {
 	candidateId: string
 	roleId: string
 	company: string
@@ -24,8 +24,8 @@ type SkillSetRow = {
 	sortOrder: number | null
 }
 
-// Transform experience rows to an array of objects.
-export function transformExperienceRowsToObjects(rows: ExperienceRow[]) {
+// Transform role rows to an array of objects.
+export function transformRoleRowsToObjects(rows: RoleRow[]) {
 	// If there are no rows, return an empty array.
 	if (rows.length === 0) return []
 

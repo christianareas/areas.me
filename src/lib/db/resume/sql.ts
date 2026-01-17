@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findEducationByCandidateId } from "@/lib/db/resume/education/sql"
-import { findExperienceByCandidateId } from "@/lib/db/resume/experience/sql"
+import { findRolesByCandidateId } from "@/lib/db/resume/experience/sql"
 import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 import { candidates } from "@/lib/db/schema"
 
@@ -17,7 +17,7 @@ export async function findResumeByCandidateId(candidateId: string) {
 
 	// Resume.
 	const [experience, skillSets, education] = await Promise.all([
-		findExperienceByCandidateId(candidateId),
+		findRolesByCandidateId(candidateId),
 		findSkillSetsByCandidateId(candidateId),
 		findEducationByCandidateId(candidateId),
 	])

@@ -1,7 +1,7 @@
 // Dependencies.
 import { and, desc, eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { transformExperienceRowsToObjects } from "@/lib/db/resume/transform"
+import { transformRoleRowsToObjects } from "@/lib/db/resume/transform"
 import { accomplishments, roles } from "@/lib/db/schema"
 
 // Role fields.
@@ -22,11 +22,11 @@ const accomplishmentFields = {
 }
 
 //
-// Experience.
+// Roles.
 //
 
-// Find experience by candidate ID.
-export async function findExperienceByCandidateId(candidateId: string) {
+// Find roles by candidate ID.
+export async function findRolesByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
 	const roleRows = await db
 		.select({
@@ -51,7 +51,7 @@ export async function findExperienceByCandidateId(candidateId: string) {
 			accomplishments.sortOrder,
 		)
 
-	return transformExperienceRowsToObjects(roleRows)
+	return transformRoleRowsToObjects(roleRows)
 }
 
 //
@@ -80,7 +80,7 @@ export async function findRoleByCandidateIdAndRoleId(
 		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
 		.orderBy(accomplishments.sortOrder)
 
-	const [roleObject] = transformExperienceRowsToObjects(roleRows)
+	const [roleObject] = transformRoleRowsToObjects(roleRows)
 
 	return roleObject ?? null
 }
