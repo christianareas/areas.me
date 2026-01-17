@@ -4,20 +4,34 @@ import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 import type { Role } from "@/types/resume"
 
+// Role fields.
+const roleFields = {
+	candidateId: roles.candidateId,
+	roleId: roles.roleId,
+	company: roles.company,
+	role: roles.role,
+	startDate: roles.startDate,
+	endDate: roles.endDate,
+}
+
+// Accomplishment fields.
+const accomplishmentFields = {
+	accomplishmentId: accomplishments.accomplishmentId,
+	accomplishment: accomplishments.accomplishment,
+	sortOrder: accomplishments.sortOrder,
+}
+
+//
+// Experience.
+//
+
 // Find experience by candidate ID.
 export async function findExperienceByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
 	const roleRows = await db
 		.select({
-			candidateId: roles.candidateId,
-			roleId: roles.roleId,
-			company: roles.company,
-			role: roles.role,
-			startDate: roles.startDate,
-			endDate: roles.endDate,
-			accomplishmentId: accomplishments.accomplishmentId,
-			accomplishment: accomplishments.accomplishment,
-			sortOrder: accomplishments.sortOrder,
+			...roleFields,
+			...accomplishmentFields,
 		})
 		.from(roles)
 		.leftJoin(
