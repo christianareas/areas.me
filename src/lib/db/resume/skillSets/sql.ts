@@ -77,6 +77,7 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 		.orderBy(skills.sortOrder)
 
 	const [skillSetObject] = transformSkillSetRowsToObjects(skillSetRows)
+
 	return skillSetObject ?? null
 }
 

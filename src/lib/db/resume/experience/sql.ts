@@ -53,3 +53,71 @@ export async function findExperienceByCandidateId(candidateId: string) {
 
 	return transformExperienceRowsToObjects(roleRows)
 }
+
+//
+// Role.
+//
+
+// Find role by candidate ID and role ID.
+export async function findRoleByCandidateIdAndRoleId(
+	candidateId: string,
+	roleId: string,
+) {
+	// Select role and accomplishments.
+	const roleRows = await db
+		.select({
+			...roleFields,
+			...accomplishmentFields,
+		})
+		.from(roles)
+		.leftJoin(
+			accomplishments,
+			and(
+				eq(roles.candidateId, accomplishments.candidateId),
+				eq(roles.roleId, accomplishments.roleId),
+			),
+		)
+		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
+		.orderBy(accomplishments.sortOrder)
+
+	const [roleObject] = transformExperienceRowsToObjects(roleRows)
+
+	return roleObject ?? null
+}
+
+//
+// Accomplishment.
+//
+
+// Find accomplishment by candidate ID, role ID, and accomplishment ID.
+export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+	candidateId: string,
+	roleId: string,
+	accomplishmentId: string,
+) {
+	// Select role and accomplishments.
+	const [accomplishment] = await db
+		.select({
+			candidateId: roles.candidateId,
+			roleId: roles.roleId,
+			...accomplishmentFields,
+		})
+		.from(roles)
+		.innerJoin(
+			accomplishments,
+			and(
+				eq(roles.candidateId, accomplishments.candidateId),
+				eq(roles.roleId, accomplishments.roleId),
+			),
+		)
+		.where(
+			and(
+				eq(roles.candidateId, candidateId),
+				eq(roles.roleId, roleId),
+				eq(accomplishments.accomplishmentId, accomplishmentId),
+			),
+		)
+		.limit(1)
+
+	return accomplishment ?? null
+}

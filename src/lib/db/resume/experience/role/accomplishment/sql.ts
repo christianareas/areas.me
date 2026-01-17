@@ -4,7 +4,7 @@ import { db } from "@/lib/db"
 import { accomplishments, roles } from "@/lib/db/schema"
 
 // Find accomplishment by candidate ID, role ID, and accomplishment ID.
-export async function findAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
+export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
 	accomplishmentId: string,
