@@ -2,6 +2,18 @@
 import type { SkillSet } from "@/types/resume"
 
 // Types.
+type ExperienceRow = {
+	candidateId: string
+	roleId: string
+	company: string
+	role: string
+	startDate: Date | null
+	endDate: Date | null
+	accomplishmentId: string | null
+	accomplishment: string | null
+	sortOrder: number | null
+}
+
 type SkillSetRow = {
 	candidateId: string
 	skillSetId: string
