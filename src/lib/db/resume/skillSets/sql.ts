@@ -1,8 +1,23 @@
 // Dependencies.
 import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db"
+import { transformSkillSetRowsToObjects } from "@/lib/db/resume/transform"
 import { skillSets, skills } from "@/lib/db/schema"
-import type { SkillSet } from "@/types/resume"
+
+// Skill set fields.
+const skillSetFields = {
+	candidateId: skillSets.candidateId,
+	skillSetId: skillSets.skillSetId,
+	skillSetType: skillSets.skillSetType,
+	skillSetSortOrder: skillSets.sortOrder,
+}
+
+// Skill fields.
+const skillFields = {
+	skillId: skills.skillId,
+	skill: skills.skill,
+	sortOrder: skills.sortOrder,
+}
 
 //
 // Skill sets.
@@ -13,13 +28,8 @@ export async function findSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets and skills.
 	const skillSetRows = await db
 		.select({
-			candidateId: skillSets.candidateId,
-			skillSetId: skillSets.skillSetId,
-			skillSetType: skillSets.skillSetType,
-			skillSetSortOrder: skillSets.sortOrder,
-			skillId: skills.skillId,
-			skill: skills.skill,
-			skillSortOrder: skills.sortOrder,
+			...skillSetFields,
+			...skillFields,
 		})
 		.from(skillSets)
 		.leftJoin(
@@ -32,41 +42,7 @@ export async function findSkillSetsByCandidateId(candidateId: string) {
 		.where(eq(skillSets.candidateId, candidateId))
 		.orderBy(skillSets.sortOrder, skillSets.skillSetId, skills.sortOrder)
 
-	// If there are no skill sets, return an empty array.
-	if (skillSetRows.length === 0) return []
-
-	// Convert the database rows to an object.
-	const skillSetsObject: SkillSet[] = []
-	let currentSkillSetObject: SkillSet | null = null
-	for (const skillSetRow of skillSetRows) {
-		if (
-			!currentSkillSetObject ||
-			currentSkillSetObject.skillSetId !== skillSetRow.skillSetId
-		) {
-			currentSkillSetObject = {
-				candidateId: skillSetRow.candidateId,
-				skillSetId: skillSetRow.skillSetId,
-				skillSetType: skillSetRow.skillSetType,
-				sortOrder: skillSetRow.skillSetSortOrder,
-				skills: [],
-			}
-			skillSetsObject.push(currentSkillSetObject)
-		}
-
-		if (
-			skillSetRow.skillId !== null &&
-			skillSetRow.skill !== null &&
-			skillSetRow.skillSortOrder !== null
-		) {
-			currentSkillSetObject.skills.push({
-				skillId: skillSetRow.skillId,
-				skill: skillSetRow.skill,
-				sortOrder: skillSetRow.skillSortOrder,
-			})
-		}
-	}
-
-	return skillSetsObject
+	return transformSkillSetRowsToObjects(skillSetRows)
 }
 
 //
@@ -81,13 +57,8 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 	// Select skill set and skills.
 	const skillSetRows = await db
 		.select({
-			candidateId: skillSets.candidateId,
-			skillSetId: skillSets.skillSetId,
-			skillSetType: skillSets.skillSetType,
-			skillSetSortOrder: skillSets.sortOrder,
-			skillId: skills.skillId,
-			skill: skills.skill,
-			skillSortOrder: skills.sortOrder,
+			...skillSetFields,
+			...skillFields,
 		})
 		.from(skillSets)
 		.leftJoin(
@@ -105,31 +76,8 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 		)
 		.orderBy(skills.sortOrder)
 
-	// If there’s no skill set, return null.
-	if (skillSetRows.length === 0) return null
-
-	// Convert the database rows to an object.
-	const firstSkillSetRow = skillSetRows[0]
-	const skillSetObject = {
-		candidateId: firstSkillSetRow.candidateId,
-		skillSetId: firstSkillSetRow.skillSetId,
-		skillSetType: firstSkillSetRow.skillSetType,
-		sortOrder: firstSkillSetRow.skillSetSortOrder,
-		skills: skillSetRows
-			.filter(
-				(skillRow) =>
-					skillRow.skillId !== null &&
-					skillRow.skill !== null &&
-					skillRow.skillSortOrder !== null,
-			)
-			.map((skillRow) => ({
-				skillId: skillRow.skillId,
-				skill: skillRow.skill,
-				sortOrder: skillRow.skillSortOrder,
-			})),
-	}
-
-	return skillSetObject
+	const [skillSetObject] = transformSkillSetRowsToObjects(skillSetRows)
+	return skillSetObject ?? null
 }
 
 //
@@ -147,9 +95,7 @@ export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 		.select({
 			candidateId: skillSets.candidateId,
 			skillSetId: skillSets.skillSetId,
-			skillId: skills.skillId,
-			skill: skills.skill,
-			sortOrder: skills.sortOrder,
+			...skillFields,
 		})
 		.from(skillSets)
 		.innerJoin(
