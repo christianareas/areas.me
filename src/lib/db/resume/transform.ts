@@ -1,5 +1,5 @@
 // Dependencies.
-import type { SkillSet } from "@/types/resume"
+import type { Role, SkillSet } from "@/types/resume"
 
 // Types.
 type ExperienceRow = {
@@ -7,8 +7,8 @@ type ExperienceRow = {
 	roleId: string
 	company: string
 	role: string
-	startDate: Date | null
-	endDate: Date | null
+	startDate: string
+	endDate: string | null
 	accomplishmentId: string | null
 	accomplishment: string | null
 	sortOrder: number | null
@@ -24,43 +24,76 @@ type SkillSetRow = {
 	sortOrder: number | null
 }
 
-// Transform skill set rows to objects.
-export function transformSkillSetRowsToObjects(skillSetRows: SkillSetRow[]) {
+// Transform experience rows to an array of objects.
+export function transformExperienceRowsToObjects(rows: ExperienceRow[]) {
 	// If there are no rows, return an empty array.
-	if (skillSetRows.length === 0) return []
+	if (rows.length === 0) return []
 
-	// Transform rows to objects.
-	const skillSetsObject: SkillSet[] = []
-	let currentSkillSetObject: SkillSet | null = null
-	for (const skillSetRow of skillSetRows) {
-		// If this is a new skill set, create a new skill set object.
-		if (
-			!currentSkillSetObject ||
-			currentSkillSetObject.skillSetId !== skillSetRow.skillSetId
-		) {
-			currentSkillSetObject = {
-				candidateId: skillSetRow.candidateId,
-				skillSetId: skillSetRow.skillSetId,
-				skillSetType: skillSetRow.skillSetType,
-				sortOrder: skillSetRow.skillSetSortOrder,
-				skills: [],
+	// Transform rows to an array of objects.
+	const arrayOfObjects: Role[] = []
+	let currentObject: Role | null = null
+	for (const row of rows) {
+		// If it’s a new role, create a new role object.
+		if (!currentObject || currentObject.roleId !== row.roleId) {
+			currentObject = {
+				candidateId: row.candidateId,
+				roleId: row.roleId,
+				company: row.company,
+				role: row.role,
+				startDate: row.startDate,
+				endDate: row.endDate,
+				accomplishments: [],
 			}
-			skillSetsObject.push(currentSkillSetObject)
+			arrayOfObjects.push(currentObject)
 		}
 
-		// If there is a skill, add it to the current skill set object.
+		// If there’s an accomplishment, add it to the current role object.
 		if (
-			skillSetRow.skillId !== null &&
-			skillSetRow.skill !== null &&
-			skillSetRow.sortOrder !== null
+			row.accomplishmentId !== null &&
+			row.accomplishment !== null &&
+			row.sortOrder !== null
 		) {
-			currentSkillSetObject.skills.push({
-				skillId: skillSetRow.skillId,
-				skill: skillSetRow.skill,
-				sortOrder: skillSetRow.sortOrder,
+			currentObject.accomplishments.push({
+				accomplishmentId: row.accomplishmentId,
+				accomplishment: row.accomplishment,
+				sortOrder: row.sortOrder,
 			})
 		}
 	}
 
-	return skillSetsObject
+	return arrayOfObjects
+}
+
+// Transform skill set rows to an array of objects.
+export function transformSkillSetRowsToObjects(rows: SkillSetRow[]) {
+	// If there are no rows, return an empty array.
+	if (rows.length === 0) return []
+
+	// Transform rows to an array of objects.
+	const arrayOfObjects: SkillSet[] = []
+	let currentObject: SkillSet | null = null
+	for (const row of rows) {
+		// If it’s a new skill set, create a new skill set object.
+		if (!currentObject || currentObject.skillSetId !== row.skillSetId) {
+			currentObject = {
+				candidateId: row.candidateId,
+				skillSetId: row.skillSetId,
+				skillSetType: row.skillSetType,
+				sortOrder: row.skillSetSortOrder,
+				skills: [],
+			}
+			arrayOfObjects.push(currentObject)
+		}
+
+		// If there’s a skill, add it to the current skill set object.
+		if (row.skillId !== null && row.skill !== null && row.sortOrder !== null) {
+			currentObject.skills.push({
+				skillId: row.skillId,
+				skill: row.skill,
+				sortOrder: row.sortOrder,
+			})
+		}
+	}
+
+	return arrayOfObjects
 }

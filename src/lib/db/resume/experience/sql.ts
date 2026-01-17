@@ -1,8 +1,8 @@
 // Dependencies.
 import { and, desc, eq, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
+import { transformExperienceRowsToObjects } from "@/lib/db/resume/transform"
 import { accomplishments, roles } from "@/lib/db/schema"
-import type { Role } from "@/types/resume"
 
 // Role fields.
 const roleFields = {
@@ -51,37 +51,5 @@ export async function findExperienceByCandidateId(candidateId: string) {
 			accomplishments.sortOrder,
 		)
 
-	// If there are no roles, return an empty array.
-	if (roleRows.length === 0) return []
-
-	// Convert the database rows to an object.
-	const rolesObject: Role[] = []
-	let currentRoleObject: Role | null = null
-	for (const roleRow of roleRows) {
-		if (!currentRoleObject || currentRoleObject.roleId !== roleRow.roleId) {
-			currentRoleObject = {
-				candidateId: roleRow.candidateId,
-				roleId: roleRow.roleId,
-				company: roleRow.company,
-				role: roleRow.role,
-				startDate: roleRow.startDate,
-				endDate: roleRow.endDate,
-				accomplishments: [],
-			}
-			rolesObject.push(currentRoleObject)
-		}
-		if (
-			roleRow.accomplishmentId !== null &&
-			roleRow.accomplishment !== null &&
-			roleRow.sortOrder !== null
-		) {
-			currentRoleObject.accomplishments.push({
-				accomplishmentId: roleRow.accomplishmentId,
-				accomplishment: roleRow.accomplishment,
-				sortOrder: roleRow.sortOrder,
-			})
-		}
-	}
-
-	return rolesObject
+	return transformExperienceRowsToObjects(roleRows)
 }
