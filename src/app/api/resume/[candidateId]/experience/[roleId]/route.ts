@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { findRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role/sql"
+import { findRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/sql"
 
 //
 // GET /api/resume/[candidateId]/experience/[roleId].

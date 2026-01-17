@@ -2,8 +2,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/role/accomplishment/sql"
-import { findRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role/sql"
+import {
+	findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId,
+	findRoleByCandidateIdAndRoleId,
+} from "@/lib/db/resume/experience/sql"
 
 //
 // GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
