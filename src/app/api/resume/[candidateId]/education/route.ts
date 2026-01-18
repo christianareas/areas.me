@@ -1,8 +1,79 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
-import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getEducationByCandidateId } from "@/lib/db/resume/education/sql"
+import { authorizeApiToken } from "@/lib/api/auth"
+import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/contract"
+import {
+	parseJson,
+	validateDataFound,
+	validateRequestBodyAgainstSchema,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import {
+	createCredentialByCandidateId,
+	findEducationByCandidateId,
+} from "@/lib/db/resume/education/sql"
+
+//
+// POST /api/resume/[candidateId]/education.
+//
+export async function POST(
+	request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateErrorResponse) return candidateErrorResponse
+
+	// If parsing the request body fails, return 400.
+	const requestBodyOrErrorResponse = await parseJson(request)
+	if (requestBodyOrErrorResponse instanceof NextResponse)
+		return requestBodyOrErrorResponse
+
+	// Request body.
+	const requestBody = requestBodyOrErrorResponse
+
+	// If validating the request body against the schema fails, return 400.
+	const validatedRequestBodyOrErrorResponse = validateRequestBodyAgainstSchema(
+		requestBody,
+		credentialCreateSchema,
+	)
+	if (validatedRequestBodyOrErrorResponse instanceof NextResponse)
+		return validatedRequestBodyOrErrorResponse
+
+	// Validated request body.
+	const validatedRequestBody = validatedRequestBodyOrErrorResponse
+
+	// Created credential.
+	const createdCredential = await createCredentialByCandidateId(
+		candidateId,
+		validatedRequestBody,
+	)
+
+	// If the credential’s created, return 201.
+	return NextResponse.json({ credential: createdCredential }, { status: 201 })
+}
 
 //
 // GET /api/resume/[candidateId]/education.
@@ -14,23 +85,32 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
-	// Education.
-	const education = await getEducationByCandidateId(candidateId)
+	// Found education.
+	const foundEducation = await findEducationByCandidateId(candidateId)
 
-	return NextResponse.json({ education }, { status: 200 })
+	// If the education’s not found, return 404.
+	const educationErrorResponse = validateDataFound(
+		foundEducation,
+		"education",
+		{ candidateId },
+	)
+	if (educationErrorResponse) return educationErrorResponse
+
+	// If the education’s found, return 200.
+	return NextResponse.json({ education: foundEducation }, { status: 200 })
 }
