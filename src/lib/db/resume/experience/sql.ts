@@ -22,7 +22,7 @@ const accomplishmentFields = {
 }
 
 //
-// Roles.
+// Experience.
 //
 
 // Find roles by candidate ID.
@@ -120,4 +120,25 @@ export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentI
 		.limit(1)
 
 	return accomplishment ?? null
+}
+
+// Delete accomplishment by candidate ID, role ID, and accomplishment ID.
+export async function deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+	candidateId: string,
+	roleId: string,
+	accomplishmentId: string,
+) {
+	// Delete accomplishment.
+	const [deletedAccomplishment] = await db
+		.delete(accomplishments)
+		.where(
+			and(
+				eq(accomplishments.candidateId, candidateId),
+				eq(accomplishments.roleId, roleId),
+				eq(accomplishments.accomplishmentId, accomplishmentId),
+			),
+		)
+		.returning({ candidateId: accomplishments.candidateId })
+
+	return deletedAccomplishment ?? null
 }

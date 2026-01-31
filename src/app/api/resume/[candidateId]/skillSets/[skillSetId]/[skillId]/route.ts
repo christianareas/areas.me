@@ -1,8 +1,10 @@
 // Dependencies.
 import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import {
+	deleteSkillByCandidateIdAndSkillSetIdAndSkillId,
 	findSkillByCandidateIdAndSkillSetIdAndSkillId,
 	findSkillSetByCandidateIdAndSkillSetId,
 } from "@/lib/db/resume/skillSets/sql"
@@ -25,52 +27,122 @@ export async function GET(
 	// Candidate, skill set, skill IDs.
 	const { candidateId, skillSetId, skillId } = await params
 
-	// Validate the candidate, skill set, and skill IDs are valid UUIDs.
-	const uuidFormatValidationResponse = validateUuidFormat([
+	// If the candidate, skill set, and skill IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
 		candidateId,
 		skillSetId,
 		skillId,
 	])
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await findCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
-	// Skill set.
-	const skillSet = await findSkillSetByCandidateIdAndSkillSetId(
+	// Found skill set.
+	const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
 		candidateId,
 		skillSetId,
 	)
 
-	// Validate the skill set found.
-	const skillSetValidationResponse = validateDataFound(skillSet, "skill set", {
-		candidateId,
+	// If the skill set’s not found, return 404.
+	const skillSetErrorResponse = validateDataFound(foundSkillSet, "skill set", {
 		skillSetId,
 	})
-	if (skillSetValidationResponse) return skillSetValidationResponse
+	if (skillSetErrorResponse) return skillSetErrorResponse
 
-	// Skill.
-	const skill = await findSkillByCandidateIdAndSkillSetIdAndSkillId(
+	// Found skill.
+	const foundSkill = await findSkillByCandidateIdAndSkillSetIdAndSkillId(
 		candidateId,
 		skillSetId,
 		skillId,
 	)
 
-	// Validate the skill found.
-	const skillValidationResponse = validateDataFound(skill, "skill", {
+	// If the skill’s not found, return 404.
+	const skillErrorResponse = validateDataFound(foundSkill, "skill", {
+		skillId,
+	})
+	if (skillErrorResponse) return skillErrorResponse
+
+	return NextResponse.json({ skill: foundSkill }, { status: 200 })
+}
+
+//
+// DELETE /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
+//
+export async function DELETE(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: Promise<{
+			candidateId: string
+			skillSetId: string
+			skillId: string
+		}>
+	},
+) {
+	// Candidate, skill set, skill IDs.
+	const { candidateId, skillSetId, skillId } = await params
+
+	// If the candidate, skill set, and skill IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
 		candidateId,
 		skillSetId,
 		skillId,
-	})
-	if (skillValidationResponse) return skillValidationResponse
+	])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	return NextResponse.json({ skill }, { status: 200 })
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
+		"candidate",
+		{ candidateId },
+	)
+	if (candidateErrorResponse) return candidateErrorResponse
+
+	// Found skill set.
+	const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
+		candidateId,
+		skillSetId,
+	)
+
+	// If the skill set’s not found, return 404.
+	const skillSetErrorResponse = validateDataFound(foundSkillSet, "skill set", {
+		skillSetId,
+	})
+	if (skillSetErrorResponse) return skillSetErrorResponse
+
+	// Deleted skill.
+	const deletedSkill = await deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
+		candidateId,
+		skillSetId,
+		skillId,
+	)
+
+	// If the skill’s not found, return 404.
+	const skillNotFoundResponse = validateDataFound(deletedSkill, "skill", {
+		skillId,
+	})
+	if (skillNotFoundResponse) return skillNotFoundResponse
+
+	// If the skill’s found and deleted, return 204.
+	return new NextResponse(null, { status: 204 })
 }

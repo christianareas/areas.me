@@ -117,3 +117,24 @@ export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 
 	return skill ?? null
 }
+
+// Delete skill by candidate ID, skill set ID, and skill ID.
+export async function deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
+	candidateId: string,
+	skillSetId: string,
+	skillId: string,
+) {
+	// Delete skill.
+	const [deletedSkill] = await db
+		.delete(skills)
+		.where(
+			and(
+				eq(skills.candidateId, candidateId),
+				eq(skills.skillSetId, skillSetId),
+				eq(skills.skillId, skillId),
+			),
+		)
+		.returning({ candidateId: skills.candidateId })
+
+	return deletedSkill ?? null
+}
