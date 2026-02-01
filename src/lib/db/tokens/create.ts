@@ -1,7 +1,6 @@
 // Dependencies.
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { parseArgs } from "node:util"
-import { config } from "dotenv"
 import { eq } from "drizzle-orm"
 import { validate as validateUuid } from "uuid"
 import { db } from "@/lib/db"
@@ -14,9 +13,6 @@ type Args = {
 	tokenScopes: string[]
 	tokenExpiresAt: Date
 }
-
-// Environment variables.
-config({ path: ".env.local" })
 
 // Throw a CLI error message.
 function throwCliErrorMessage(message: string): never {
