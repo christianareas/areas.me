@@ -1,5 +1,6 @@
 // Dependencies.
 import { and, eq } from "drizzle-orm"
+import type { SkillUpdate } from "@/lib/api/schemas/resume/skillSets/contract"
 import { db } from "@/lib/db"
 import { transformSkillSetRowsToObjects } from "@/lib/db/resume/transform"
 import { skillSets, skills } from "@/lib/db/schema"
@@ -116,6 +117,32 @@ export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 		.limit(1)
 
 	return skill ?? null
+}
+
+// Update skill by candidate ID, skill set ID, and skill ID.
+export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
+	candidateId: string,
+	skillSetId: string,
+	skillId: string,
+	skillUpdate: SkillUpdate,
+) {
+	// Update skill.
+	const [updatedSkill] = await db
+		.update(skills)
+		.set({ ...skillUpdate, updatedAt: new Date() })
+		.where(
+			and(
+				eq(skills.candidateId, candidateId),
+				eq(skills.skillSetId, skillSetId),
+				eq(skills.skillId, skillId),
+			),
+		)
+		.returning({
+			...skillFields,
+			updatedAt: skills.updatedAt,
+		})
+
+	return updatedSkill ?? null
 }
 
 // Delete skill by candidate ID, skill set ID, and skill ID.

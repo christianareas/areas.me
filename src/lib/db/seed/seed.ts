@@ -126,7 +126,7 @@ async function main() {
 
 	// Upsert skills.
 	for (const skillSet of skillSetsData) {
-		for (const skill of skillSet.skills) {
+		for (const skill of skillSet.skills ?? []) {
 			statements.push(
 				db
 					.insert(skills)
@@ -183,7 +183,7 @@ async function main() {
 	console.log("Seeded skill sets:", skillSetsData.length)
 	console.log(
 		"Seeded skills:",
-		skillSetsData.reduce((sum, s) => sum + s.skills.length, 0),
+		skillSetsData.reduce((sum, s) => sum + (s.skills?.length ?? 0), 0),
 	)
 	console.log("Seeded credentials:", education.length)
 }

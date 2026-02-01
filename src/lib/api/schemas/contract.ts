@@ -45,26 +45,41 @@ export const candidateSchema = z.object(candidateFields).strict()
 // Experience.
 //
 
+// Accomplishment fields.
+export const accomplishmentFields = {
+	candidateId: uuidSchema,
+	roleId: uuidSchema,
+	accomplishmentId: uuidSchema,
+	accomplishment: z
+		.string()
+		.min(
+			1,
+			"The candidate's accomplishment must contain at least one character.",
+		),
+	sortOrder: z.number().int(),
+}
+
+// Role fields.
+export const roleFields = {
+	candidateId: uuidSchema,
+	roleId: uuidSchema,
+	company: z
+		.string()
+		.min(1, "The candidate's company must contain at least one character."),
+	role: z
+		.string()
+		.min(1, "The candidate's role must contain at least one character."),
+	startDate: dateStringSchema,
+	endDate: dateStringSchema.nullable(),
+}
+
 // Accomplishment schema.
-export const accomplishmentSchema = z
-	.object({
-		candidateId: uuidSchema,
-		roleId: uuidSchema,
-		accomplishmentId: uuidSchema,
-		accomplishment: z.string(),
-		sortOrder: z.number().int(),
-	})
-	.strict()
+export const accomplishmentSchema = z.object(accomplishmentFields).strict()
 
 // Role schema.
 export const roleSchema = z
 	.object({
-		candidateId: uuidSchema,
-		roleId: uuidSchema,
-		company: z.string(),
-		role: z.string(),
-		startDate: dateStringSchema,
-		endDate: dateStringSchema.nullable(),
+		...roleFields,
 		accomplishments: z.array(accomplishmentSchema).optional(),
 	})
 	.strict()
@@ -73,33 +88,38 @@ export const roleSchema = z
 // Skill sets.
 //
 
+// Skill fields.
+export const skillFields = {
+	candidateId: uuidSchema,
+	skillSetId: uuidSchema,
+	skillId: uuidSchema,
+	skill: z
+		.string()
+		.min(1, "The candidate's skill must contain at least one character."),
+	sortOrder: z.number().int(),
+}
+
+// Skill set fields.
+export const skillSetFields = {
+	candidateId: uuidSchema,
+	skillSetId: uuidSchema,
+	skillSetType: z
+		.string()
+		.min(
+			1,
+			"The candidate's skill set type must contain at least one character.",
+		),
+	sortOrder: z.number().int(),
+}
+
 // Skill schema.
-export const skillSchema = z
-	.object({
-		candidateId: uuidSchema,
-		skillSetId: uuidSchema,
-		skillId: uuidSchema,
-		skill: z.string(),
-		sortOrder: z.number().int(),
-	})
-	.strict()
+export const skillSchema = z.object(skillFields).strict()
 
 // Skill set schema.
 export const skillSetSchema = z
 	.object({
-		candidateId: uuidSchema,
-		skillSetId: uuidSchema,
-		skillSetType: z.enum([
-			"apps",
-			"command-line-tools",
-			"databases",
-			"frameworks",
-			"cloud-deployments",
-			"languages",
-			"specifications",
-		]),
-		sortOrder: z.number().int(),
-		skills: z.array(skillSchema),
+		...skillSetFields,
+		skills: z.array(skillSchema).optional(),
 	})
 	.strict()
 
