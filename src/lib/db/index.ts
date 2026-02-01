@@ -1,5 +1,11 @@
 // Dependencies.
-import { sql } from "@vercel/postgres"
-import { drizzle } from "drizzle-orm/vercel-postgres"
+import { neon } from "@neondatabase/serverless"
+import { drizzle } from "drizzle-orm/neon-http"
 
-export const db = drizzle(sql)
+// Database URL.
+const databaseUrl = process.env.POSTGRES_URL
+if (!databaseUrl) {
+	throw new Error("There's no POSTGRES_URL environment variable.")
+}
+
+export const db = drizzle({ client: neon(databaseUrl) })
