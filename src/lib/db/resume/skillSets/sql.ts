@@ -1,6 +1,10 @@
 // Dependencies.
+import { randomUUID } from "node:crypto"
 import { and, eq } from "drizzle-orm"
-import type { SkillUpdate } from "@/lib/api/schemas/resume/skillSets/contract"
+import type {
+	SkillCreate,
+	SkillUpdate,
+} from "@/lib/api/schemas/resume/skillSets/contract"
 import { db } from "@/lib/db"
 import { transformSkillSetRowsToObjects } from "@/lib/db/resume/transform"
 import { skillSets, skills } from "@/lib/db/schema"
@@ -85,6 +89,31 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 //
 // Skill.
 //
+
+// Create skill by candidate ID and skill set ID.
+export async function createSkillByCandidateIdAndSkillSetId(
+	candidateId: string,
+	skillSetId: string,
+	skillCreate: SkillCreate,
+) {
+	// Insert skill.
+	const [newSkill] = await db
+		.insert(skills)
+		.values({
+			...skillCreate,
+			candidateId,
+			skillSetId,
+			skillId: randomUUID(),
+		})
+		.returning({
+			candidateId: skills.candidateId,
+			skillSetId: skills.skillSetId,
+			...skillFields,
+			createdAt: skills.createdAt,
+		})
+
+	return newSkill ?? null
+}
 
 // Find skill by candidate ID, skill set ID, and skill ID.
 export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
