@@ -21,8 +21,8 @@
 		"vercel:env:pull": "vercel env pull .env.local",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:seed": "node --env-file=.env.local --import tsx src/lib/db/seed/seed.ts",
-		"db:token:create": "node --env-file=.env.local --import tsx src/lib/db/tokens/create.ts"
+		"db:seed": "tsx src/lib/db/seed/seed.ts",
+		"db:token:create": "tsx src/lib/db/tokens/create.ts"
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.25.3",

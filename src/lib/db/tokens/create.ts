@@ -1,10 +1,13 @@
 // Dependencies.
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { parseArgs } from "node:util"
+import { config } from "dotenv"
 import { eq } from "drizzle-orm"
 import { validate as validateUuid } from "uuid"
-import { db } from "@/lib/db"
 import { apiTokens, candidates } from "@/lib/db/schema"
+
+// Environment variables.
+config({ path: ".env.local" })
 
 // Types.
 type Args = {
@@ -101,6 +104,7 @@ function parseCliArgs(argv: string[]): Args {
 
 // Create the API token.
 async function main() {
+	const { db } = await import("@/lib/db")
 	const { candidateId, tokenName, tokenScopes, tokenExpiresAt } = parseCliArgs(
 		process.argv.slice(2),
 	)
