@@ -1,5 +1,10 @@
 // Dependencies.
+import { randomUUID } from "node:crypto"
 import { and, desc, eq, sql } from "drizzle-orm"
+import type {
+	AccomplishmentCreate,
+	AccomplishmentUpdate,
+} from "@/lib/api/schemas/resume/experience/contract"
 import { db } from "@/lib/db"
 import { transformRoleRowsToObjects } from "@/lib/db/resume/transform"
 import { accomplishments, roles } from "@/lib/db/schema"
@@ -89,6 +94,31 @@ export async function findRoleByCandidateIdAndRoleId(
 // Accomplishment.
 //
 
+// Create accomplishment by candidate ID and role ID.
+export async function createAccomplishmentByCandidateIdAndRoleId(
+	candidateId: string,
+	roleId: string,
+	accomplishmentCreate: AccomplishmentCreate,
+) {
+	// Insert accomplishment.
+	const [newAccomplishment] = await db
+		.insert(accomplishments)
+		.values({
+			...accomplishmentCreate,
+			candidateId,
+			roleId,
+			accomplishmentId: randomUUID(),
+		})
+		.returning({
+			candidateId: accomplishments.candidateId,
+			roleId: accomplishments.roleId,
+			...accomplishmentFields,
+			createdAt: accomplishments.createdAt,
+		})
+
+	return newAccomplishment ?? null
+}
+
 // Find accomplishment by candidate ID, role ID, and accomplishment ID.
 export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
@@ -120,6 +150,34 @@ export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentI
 		.limit(1)
 
 	return accomplishment ?? null
+}
+
+// Update accomplishment by candidate ID, role ID, and accomplishment ID.
+export async function updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+	candidateId: string,
+	roleId: string,
+	accomplishmentId: string,
+	accomplishmentUpdate: AccomplishmentUpdate,
+) {
+	// Update accomplishment.
+	const [updatedAccomplishment] = await db
+		.update(accomplishments)
+		.set({ ...accomplishmentUpdate, updatedAt: new Date() })
+		.where(
+			and(
+				eq(accomplishments.candidateId, candidateId),
+				eq(accomplishments.roleId, roleId),
+				eq(accomplishments.accomplishmentId, accomplishmentId),
+			),
+		)
+		.returning({
+			candidateId: accomplishments.candidateId,
+			roleId: accomplishments.roleId,
+			...accomplishmentFields,
+			updatedAt: accomplishments.updatedAt,
+		})
+
+	return updatedAccomplishment ?? null
 }
 
 // Delete accomplishment by candidate ID, role ID, and accomplishment ID.

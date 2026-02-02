@@ -167,6 +167,8 @@ export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
 			),
 		)
 		.returning({
+			candidateId: skills.candidateId,
+			skillSetId: skills.skillSetId,
 			...skillFields,
 			updatedAt: skills.updatedAt,
 		})
