@@ -7,6 +7,7 @@ Last updated: 2026-02-21
 - When asked for review, prioritize findings and call out exact file/line locations.
 - If the user asks not to edit files, provide only the required change instructions.
 - Commit messages should be simple, sentence case, past tense, and end with a period.
+- In comments, prefer contractions and typographic right single quotes (`’`) over straight apostrophes (`'`).
 
 ## Codebase Conventions
 - Section comment separators in `src/` use:
@@ -16,4 +17,3 @@ Last updated: 2026-02-21
 ## Commit Style (Observed)
 - Typical format: single-sentence summary with a period.
 - Common verbs: `Updated`, `Added`, `Refactored`, `Moved`, `Renamed`, `Deleted`, `Consolidated`.
-

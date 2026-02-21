@@ -39,7 +39,7 @@ export async function authorizeApiToken(
 	// Bearer token.
 	const [scheme, token] = authorizationHeader.trim().split(/\s+/)
 
-	// If the Authorization header is not a Bearer token, return an error.
+	// If the Authorization header isn’t a Bearer token, return an error.
 	if (scheme?.toLowerCase() !== "bearer" || !token) {
 		return NextResponse.json(
 			{ error: "You must send a Bearer token." },

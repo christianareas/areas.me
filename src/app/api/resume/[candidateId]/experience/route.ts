@@ -19,19 +19,19 @@ export async function GET(
 	const { candidateId } = await params
 
 	// If the candidate ID isn’t a valid UUID, return 400.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await findCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
 	// If the candidate’s not found, return 404.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
 	// Experience.
 	const experience = await findRolesByCandidateId(candidateId)

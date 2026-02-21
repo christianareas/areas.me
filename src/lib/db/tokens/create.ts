@@ -104,7 +104,7 @@ function parseCliArgs(argv: string[]): Args {
 		? new Date(argValues["expires-at"])
 		: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
 
-	// If expiration date isn't a date, throw an error.
+	// If expiration date isn’t a date, throw an error.
 	if (Number.isNaN(tokenExpiresAt.getTime())) {
 		throwCliErrorMessage("Your --expires-at value isn't a valid date.")
 	}

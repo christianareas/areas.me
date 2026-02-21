@@ -10,7 +10,7 @@ import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 
 // --------------------------------------------------------------------------------
-// GET /resume/[candidateId]/pdf.
+// GET /api/resume/[candidateId]/pdf.
 // --------------------------------------------------------------------------------
 
 export async function GET(
@@ -21,22 +21,22 @@ export async function GET(
 	const { candidateId } = await params
 
 	// If the candidate ID isn’t a valid UUID, return 400.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await findCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
 	// If the candidate’s not found, return 404.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
 	// Candidate name.
-	const { firstName, lastName } = candidate
+	const { firstName, lastName } = foundCandidate
 
 	// PDF name and location.
 	const pdfName = `${firstName} ${lastName}.pdf`

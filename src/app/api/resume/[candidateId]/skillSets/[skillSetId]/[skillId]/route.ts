@@ -82,6 +82,7 @@ export async function GET(
 	})
 	if (skillErrorResponse) return skillErrorResponse
 
+	// If the skill’s found, return 200.
 	return NextResponse.json({ skill: foundSkill }, { status: 200 })
 }
 

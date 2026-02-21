@@ -80,6 +80,7 @@ export async function GET(
 	)
 	if (accomplishmentErrorResponse) return accomplishmentErrorResponse
 
+	// If the accomplishment’s found, return 200.
 	return NextResponse.json(
 		{ accomplishment: foundAccomplishment },
 		{ status: 200 },

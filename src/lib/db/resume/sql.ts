@@ -18,7 +18,7 @@ export async function findResumeByCandidateId(candidateId: string) {
 	// Candidate.
 	const candidate = await findCandidateByCandidateId(candidateId)
 
-	// If there's no candidate, return null.
+	// If the candidate isn’t found, return null.
 	if (!candidate) return null
 
 	// Resume.
@@ -45,7 +45,10 @@ export async function replaceResumeByCandidateId(candidateId: string) {
 	return { candidate: { candidateId } }
 }
 
+// --------------------------------------------------------------------------------
 // Delete resume by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function deleteResumeByCandidateId(candidateId: string) {
 	// Delete candidate.
 	const [deletedCandidate] = await db
