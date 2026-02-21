@@ -1,5 +1,31 @@
 # Session Log
 
+## 2026-01-31 (Recovered From Local Session `019c17ab-cdd8-7570-a271-d6f09f9ac7c3`)
+- Topic: Career/portfolio strategy for Anthropic Senior Technical Documentation Specialist role.
+- Outcomes:
+  - Prioritized finishing API operations before chatbot/evals/full test suite.
+  - Considered MCP-first portfolio iteration (prompts + docs + Postman MCP requests) as a faster alternative to building a full chatbot immediately.
+  - Framed docs and developer education outputs as key differentiators for candidacy.
+
+## 2026-02-01 (Recovered From Local Session `019c1acb-d19e-7da2-829c-3bed931ca95b`)
+- Topic: Schema and API pattern reviews while implementing remaining resume operations.
+- Key findings/decisions:
+  - `skillSetSchema` needed dedicated `skillSetFields` for DB parity; avoid mixing with `skillFields`.
+  - Preferred contract structure: base-object spread style and consistent schema construction across sections.
+  - Reverted an attempted verbose primitive error-message approach after complexity/noise tradeoff.
+  - Kept optional top-level collection arrays (`experience`, `skillSets`, `education`) and accepted empty arrays.
+  - Established targeted `validateDataFound` identifiers for clearer not-found error messages.
+  - Confirmed route-shape decision to use nested POST collection endpoints for skills and accomplishments.
+- Follow-through in branch history:
+  - `22310f0`, `43a80fd`, `75a963e`, and related commits in this series reflect these patterns.
+
+## 2026-02-09 (Recovered From Local Session `019c45a0-696c-7183-9fe8-fa152e1454f7`)
+- Topic: Career fit vs Vercel DX Engineer role and application positioning.
+- Outcomes:
+  - Position AI-assisted development (Codex/Claude workflows) as a leverage multiplier, not as a replacement for technical ownership.
+  - Evaluate writing samples from existing developer-facing work (Postman MCP docs context and `openapi-hook`).
+  - Keep role-targeted narrative tied to shipped API/platform work in this repo.
+
 ## 2026-02-21 (Recovered From Git History)
 - Context source: recent `git log` on branch `add-remaining-api-operations`.
 - `ee6036d`: Updated comment style across codebase.
@@ -20,4 +46,3 @@
 - Commit created: `ee6036d` with message `Updated comment style across codebase.`
 - Request: set up persistent AI memory for this project (Codex now, Claude-compatible structure later).
 - Outcome: added `.ai/` memory files and `AGENTS.md` startup/closeout rules.
-

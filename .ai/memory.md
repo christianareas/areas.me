@@ -13,7 +13,15 @@ Last updated: 2026-02-21
 - Section comment separators in `src/` use:
   - `// --------------------------------------------------------------------------------`
 - API and DB work tends to favor explicit, readable naming over short aliases.
+- For nested resources, prefer collection POST routes:
+  - `/api/resume/[candidateId]/experience/[roleId]/accomplishments`
+  - `/api/resume/[candidateId]/skillSets/[skillSetId]/skills`
 
 ## Commit Style (Observed)
 - Typical format: single-sentence summary with a period.
 - Common verbs: `Updated`, `Added`, `Refactored`, `Moved`, `Renamed`, `Deleted`, `Consolidated`.
+
+## Memory Portability
+- Treat `.ai/*` as the source of truth for cross-machine memory.
+- Local Codex session logs under `~/.codex/sessions` are machine-local and should not be relied on as portable memory.
+- Promote durable session outcomes into `.ai/memory.md` and `.ai/sessions.md`.
