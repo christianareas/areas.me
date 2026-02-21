@@ -1,10 +1,16 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { eq } from "drizzle-orm"
 import type { CandidateUpdate } from "@/lib/api/schemas/resume/candidate/contract"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Candidate fields.
+// --------------------------------------------------------------------------------
+
 const candidateFields = {
 	candidateId: candidates.candidateId,
 	firstName: candidates.firstName,
@@ -19,7 +25,10 @@ const candidateFields = {
 	gitHub: candidates.gitHub,
 }
 
+// --------------------------------------------------------------------------------
 // Find first candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function findFirstCandidateId() {
 	// Select candidate.
 	const [candidate] = await db
@@ -33,7 +42,10 @@ export async function findFirstCandidateId() {
 	return candidate?.candidateId ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Find candidate by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function findCandidateByCandidateId(candidateId: string) {
 	// Select candidate.
 	const [candidate] = await db
@@ -45,7 +57,10 @@ export async function findCandidateByCandidateId(candidateId: string) {
 	return candidate ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Update candidate by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function updateCandidateByCandidateId(
 	candidateId: string,
 	candidateUpdate: CandidateUpdate,
@@ -62,3 +77,5 @@ export async function updateCandidateByCandidateId(
 
 	return updatedCandidate ?? null
 }
+
+// --------------------------------------------------------------------------------

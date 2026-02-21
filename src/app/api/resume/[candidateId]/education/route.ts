@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/contract"
@@ -14,9 +17,10 @@ import {
 	findEducationByCandidateId,
 } from "@/lib/db/resume/education/sql"
 
-//
+// --------------------------------------------------------------------------------
 // POST /api/resume/[candidateId]/education.
-//
+// --------------------------------------------------------------------------------
+
 export async function POST(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -75,9 +79,10 @@ export async function POST(
 	return NextResponse.json({ credential: createdCredential }, { status: 201 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/education.
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -114,3 +119,5 @@ export async function GET(
 	// If the education’s found, return 200.
 	return NextResponse.json({ education: foundEducation }, { status: 200 })
 }
+
+// --------------------------------------------------------------------------------

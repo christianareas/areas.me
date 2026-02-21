@@ -1,12 +1,18 @@
 export const revalidate = 0
 
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { notFound } from "next/navigation"
 import Resume from "@/components/Resume"
 import { findFirstCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findResumeByCandidateId } from "@/lib/db/resume/sql"
 
+// --------------------------------------------------------------------------------
 // Page.
+// --------------------------------------------------------------------------------
+
 export default async function Home() {
 	// Candidate ID.
 	const candidateId = await findFirstCandidateId()
@@ -19,3 +25,5 @@ export default async function Home() {
 	// Render.
 	return <Resume resume={resume} />
 }
+
+// --------------------------------------------------------------------------------

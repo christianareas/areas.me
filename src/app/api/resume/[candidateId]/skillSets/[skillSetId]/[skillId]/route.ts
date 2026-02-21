@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { skillUpdateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
@@ -16,9 +19,10 @@ import {
 	updateSkillByCandidateIdAndSkillSetIdAndSkillId,
 } from "@/lib/db/resume/skillSets/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{
@@ -81,9 +85,10 @@ export async function GET(
 	return NextResponse.json({ skill: foundSkill }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // PATCH /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
-//
+// --------------------------------------------------------------------------------
+
 export async function PATCH(
 	request: NextRequest,
 	{
@@ -174,9 +179,10 @@ export async function PATCH(
 	return NextResponse.json({ skill: updatedSkill }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // DELETE /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
-//
+// --------------------------------------------------------------------------------
+
 export async function DELETE(
 	request: NextRequest,
 	{
@@ -246,3 +252,5 @@ export async function DELETE(
 	// If the skill’s found and deleted, return 204.
 	return new NextResponse(null, { status: 204 })
 }
+
+// --------------------------------------------------------------------------------

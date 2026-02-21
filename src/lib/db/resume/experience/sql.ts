@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { randomUUID } from "node:crypto"
 import { and, desc, eq, sql } from "drizzle-orm"
 import type {
@@ -8,6 +11,10 @@ import type {
 import { db } from "@/lib/db"
 import { transformRoleRowsToObjects } from "@/lib/db/resume/transform"
 import { accomplishments, roles } from "@/lib/db/schema"
+
+// --------------------------------------------------------------------------------
+// Fields.
+// --------------------------------------------------------------------------------
 
 // Role fields.
 const roleFields = {
@@ -26,11 +33,10 @@ const accomplishmentFields = {
 	sortOrder: accomplishments.sortOrder,
 }
 
-//
-// Experience.
-//
-
+// --------------------------------------------------------------------------------
 // Find roles by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function findRolesByCandidateId(candidateId: string) {
 	// Select roles and accomplishments.
 	const roleRows = await db
@@ -59,11 +65,10 @@ export async function findRolesByCandidateId(candidateId: string) {
 	return transformRoleRowsToObjects(roleRows)
 }
 
-//
-// Role.
-//
-
+// --------------------------------------------------------------------------------
 // Find role by candidate ID and role ID.
+// --------------------------------------------------------------------------------
+
 export async function findRoleByCandidateIdAndRoleId(
 	candidateId: string,
 	roleId: string,
@@ -90,11 +95,10 @@ export async function findRoleByCandidateIdAndRoleId(
 	return roleObject ?? null
 }
 
-//
-// Accomplishment.
-//
-
+// --------------------------------------------------------------------------------
 // Create accomplishment by candidate ID and role ID.
+// --------------------------------------------------------------------------------
+
 export async function createAccomplishmentByCandidateIdAndRoleId(
 	candidateId: string,
 	roleId: string,
@@ -119,7 +123,10 @@ export async function createAccomplishmentByCandidateIdAndRoleId(
 	return newAccomplishment ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Find accomplishment by candidate ID, role ID, and accomplishment ID.
+// --------------------------------------------------------------------------------
+
 export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
@@ -152,7 +159,10 @@ export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentI
 	return accomplishment ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Update accomplishment by candidate ID, role ID, and accomplishment ID.
+// --------------------------------------------------------------------------------
+
 export async function updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
@@ -180,7 +190,10 @@ export async function updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmen
 	return updatedAccomplishment ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Delete accomplishment by candidate ID, role ID, and accomplishment ID.
+// --------------------------------------------------------------------------------
+
 export async function deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
@@ -200,3 +213,5 @@ export async function deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmen
 
 	return deletedAccomplishment ?? null
 }
+
+// --------------------------------------------------------------------------------

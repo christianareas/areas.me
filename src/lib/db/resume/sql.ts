@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
@@ -7,7 +10,10 @@ import { findRolesByCandidateId } from "@/lib/db/resume/experience/sql"
 import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 import { candidates } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Find resume by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function findResumeByCandidateId(candidateId: string) {
 	// Candidate.
 	const candidate = await findCandidateByCandidateId(candidateId)
@@ -30,7 +36,10 @@ export async function findResumeByCandidateId(candidateId: string) {
 	}
 }
 
+// --------------------------------------------------------------------------------
 // Replace resume by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function replaceResumeByCandidateId(candidateId: string) {
 	// Stub.
 	return { candidate: { candidateId } }
@@ -46,3 +55,5 @@ export async function deleteResumeByCandidateId(candidateId: string) {
 
 	return deletedCandidate ?? null
 }
+
+// --------------------------------------------------------------------------------

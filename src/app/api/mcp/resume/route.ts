@@ -1,10 +1,16 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"
 import { findFirstCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findResumeByCandidateId } from "@/lib/db/resume/sql"
 
+// --------------------------------------------------------------------------------
 // Server.
+// --------------------------------------------------------------------------------
+
 const createServer = async () => {
 	// Candidate ID.
 	const candidateId = await findFirstCandidateId()
@@ -140,3 +146,5 @@ export async function POST(req: Request) {
 
 	return transport.handleRequest(req)
 }
+
+// --------------------------------------------------------------------------------

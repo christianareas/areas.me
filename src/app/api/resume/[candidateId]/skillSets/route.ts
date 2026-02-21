@@ -1,12 +1,16 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findSkillSetsByCandidateId } from "@/lib/db/resume/skillSets/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/skillSets/.
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -14,14 +18,14 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
+	// If the candidate ID isn’t a valid UUID, return 400.
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
 	const candidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
+	// If the candidate’s not found, return 404.
 	const candidateValidationResponse = validateDataFound(
 		candidate,
 		"candidate",
@@ -32,5 +36,8 @@ export async function GET(
 	// Skill sets.
 	const skillSets = await findSkillSetsByCandidateId(candidateId)
 
+	// If the skill sets’s found, return 200.
 	return NextResponse.json({ skillSets }, { status: 200 })
 }
+
+// --------------------------------------------------------------------------------

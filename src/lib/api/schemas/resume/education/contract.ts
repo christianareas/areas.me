@@ -1,14 +1,23 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { z } from "zod"
 import { credentialFields } from "@/lib/api/schemas/contract"
 
+// --------------------------------------------------------------------------------
 // Credential create schema.
+// --------------------------------------------------------------------------------
+
 export const credentialCreateSchema = z
 	.object(credentialFields)
 	.omit({ credentialId: true, candidateId: true })
 	.strict()
 
+// --------------------------------------------------------------------------------
 // Credential update schema.
+// --------------------------------------------------------------------------------
+
 export const credentialUpdateSchema = z
 	.object(credentialFields)
 	.omit({ credentialId: true, candidateId: true })
@@ -20,3 +29,5 @@ export const credentialUpdateSchema = z
 
 export type CredentialCreate = z.infer<typeof credentialCreateSchema>
 export type CredentialUpdate = z.infer<typeof credentialUpdateSchema>
+
+// --------------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { randomUUID } from "node:crypto"
 import { and, eq, sql } from "drizzle-orm"
 import type {
@@ -8,7 +11,10 @@ import type {
 import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Credential fields.
+// --------------------------------------------------------------------------------
+
 const credentialFields = {
 	candidateId: credentials.candidateId,
 	credentialId: credentials.credentialId,
@@ -18,9 +24,9 @@ const credentialFields = {
 	endDate: credentials.endDate,
 }
 
-//
+// --------------------------------------------------------------------------------
 // Education.
-//
+// --------------------------------------------------------------------------------
 
 // Create credential by candidate ID.
 export async function createCredentialByCandidateId(
@@ -58,9 +64,9 @@ export async function findEducationByCandidateId(candidateId: string) {
 	return education
 }
 
-//
+// --------------------------------------------------------------------------------
 // Credential.
-//
+// --------------------------------------------------------------------------------
 
 // Find credential by candidate ID and credential ID.
 export async function findCredentialByCandidateIdAndCredentialId(
@@ -109,7 +115,10 @@ export async function updateCredentialByCandidateIdAndCredentialId(
 	return updatedCredential ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Delete credential by candidate ID and credential ID.
+// --------------------------------------------------------------------------------
+
 export async function deleteCredentialByCandidateIdAndCredentialId(
 	candidateId: string,
 	credentialId: string,
@@ -127,3 +136,5 @@ export async function deleteCredentialByCandidateIdAndCredentialId(
 
 	return deletedCredential ?? null
 }
+
+// --------------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import fs from "node:fs/promises"
 import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
@@ -6,9 +9,10 @@ import { chromium } from "playwright-chromium"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /resume/[candidateId]/pdf.
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -16,14 +20,14 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
+	// If the candidate ID isn’t a valid UUID, return 400.
 	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
 	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
 
 	// Candidate.
 	const candidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
+	// If the candidate’s not found, return 404.
 	const candidateValidationResponse = validateDataFound(
 		candidate,
 		"candidate",
@@ -118,3 +122,5 @@ export async function GET(
 		}
 	}
 }
+
+// --------------------------------------------------------------------------------

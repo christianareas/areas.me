@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { randomUUID } from "node:crypto"
 import { and, eq } from "drizzle-orm"
 import type {
@@ -8,6 +11,10 @@ import type {
 import { db } from "@/lib/db"
 import { transformSkillSetRowsToObjects } from "@/lib/db/resume/transform"
 import { skillSets, skills } from "@/lib/db/schema"
+
+// --------------------------------------------------------------------------------
+// Fields.
+// --------------------------------------------------------------------------------
 
 // Skill set fields.
 const skillSetFields = {
@@ -24,11 +31,10 @@ const skillFields = {
 	sortOrder: skills.sortOrder,
 }
 
-//
-// Skill sets.
-//
-
+// --------------------------------------------------------------------------------
 // Find skill sets by candidate ID.
+// --------------------------------------------------------------------------------
+
 export async function findSkillSetsByCandidateId(candidateId: string) {
 	// Select skill sets and skills.
 	const skillSetRows = await db
@@ -50,11 +56,10 @@ export async function findSkillSetsByCandidateId(candidateId: string) {
 	return transformSkillSetRowsToObjects(skillSetRows)
 }
 
-//
-// Skill set.
-//
-
+// --------------------------------------------------------------------------------
 // Find skill set by candidate ID and skill set ID.
+// --------------------------------------------------------------------------------
+
 export async function findSkillSetByCandidateIdAndSkillSetId(
 	candidateId: string,
 	skillSetId: string,
@@ -86,11 +91,10 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 	return skillSetObject ?? null
 }
 
-//
-// Skill.
-//
-
+// --------------------------------------------------------------------------------
 // Create skill by candidate ID and skill set ID.
+// --------------------------------------------------------------------------------
+
 export async function createSkillByCandidateIdAndSkillSetId(
 	candidateId: string,
 	skillSetId: string,
@@ -115,7 +119,10 @@ export async function createSkillByCandidateIdAndSkillSetId(
 	return newSkill ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Find skill by candidate ID, skill set ID, and skill ID.
+// --------------------------------------------------------------------------------
+
 export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
@@ -148,7 +155,10 @@ export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	return skill ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Update skill by candidate ID, skill set ID, and skill ID.
+// --------------------------------------------------------------------------------
+
 export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
@@ -176,7 +186,10 @@ export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
 	return updatedSkill ?? null
 }
 
+// --------------------------------------------------------------------------------
 // Delete skill by candidate ID, skill set ID, and skill ID.
+// --------------------------------------------------------------------------------
+
 export async function deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
@@ -196,3 +209,5 @@ export async function deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
 
 	return deletedSkill ?? null
 }
+
+// --------------------------------------------------------------------------------

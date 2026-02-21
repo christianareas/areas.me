@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { config } from "dotenv"
 import type { BatchItem } from "drizzle-orm/batch"
 import { resumeSchema } from "@/lib/api/schemas/contract"
@@ -12,10 +15,16 @@ import {
 } from "@/lib/db/schema"
 import { resume } from "@/lib/db/seed/resume"
 
+// --------------------------------------------------------------------------------
 // Environment variables.
+// --------------------------------------------------------------------------------
+
 config({ path: ".env.local" })
 
+// --------------------------------------------------------------------------------
 // Seed the database.
+// --------------------------------------------------------------------------------
+
 async function main() {
 	const { db } = await import("@/lib/db")
 	const parsedResume = resumeSchema.parse(resume)
@@ -192,3 +201,5 @@ main().catch((error) => {
 	console.error(error)
 	process.exit(1)
 })
+
+// --------------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { resumePutSchema } from "@/lib/api/schemas/resume/contract"
@@ -14,9 +17,10 @@ import {
 	replaceResumeByCandidateId,
 } from "@/lib/db/resume/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -41,9 +45,10 @@ export async function GET(
 	return NextResponse.json({ resume }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // PUT /api/resume/[candidateId].
-//
+// --------------------------------------------------------------------------------
+
 export async function PUT(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -91,9 +96,10 @@ export async function PUT(
 	return NextResponse.json({ resume: replacedResume }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // DELETE /api/resume/[candidateId].
-//
+// --------------------------------------------------------------------------------
+
 export async function DELETE(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -124,3 +130,5 @@ export async function DELETE(
 	// If resume deletion succeeds, return 204 No Content.
 	return new NextResponse(null, { status: 204 })
 }
+
+// --------------------------------------------------------------------------------

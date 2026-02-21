@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { skillCreateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
@@ -14,9 +17,10 @@ import {
 	findSkillSetByCandidateIdAndSkillSetId,
 } from "@/lib/db/resume/skillSets/sql"
 
-//
+// --------------------------------------------------------------------------------
 // POST /api/resume/[candidateId]/skillSets/[skillSetId]/skills.
-//
+// --------------------------------------------------------------------------------
+
 export async function POST(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string; skillSetId: string }> },
@@ -87,3 +91,5 @@ export async function POST(
 	// If the skill’s created, return 201.
 	return NextResponse.json({ skill: createdSkill }, { status: 201 })
 }
+
+// --------------------------------------------------------------------------------

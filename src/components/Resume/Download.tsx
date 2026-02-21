@@ -1,13 +1,22 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { LuCloudDownload } from "react-icons/lu"
 import type { Candidate as CandidateType } from "@/types/resume"
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type DownloadProps = {
 	candidate: CandidateType
 }
 
-// Component.
+// --------------------------------------------------------------------------------
+// Download component.
+// --------------------------------------------------------------------------------
+
 export default function Download({ candidate }: DownloadProps) {
 	// Candidate name.
 	const { candidateId, firstName, lastName } = candidate
@@ -33,3 +42,5 @@ export default function Download({ candidate }: DownloadProps) {
 		</section>
 	)
 }
+
+// --------------------------------------------------------------------------------

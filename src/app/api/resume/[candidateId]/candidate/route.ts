@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { candidateUpdateSchema } from "@/lib/api/schemas/resume/candidate/contract"
@@ -13,9 +16,10 @@ import {
 	updateCandidateByCandidateId,
 } from "@/lib/db/resume/candidate/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/candidate.
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -42,9 +46,10 @@ export async function GET(
 	return NextResponse.json({ candidate: foundCandidate }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // PATCH /api/resume/[candidateId]/candidate.
-//
+// --------------------------------------------------------------------------------
+
 export async function PATCH(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -99,3 +104,5 @@ export async function PATCH(
 	// If the candidate’s found and updated, return 200.
 	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
 }
+
+// --------------------------------------------------------------------------------

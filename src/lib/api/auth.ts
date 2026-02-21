@@ -1,17 +1,26 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { createHash } from "node:crypto"
 import { eq } from "drizzle-orm"
 import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { apiTokens } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type ApiAuthOptions = {
 	candidateId: string
 	scopeRequirement: string
 }
 
+// --------------------------------------------------------------------------------
 // Authorize the API token.
+// --------------------------------------------------------------------------------
+
 export async function authorizeApiToken(
 	request: NextRequest,
 	{ candidateId, scopeRequirement }: ApiAuthOptions,
@@ -97,3 +106,5 @@ export async function authorizeApiToken(
 
 	return null
 }
+
+// --------------------------------------------------------------------------------

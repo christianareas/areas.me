@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { credentialUpdateSchema } from "@/lib/api/schemas/resume/education/contract"
@@ -15,9 +18,10 @@ import {
 	updateCredentialByCandidateIdAndCredentialId,
 } from "@/lib/db/resume/education/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/education/[credentialId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{
@@ -63,9 +67,10 @@ export async function GET(
 	return NextResponse.json({ credential: foundCredential }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // PATCH /api/resume/[candidateId]/education/[credentialId].
-//
+// --------------------------------------------------------------------------------
+
 export async function PATCH(
 	request: NextRequest,
 	{
@@ -138,9 +143,10 @@ export async function PATCH(
 	return NextResponse.json({ credential: updatedCredential }, { status: 200 })
 }
 
-//
+// --------------------------------------------------------------------------------
 // DELETE /api/resume/[candidateId]/education/[credentialId].
-//
+// --------------------------------------------------------------------------------
+
 export async function DELETE(
 	request: NextRequest,
 	{
@@ -192,3 +198,5 @@ export async function DELETE(
 	// If the credential’s found and deleted, return 204.
 	return new NextResponse(null, { status: 204 })
 }
+
+// --------------------------------------------------------------------------------

@@ -1,10 +1,16 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { validate } from "uuid"
 import type { ZodType } from "zod"
 
+// --------------------------------------------------------------------------------
 // Validate UUID format.
+// --------------------------------------------------------------------------------
+
 export function validateUuidFormat(uuid: string | string[]) {
 	const uuids = Array.isArray(uuid) ? uuid : [uuid]
 
@@ -22,7 +28,10 @@ export function validateUuidFormat(uuid: string | string[]) {
 	return null
 }
 
+// --------------------------------------------------------------------------------
 // Validate data found by ID.
+// --------------------------------------------------------------------------------
+
 export function validateDataFound<T>(
 	data: T | null,
 	dataName: string,
@@ -44,7 +53,10 @@ export function validateDataFound<T>(
 	return null
 }
 
+// --------------------------------------------------------------------------------
 // Parse the request body JSON.
+// --------------------------------------------------------------------------------
+
 export async function parseJson(request: NextRequest) {
 	let requestBody: unknown
 
@@ -60,7 +72,10 @@ export async function parseJson(request: NextRequest) {
 	return requestBody
 }
 
+// --------------------------------------------------------------------------------
 // Validate the request body against the schema.
+// --------------------------------------------------------------------------------
+
 export function validateRequestBodyAgainstSchema<T>(
 	requestBody: unknown,
 	schema: ZodType<T>,
@@ -93,3 +108,5 @@ export function validateRequestBodyAgainstSchema<T>(
 
 	return parsedRequestBody.data
 }
+
+// --------------------------------------------------------------------------------

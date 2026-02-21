@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { parseArgs } from "node:util"
 import { config } from "dotenv"
@@ -6,10 +9,16 @@ import { eq } from "drizzle-orm"
 import { validate as validateUuid } from "uuid"
 import { apiTokens, candidates } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Environment variables.
+// --------------------------------------------------------------------------------
+
 config({ path: ".env.local" })
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type Args = {
 	candidateId: string
 	tokenName: string
@@ -17,7 +26,10 @@ type Args = {
 	tokenExpiresAt: Date
 }
 
+// --------------------------------------------------------------------------------
 // Throw a CLI error message.
+// --------------------------------------------------------------------------------
+
 function throwCliErrorMessage(message: string): never {
 	console.log(
 		[
@@ -30,7 +42,10 @@ function throwCliErrorMessage(message: string): never {
 	throw new Error(message)
 }
 
+// --------------------------------------------------------------------------------
 // Parse the CLI arguments.
+// --------------------------------------------------------------------------------
+
 function parseCliArgs(argv: string[]): Args {
 	// Parse arguments.
 	const { values: argValues } = parseArgs({
@@ -102,7 +117,10 @@ function parseCliArgs(argv: string[]): Args {
 	}
 }
 
+// --------------------------------------------------------------------------------
 // Create the API token.
+// --------------------------------------------------------------------------------
+
 async function main() {
 	const { db } = await import("@/lib/db")
 	const { candidateId, tokenName, tokenScopes, tokenExpiresAt } = parseCliArgs(
@@ -150,3 +168,5 @@ main().catch((error) => {
 	console.error(error)
 	process.exit(1)
 })
+
+// --------------------------------------------------------------------------------

@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import Candidate from "@/components/Resume/Candidate"
 import Download from "@/components/Resume/Download"
 import Education from "@/components/Resume/Education"
@@ -6,12 +9,18 @@ import Experience from "@/components/Resume/Experience"
 import SkillSets from "@/components/Resume/SkillSets"
 import type { Resume as ResumeType } from "@/types/resume"
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type ResumeProps = {
 	resume: ResumeType
 }
 
-// Component.
+// --------------------------------------------------------------------------------
+// Resume component.
+// --------------------------------------------------------------------------------
+
 export default function Resume({ resume }: ResumeProps) {
 	// Render.
 	return (
@@ -24,3 +33,5 @@ export default function Resume({ resume }: ResumeProps) {
 		</main>
 	)
 }
+
+// --------------------------------------------------------------------------------

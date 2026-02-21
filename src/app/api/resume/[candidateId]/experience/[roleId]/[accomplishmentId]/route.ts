@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { accomplishmentUpdateSchema } from "@/lib/api/schemas/resume/experience/contract"
@@ -16,9 +19,10 @@ import {
 	updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId,
 } from "@/lib/db/resume/experience/sql"
 
-//
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	_request: NextRequest,
 	{
@@ -82,9 +86,10 @@ export async function GET(
 	)
 }
 
-//
+// --------------------------------------------------------------------------------
 // PATCH /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
-//
+// --------------------------------------------------------------------------------
+
 export async function PATCH(
 	request: NextRequest,
 	{
@@ -176,9 +181,10 @@ export async function PATCH(
 	)
 }
 
-//
+// --------------------------------------------------------------------------------
 // DELETE /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
-//
+// --------------------------------------------------------------------------------
+
 export async function DELETE(
 	request: NextRequest,
 	{
@@ -246,3 +252,5 @@ export async function DELETE(
 	// If the accomplishment’s found and deleted, return 204.
 	return new NextResponse(null, { status: 204 })
 }
+
+// --------------------------------------------------------------------------------

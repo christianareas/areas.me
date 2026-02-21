@@ -1,13 +1,19 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { z } from "zod"
 
+// --------------------------------------------------------------------------------
 // Primitives.
+// --------------------------------------------------------------------------------
+
 const uuidSchema = z.uuid()
 const dateStringSchema = z.iso.date()
 
-//
+// --------------------------------------------------------------------------------
 // Candidate.
-//
+// --------------------------------------------------------------------------------
 
 // Candidate fields.
 export const candidateFields = {
@@ -41,9 +47,9 @@ export const candidateFields = {
 // Candidate schema.
 export const candidateSchema = z.object(candidateFields).strict()
 
-//
+// --------------------------------------------------------------------------------
 // Experience.
-//
+// --------------------------------------------------------------------------------
 
 // Accomplishment fields.
 export const accomplishmentFields = {
@@ -84,9 +90,9 @@ export const roleSchema = z
 	})
 	.strict()
 
-//
+// --------------------------------------------------------------------------------
 // Skill sets.
-//
+// --------------------------------------------------------------------------------
 
 // Skill fields.
 export const skillFields = {
@@ -123,9 +129,9 @@ export const skillSetSchema = z
 	})
 	.strict()
 
-//
+// --------------------------------------------------------------------------------
 // Education.
-//
+// --------------------------------------------------------------------------------
 
 // Credential fields.
 export const credentialFields = {
@@ -144,9 +150,9 @@ export const credentialFields = {
 // Credential schema.
 export const credentialSchema = z.object(credentialFields).strict()
 
-//
+// --------------------------------------------------------------------------------
 // Resume.
-//
+// --------------------------------------------------------------------------------
 
 // Resume schema.
 export const resumeSchema = z
@@ -159,3 +165,5 @@ export const resumeSchema = z
 	.strict()
 
 export type SeedResume = z.infer<typeof resumeSchema>
+
+// --------------------------------------------------------------------------------

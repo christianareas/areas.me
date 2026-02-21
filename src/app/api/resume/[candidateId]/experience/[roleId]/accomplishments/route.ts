@@ -1,4 +1,7 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { accomplishmentCreateSchema } from "@/lib/api/schemas/resume/experience/contract"
@@ -14,9 +17,10 @@ import {
 	findRoleByCandidateIdAndRoleId,
 } from "@/lib/db/resume/experience/sql"
 
-//
+// --------------------------------------------------------------------------------
 // POST /api/resume/[candidateId]/experience/[roleId]/accomplishments.
-//
+// --------------------------------------------------------------------------------
+
 export async function POST(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string; roleId: string }> },
@@ -86,3 +90,5 @@ export async function POST(
 		{ status: 201 },
 	)
 }
+
+// --------------------------------------------------------------------------------

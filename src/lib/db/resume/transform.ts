@@ -1,7 +1,13 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import type { Role, SkillSet } from "@/types/resume"
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type RoleRow = {
 	candidateId: string
 	roleId: string
@@ -24,7 +30,10 @@ type SkillSetRow = {
 	sortOrder: number | null
 }
 
+// --------------------------------------------------------------------------------
 // Transform role rows to an array of objects.
+// --------------------------------------------------------------------------------
+
 export function transformRoleRowsToObjects(rows: RoleRow[]) {
 	// If there are no rows, return an empty array.
 	if (rows.length === 0) return []
@@ -64,7 +73,10 @@ export function transformRoleRowsToObjects(rows: RoleRow[]) {
 	return arrayOfObjects
 }
 
+// --------------------------------------------------------------------------------
 // Transform skill set rows to an array of objects.
+// --------------------------------------------------------------------------------
+
 export function transformSkillSetRowsToObjects(rows: SkillSetRow[]) {
 	// If there are no rows, return an empty array.
 	if (rows.length === 0) return []
@@ -97,3 +109,5 @@ export function transformSkillSetRowsToObjects(rows: SkillSetRow[]) {
 
 	return arrayOfObjects
 }
+
+// --------------------------------------------------------------------------------
