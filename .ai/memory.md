@@ -1,9 +1,10 @@
 # Durable Memory
 
-Last updated: 2026-02-21
+Last updated: 2026-02-22
 
 ## User Preferences
 - Keep responses concise, direct, and practical.
+- Stay focused on the task at hand and avoid tangential suggestions unless requested.
 - When asked for review, prioritize findings and call out exact file/line locations.
 - If the user asks not to edit files, provide only the required change instructions.
 - Commit messages should be simple, sentence case, past tense, and end with a period.

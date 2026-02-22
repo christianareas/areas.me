@@ -46,3 +46,8 @@
 - Commit created: `ee6036d` with message `Updated comment style across codebase.`
 - Request: set up persistent AI memory for this project (Codex now, Claude-compatible structure later).
 - Outcome: added `.ai/` memory files and `AGENTS.md` startup/closeout rules.
+
+## 2026-02-22 (Running Session)
+- Request: tighten assistant behavior to stay focused on the active task.
+- Action: updated durable memory preference to avoid tangential suggestions unless requested.
+- Outcome: preference added to `.ai/memory.md` and will be applied in this and future sessions.
