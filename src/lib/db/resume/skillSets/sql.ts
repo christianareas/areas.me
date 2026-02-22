@@ -6,6 +6,8 @@ import { randomUUID } from "node:crypto"
 import { and, eq } from "drizzle-orm"
 import type {
 	SkillCreate,
+	SkillSetCreate,
+	SkillSetUpdate,
 	SkillUpdate,
 } from "@/lib/api/schemas/resume/skillSets/contract"
 import { db } from "@/lib/db"
@@ -16,7 +18,6 @@ import { skillSets, skills } from "@/lib/db/schema"
 // Fields.
 // --------------------------------------------------------------------------------
 
-// Skill set fields.
 const skillSetFields = {
 	candidateId: skillSets.candidateId,
 	skillSetId: skillSets.skillSetId,
@@ -24,7 +25,6 @@ const skillSetFields = {
 	skillSetSortOrder: skillSets.sortOrder,
 }
 
-// Skill fields.
 const skillFields = {
 	skillId: skills.skillId,
 	skill: skills.skill,
@@ -32,7 +32,7 @@ const skillFields = {
 }
 
 // --------------------------------------------------------------------------------
-// Find skill sets by candidate ID.
+// Skill sets.
 // --------------------------------------------------------------------------------
 
 export async function findSkillSetsByCandidateId(candidateId: string) {
@@ -57,8 +57,64 @@ export async function findSkillSetsByCandidateId(candidateId: string) {
 }
 
 // --------------------------------------------------------------------------------
-// Find skill set by candidate ID and skill set ID.
+// Skill set.
 // --------------------------------------------------------------------------------
+
+export async function createSkillSetByCandidateId(
+	candidateId: string,
+	skillSetCreate: SkillSetCreate,
+) {
+	const skillSetId = randomUUID()
+	const { skillSetType, sortOrder } = skillSetCreate
+	const { skills: skillsCreate = [] } = skillSetCreate
+
+	// Insert skill set and skills.
+	return db.transaction(async (tx) => {
+		// Insert skill set.
+		const [newSkillSet] = await tx
+			.insert(skillSets)
+			.values({
+				candidateId,
+				skillSetId,
+				skillSetType,
+				sortOrder,
+			})
+			.returning({
+				candidateId: skillSets.candidateId,
+				skillSetId: skillSets.skillSetId,
+				skillSetType: skillSets.skillSetType,
+				sortOrder: skillSets.sortOrder,
+				createdAt: skillSets.createdAt,
+			})
+
+		if (!newSkillSet) return null
+
+		// Insert skills.
+		let newSkills: { skillId: string; skill: string; sortOrder: number }[] = []
+		if (skillsCreate.length > 0) {
+			newSkills = await tx
+				.insert(skills)
+				.values(
+					skillsCreate.map((skillCreate) => ({
+						candidateId,
+						skillSetId,
+						skillId: randomUUID(),
+						...skillCreate,
+					})),
+				)
+				.returning({
+					skillId: skills.skillId,
+					skill: skills.skill,
+					sortOrder: skills.sortOrder,
+				})
+		}
+
+		return {
+			...newSkillSet,
+			skills: newSkills,
+		}
+	})
+}
 
 export async function findSkillSetByCandidateIdAndSkillSetId(
 	candidateId: string,
@@ -91,8 +147,55 @@ export async function findSkillSetByCandidateIdAndSkillSetId(
 	return skillSetObject ?? null
 }
 
+export async function updateSkillSetByCandidateIdAndSkillSetId(
+	candidateId: string,
+	skillSetId: string,
+	skillSetUpdate: SkillSetUpdate,
+) {
+	// Update skill set.
+	const [updatedSkillSet] = await db
+		.update(skillSets)
+		.set({
+			...skillSetUpdate,
+			updatedAt: new Date(),
+		})
+		.where(
+			and(
+				eq(skillSets.candidateId, candidateId),
+				eq(skillSets.skillSetId, skillSetId),
+			),
+		)
+		.returning({
+			candidateId: skillSets.candidateId,
+			skillSetId: skillSets.skillSetId,
+			skillSetType: skillSets.skillSetType,
+			sortOrder: skillSets.sortOrder,
+			updatedAt: skillSets.updatedAt,
+		})
+
+	return updatedSkillSet ?? null
+}
+
+export async function deleteSkillSetByCandidateIdAndSkillSetId(
+	candidateId: string,
+	skillSetId: string,
+) {
+	// Delete skill set.
+	const [deletedSkillSet] = await db
+		.delete(skillSets)
+		.where(
+			and(
+				eq(skillSets.candidateId, candidateId),
+				eq(skillSets.skillSetId, skillSetId),
+			),
+		)
+		.returning({ candidateId: skillSets.candidateId })
+
+	return deletedSkillSet ?? null
+}
+
 // --------------------------------------------------------------------------------
-// Create skill by candidate ID and skill set ID.
+// Skill.
 // --------------------------------------------------------------------------------
 
 export async function createSkillByCandidateIdAndSkillSetId(
@@ -118,10 +221,6 @@ export async function createSkillByCandidateIdAndSkillSetId(
 
 	return newSkill ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Find skill by candidate ID, skill set ID, and skill ID.
-// --------------------------------------------------------------------------------
 
 export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
@@ -155,10 +254,6 @@ export async function findSkillByCandidateIdAndSkillSetIdAndSkillId(
 	return skill ?? null
 }
 
-// --------------------------------------------------------------------------------
-// Update skill by candidate ID, skill set ID, and skill ID.
-// --------------------------------------------------------------------------------
-
 export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,
 	skillSetId: string,
@@ -185,10 +280,6 @@ export async function updateSkillByCandidateIdAndSkillSetIdAndSkillId(
 
 	return updatedSkill ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Delete skill by candidate ID, skill set ID, and skill ID.
-// --------------------------------------------------------------------------------
 
 export async function deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
 	candidateId: string,

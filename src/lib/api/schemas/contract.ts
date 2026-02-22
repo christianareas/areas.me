@@ -72,17 +72,13 @@ export const roleFields = {
 	company: z
 		.string()
 		.min(1, "The candidate's company must contain at least one character."),
-	role: z
-		.string()
-		.min(1, "The candidate's role must contain at least one character."),
+	role: z.string(),
 	startDate: dateStringSchema,
 	endDate: dateStringSchema.nullable(),
 }
 
-// Accomplishment schema.
+// Schemas.
 export const accomplishmentSchema = z.object(accomplishmentFields).strict()
-
-// Role schema.
 export const roleSchema = z
 	.object({
 		...roleFields,
@@ -118,10 +114,8 @@ export const skillSetFields = {
 	sortOrder: z.number().int(),
 }
 
-// Skill schema.
+// Schemas.
 export const skillSchema = z.object(skillFields).strict()
-
-// Skill set schema.
 export const skillSetSchema = z
 	.object({
 		...skillSetFields,

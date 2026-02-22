@@ -3,7 +3,6 @@
 // --------------------------------------------------------------------------------
 
 import { config } from "dotenv"
-import type { BatchItem } from "drizzle-orm/batch"
 import { resumeSchema } from "@/lib/api/schemas/contract"
 import {
 	accomplishments,
@@ -42,9 +41,9 @@ async function main() {
 	const skillSetsData = parsedResume.skillSets ?? []
 	const education = parsedResume.education ?? []
 
-	// Upsert candidates.
-	const statements: [BatchItem<"pg">, ...BatchItem<"pg">[]] = [
-		db
+	await db.transaction(async (tx) => {
+		// Upsert candidate.
+		await tx
 			.insert(candidates)
 			.values(candidate)
 			.onConflictDoUpdate({
@@ -53,13 +52,11 @@ async function main() {
 					...candidate,
 					updatedAt: new Date(),
 				},
-			}),
-	]
+			})
 
-	// Upsert roles.
-	for (const role of experience) {
-		statements.push(
-			db
+		// Upsert roles.
+		for (const role of experience) {
+			await tx
 				.insert(roles)
 				.values({
 					candidateId: role.candidateId,
@@ -80,16 +77,14 @@ async function main() {
 						endDate: role.endDate,
 						updatedAt: new Date(),
 					},
-				}),
-		)
-	}
+				})
+		}
 
-	// Upsert accomplishments.
-	for (const role of experience) {
-		const roleAccomplishments = role.accomplishments ?? []
-		for (const accomplishment of roleAccomplishments) {
-			statements.push(
-				db
+		// Upsert accomplishments.
+		for (const role of experience) {
+			const roleAccomplishments = role.accomplishments ?? []
+			for (const accomplishment of roleAccomplishments) {
+				await tx
 					.insert(accomplishments)
 					.values({
 						candidateId: accomplishment.candidateId,
@@ -104,15 +99,13 @@ async function main() {
 							...accomplishment,
 							updatedAt: new Date(),
 						},
-					}),
-			)
+					})
+			}
 		}
-	}
 
-	// Upsert skill sets.
-	for (const skillSet of skillSetsData) {
-		statements.push(
-			db
+		// Upsert skill sets.
+		for (const skillSet of skillSetsData) {
+			await tx
 				.insert(skillSets)
 				.values({
 					candidateId: skillSet.candidateId,
@@ -129,15 +122,13 @@ async function main() {
 						sortOrder: skillSet.sortOrder,
 						updatedAt: new Date(),
 					},
-				}),
-		)
-	}
+				})
+		}
 
-	// Upsert skills.
-	for (const skillSet of skillSetsData) {
-		for (const skill of skillSet.skills ?? []) {
-			statements.push(
-				db
+		// Upsert skills.
+		for (const skillSet of skillSetsData) {
+			for (const skill of skillSet.skills ?? []) {
+				await tx
 					.insert(skills)
 					.values({
 						candidateId: skill.candidateId,
@@ -152,15 +143,13 @@ async function main() {
 							...skill,
 							updatedAt: new Date(),
 						},
-					}),
-			)
+					})
+			}
 		}
-	}
 
-	// Upsert credentials.
-	for (const credential of education) {
-		statements.push(
-			db
+		// Upsert credentials.
+		for (const credential of education) {
+			await tx
 				.insert(credentials)
 				.values({
 					candidateId: credential.candidateId,
@@ -176,11 +165,9 @@ async function main() {
 						...credential,
 						updatedAt: new Date(),
 					},
-				}),
-		)
-	}
-
-	await db.batch(statements)
+				})
+		}
+	})
 
 	// Log the seeded data.
 	console.log("Seeded candidate:", candidate.candidateId)

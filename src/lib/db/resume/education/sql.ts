@@ -12,7 +12,7 @@ import { db } from "@/lib/db"
 import { credentials } from "@/lib/db/schema"
 
 // --------------------------------------------------------------------------------
-// Credential fields.
+// Fields.
 // --------------------------------------------------------------------------------
 
 const credentialFields = {
@@ -28,7 +28,24 @@ const credentialFields = {
 // Education.
 // --------------------------------------------------------------------------------
 
-// Create credential by candidate ID.
+export async function findEducationByCandidateId(candidateId: string) {
+	// Select credentials.
+	const education = await db
+		.select(credentialFields)
+		.from(credentials)
+		.where(eq(credentials.candidateId, candidateId))
+		.orderBy(
+			sql`${credentials.endDate} DESC NULLS FIRST`,
+			sql`${credentials.startDate} DESC NULLS FIRST`,
+		)
+
+	return education
+}
+
+// --------------------------------------------------------------------------------
+// Credential.
+// --------------------------------------------------------------------------------
+
 export async function createCredentialByCandidateId(
 	candidateId: string,
 	credentialCreate: CredentialCreate,
@@ -49,26 +66,6 @@ export async function createCredentialByCandidateId(
 	return newCredential ?? null
 }
 
-// Find education by candidate ID.
-export async function findEducationByCandidateId(candidateId: string) {
-	// Select credentials.
-	const education = await db
-		.select(credentialFields)
-		.from(credentials)
-		.where(eq(credentials.candidateId, candidateId))
-		.orderBy(
-			sql`${credentials.endDate} DESC NULLS FIRST`,
-			sql`${credentials.startDate} DESC NULLS FIRST`,
-		)
-
-	return education
-}
-
-// --------------------------------------------------------------------------------
-// Credential.
-// --------------------------------------------------------------------------------
-
-// Find credential by candidate ID and credential ID.
 export async function findCredentialByCandidateIdAndCredentialId(
 	candidateId: string,
 	credentialId: string,
@@ -88,7 +85,6 @@ export async function findCredentialByCandidateIdAndCredentialId(
 	return credential ?? null
 }
 
-// Update credential by candidate ID and credential ID.
 export async function updateCredentialByCandidateIdAndCredentialId(
 	candidateId: string,
 	credentialId: string,
@@ -114,10 +110,6 @@ export async function updateCredentialByCandidateIdAndCredentialId(
 
 	return updatedCredential ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Delete credential by candidate ID and credential ID.
-// --------------------------------------------------------------------------------
 
 export async function deleteCredentialByCandidateIdAndCredentialId(
 	candidateId: string,

@@ -2,8 +2,8 @@
 // Dependencies.
 // --------------------------------------------------------------------------------
 
-import { neon } from "@neondatabase/serverless"
-import { drizzle } from "drizzle-orm/neon-http"
+import { Pool } from "@neondatabase/serverless"
+import { drizzle } from "drizzle-orm/neon-serverless"
 
 // --------------------------------------------------------------------------------
 // Database URL.
@@ -14,6 +14,12 @@ if (!databaseUrl) {
 	throw new Error("There's no DATABASE_URL environment variable.")
 }
 
-export const db = drizzle({ client: neon(databaseUrl) })
+// --------------------------------------------------------------------------------
+// Database.
+// --------------------------------------------------------------------------------
+
+export const db = drizzle({
+	client: new Pool({ connectionString: databaseUrl }),
+})
 
 // --------------------------------------------------------------------------------

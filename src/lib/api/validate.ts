@@ -110,3 +110,28 @@ export function validateRequestBodyAgainstSchema<T>(
 }
 
 // --------------------------------------------------------------------------------
+// Validate data created by ID.
+// --------------------------------------------------------------------------------
+
+export function validateDataCreated<T>(
+	data: T | null,
+	dataName: string,
+	ids: Record<string, string>,
+) {
+	if (!data) {
+		const identifierMessage = Object.entries(ids)
+			.map(([key, value]) => `${key} (${value})`)
+			.join(" and ")
+
+		return NextResponse.json(
+			{
+				error: `Couldn't create the ${dataName} by ${identifierMessage}.`,
+			},
+			{ status: 500 },
+		)
+	}
+
+	return null
+}
+
+// --------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
 // --------------------------------------------------------------------------------
-// Candidate fields.
+// Fields.
 // --------------------------------------------------------------------------------
 
 const candidateFields = {
@@ -26,7 +26,7 @@ const candidateFields = {
 }
 
 // --------------------------------------------------------------------------------
-// Find first candidate ID.
+// Candidate.
 // --------------------------------------------------------------------------------
 
 export async function findFirstCandidateId() {
@@ -42,10 +42,6 @@ export async function findFirstCandidateId() {
 	return candidate?.candidateId ?? null
 }
 
-// --------------------------------------------------------------------------------
-// Find candidate by candidate ID.
-// --------------------------------------------------------------------------------
-
 export async function findCandidateByCandidateId(candidateId: string) {
 	// Select candidate.
 	const [candidate] = await db
@@ -56,10 +52,6 @@ export async function findCandidateByCandidateId(candidateId: string) {
 
 	return candidate ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Update candidate by candidate ID.
-// --------------------------------------------------------------------------------
 
 export async function updateCandidateByCandidateId(
 	candidateId: string,
