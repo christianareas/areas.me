@@ -7,6 +7,7 @@ import { authorizeApiToken } from "@/lib/api/auth"
 import { credentialCreateSchema } from "@/lib/api/schemas/resume/education/contract"
 import {
 	parseJson,
+	validateDataCreated,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
@@ -74,6 +75,14 @@ export async function POST(
 		candidateId,
 		validatedRequestBody,
 	)
+
+	// If the credential’s not created, return 500.
+	const createErrorResponse = validateDataCreated(
+		createdCredential,
+		"credential",
+		{ candidateId },
+	)
+	if (createErrorResponse) return createErrorResponse
 
 	// If the credential’s created, return 201.
 	return NextResponse.json({ credential: createdCredential }, { status: 201 })

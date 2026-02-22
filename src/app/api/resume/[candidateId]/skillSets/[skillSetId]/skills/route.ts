@@ -7,6 +7,7 @@ import { authorizeApiToken } from "@/lib/api/auth"
 import { skillCreateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
 import {
 	parseJson,
+	validateDataCreated,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
@@ -87,6 +88,13 @@ export async function POST(
 		skillSetId,
 		validatedRequestBody,
 	)
+
+	// If the skill’s not created, return 500.
+	const createErrorResponse = validateDataCreated(createdSkill, "skill", {
+		candidateId,
+		skillSetId,
+	})
+	if (createErrorResponse) return createErrorResponse
 
 	// If the skill’s created, return 201.
 	return NextResponse.json({ skill: createdSkill }, { status: 201 })

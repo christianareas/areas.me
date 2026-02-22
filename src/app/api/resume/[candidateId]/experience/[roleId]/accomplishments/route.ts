@@ -7,6 +7,7 @@ import { authorizeApiToken } from "@/lib/api/auth"
 import { accomplishmentCreateSchema } from "@/lib/api/schemas/resume/experience/contract"
 import {
 	parseJson,
+	validateDataCreated,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
 	validateUuidFormat,
@@ -83,6 +84,14 @@ export async function POST(
 			roleId,
 			validatedRequestBody,
 		)
+
+	// If the accomplishment’s not created, return 500.
+	const createErrorResponse = validateDataCreated(
+		createdAccomplishment,
+		"accomplishment",
+		{ candidateId, roleId },
+	)
+	if (createErrorResponse) return createErrorResponse
 
 	// If the accomplishment’s created, return 201.
 	return NextResponse.json(
