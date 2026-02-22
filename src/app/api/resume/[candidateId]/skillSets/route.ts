@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { skillSetCreateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataCreated,
 	validateDataFound,
@@ -40,17 +41,6 @@ export async function POST(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -70,22 +60,37 @@ export async function POST(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Created skill set.
-	const createdSkillSet = await createSkillSetByCandidateId(
-		candidateId,
-		validatedRequestBody,
-	)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the skill set’s not created, return 500.
-	const createErrorResponse = validateDataCreated(
-		createdSkillSet,
-		"skill set",
-		{ candidateId },
-	)
-	if (createErrorResponse) return createErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the skill set’s created, return 201.
-	return NextResponse.json({ skillSet: createdSkillSet }, { status: 201 })
+		// Created skill set.
+		const createdSkillSet = await createSkillSetByCandidateId(
+			candidateId,
+			validatedRequestBody,
+		)
+
+		// If the skill set’s not created, return 500.
+		const createErrorResponse = validateDataCreated(
+			createdSkillSet,
+			"skill set",
+			{ candidateId },
+		)
+		if (createErrorResponse) return createErrorResponse
+
+		// If the skill set’s created, return 201.
+		return NextResponse.json({ skillSet: createdSkillSet }, { status: 201 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -93,7 +98,7 @@ export async function POST(
 // --------------------------------------------------------------------------------
 
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
@@ -103,22 +108,26 @@ export async function GET(
 	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
 	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// Skill sets.
-	const skillSets = await findSkillSetsByCandidateId(candidateId)
+		// Skill sets.
+		const skillSets = await findSkillSetsByCandidateId(candidateId)
 
-	// If the skill sets are found, return 200.
-	return NextResponse.json({ skillSets }, { status: 200 })
+		// If the skill sets are found, return 200.
+		return NextResponse.json({ skillSets }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------

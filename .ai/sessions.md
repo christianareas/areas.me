@@ -51,3 +51,35 @@
 - Request: tighten assistant behavior to stay focused on the active task.
 - Action: updated durable memory preference to avoid tangential suggestions unless requested.
 - Outcome: preference added to `.ai/memory.md` and will be applied in this and future sessions.
+- Request: standardize education API route error handling with `try/catch` and `catchServerError`.
+- Actions:
+  - Refactored `src/app/api/resume/[candidateId]/education/[credentialId]/route.ts` to wrap DB calls in a single `try/catch` per handler for `GET`, `PATCH`, and `DELETE`.
+  - Added `catchServerError` import and usage in those handlers.
+- Outcome:
+  - Education collection routes now follow the same error-handling pattern used in `src/app/api/resume/[candidateId]/education/route.ts`.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.
+- Next step: apply the same route-level `try/catch + catchServerError` pattern across the remaining collections.
+- Request: apply the same error-handling pattern to the candidate collection.
+- Actions:
+  - Refactored `src/app/api/resume/[candidateId]/candidate/route.ts`:
+    - `GET`: wrapped `findCandidateByCandidateId` flow in `try/catch`.
+    - `PATCH`: wrapped `updateCandidateByCandidateId` flow in `try/catch`.
+  - Added `catchServerError` import and returned `catchServerError(error, request)` in both handlers.
+- Outcome:
+  - Candidate routes now match the standardized route-level DB error handling pattern.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.
+- Next step: continue the same sweep for experience, skill sets, and resume routes.
+- Request: apply the same error-handling pattern to the skill sets collection.
+- Actions:
+  - Refactored `src/app/api/resume/[candidateId]/skillSets/route.ts` (`POST`, `GET`) to wrap DB calls in a single `try/catch` per handler.
+  - Refactored `src/app/api/resume/[candidateId]/skillSets/[skillSetId]/route.ts` (`GET`, `PATCH`, `DELETE`) with the same pattern.
+  - Refactored `src/app/api/resume/[candidateId]/skillSets/[skillSetId]/skills/route.ts` (`POST`) with the same pattern.
+  - Refactored `src/app/api/resume/[candidateId]/skillSets/[skillSetId]/[skillId]/route.ts` (`GET`, `PATCH`, `DELETE`) with the same pattern.
+  - Added `catchServerError` import and `return catchServerError(error, request)` to each handler above.
+- Outcome:
+  - Skill set routes now follow the standardized route-level DB error handling pattern.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.
+- Next step: continue the same sweep for experience and resume routes.

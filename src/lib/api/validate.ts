@@ -2,8 +2,7 @@
 // Dependencies.
 // --------------------------------------------------------------------------------
 
-import type { NextRequest } from "next/server"
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import { validate } from "uuid"
 import type { ZodType } from "zod"
 
@@ -132,6 +131,20 @@ export function validateDataCreated<T>(
 	}
 
 	return null
+}
+
+// --------------------------------------------------------------------------------
+// Catch server error.
+// --------------------------------------------------------------------------------
+
+export function catchServerError(error: unknown, request: NextRequest) {
+	console.error("Internal server error.", {
+		error,
+		method: request.method,
+		path: request.nextUrl.pathname,
+	})
+
+	return NextResponse.json({ error: "Internal server error." }, { status: 500 })
 }
 
 // --------------------------------------------------------------------------------

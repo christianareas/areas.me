@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { candidateUpdateSchema } from "@/lib/api/schemas/resume/candidate/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
@@ -21,7 +22,7 @@ import {
 // --------------------------------------------------------------------------------
 
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
@@ -31,19 +32,23 @@ export async function GET(
 	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
 	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the candidate’s found, return 200.
-	return NextResponse.json({ candidate: foundCandidate }, { status: 200 })
+		// If the candidate’s found, return 200.
+		return NextResponse.json({ candidate: foundCandidate }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -87,22 +92,26 @@ export async function PATCH(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Updated candidate.
-	const updatedCandidate = await updateCandidateByCandidateId(
-		candidateId,
-		validatedRequestBody,
-	)
+	try {
+		// Updated candidate.
+		const updatedCandidate = await updateCandidateByCandidateId(
+			candidateId,
+			validatedRequestBody,
+		)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		updatedCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			updatedCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the candidate’s found and updated, return 200.
-	return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
+		// If the candidate’s found and updated, return 200.
+		return NextResponse.json({ candidate: updatedCandidate }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------

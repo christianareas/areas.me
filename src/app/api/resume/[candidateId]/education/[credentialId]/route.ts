@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { credentialUpdateSchema } from "@/lib/api/schemas/resume/education/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
@@ -23,7 +24,7 @@ import {
 // --------------------------------------------------------------------------------
 
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{
 		params,
 	}: { params: Promise<{ candidateId: string; credentialId: string }> },
@@ -38,33 +39,37 @@ export async function GET(
 	])
 	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// Found credential.
-	const foundCredential = await findCredentialByCandidateIdAndCredentialId(
-		candidateId,
-		credentialId,
-	)
+		// Found credential.
+		const foundCredential = await findCredentialByCandidateIdAndCredentialId(
+			candidateId,
+			credentialId,
+		)
 
-	// If the credential’s not found, return 404.
-	const credentialErrorResponse = validateDataFound(
-		foundCredential,
-		"credential",
-		{ credentialId },
-	)
-	if (credentialErrorResponse) return credentialErrorResponse
+		// If the credential’s not found, return 404.
+		const credentialErrorResponse = validateDataFound(
+			foundCredential,
+			"credential",
+			{ credentialId },
+		)
+		if (credentialErrorResponse) return credentialErrorResponse
 
-	// If the credential’s found, return 200.
-	return NextResponse.json({ credential: foundCredential }, { status: 200 })
+		// If the credential’s found, return 200.
+		return NextResponse.json({ credential: foundCredential }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -94,17 +99,6 @@ export async function PATCH(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -124,23 +118,39 @@ export async function PATCH(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Updated credential.
-	const updatedCredential = await updateCredentialByCandidateIdAndCredentialId(
-		candidateId,
-		credentialId,
-		validatedRequestBody,
-	)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the credential’s not found, return 404.
-	const credentialErrorResponse = validateDataFound(
-		updatedCredential,
-		"credential",
-		{ credentialId },
-	)
-	if (credentialErrorResponse) return credentialErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the credential’s found and updated, return 200.
-	return NextResponse.json({ credential: updatedCredential }, { status: 200 })
+		// Updated credential.
+		const updatedCredential =
+			await updateCredentialByCandidateIdAndCredentialId(
+				candidateId,
+				credentialId,
+				validatedRequestBody,
+			)
+
+		// If the credential’s not found, return 404.
+		const credentialErrorResponse = validateDataFound(
+			updatedCredential,
+			"credential",
+			{ credentialId },
+		)
+		if (credentialErrorResponse) return credentialErrorResponse
+
+		// If the credential’s found and updated, return 200.
+		return NextResponse.json({ credential: updatedCredential }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -170,33 +180,38 @@ export async function DELETE(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// Deleted credential.
-	const deletedCredential = await deleteCredentialByCandidateIdAndCredentialId(
-		candidateId,
-		credentialId,
-	)
+		// Deleted credential.
+		const deletedCredential =
+			await deleteCredentialByCandidateIdAndCredentialId(
+				candidateId,
+				credentialId,
+			)
 
-	// If the credential’s not found, return 404.
-	const credentialErrorResponse = validateDataFound(
-		deletedCredential,
-		"credential",
-		{ credentialId },
-	)
-	if (credentialErrorResponse) return credentialErrorResponse
+		// If the credential’s not found, return 404.
+		const credentialErrorResponse = validateDataFound(
+			deletedCredential,
+			"credential",
+			{ credentialId },
+		)
+		if (credentialErrorResponse) return credentialErrorResponse
 
-	// If the credential’s found and deleted, return 204.
-	return new NextResponse(null, { status: 204 })
+		// If the credential’s found and deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { skillCreateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataCreated,
 	validateDataFound,
@@ -40,29 +41,6 @@ export async function POST(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// Found skill set.
-	const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
-		candidateId,
-		skillSetId,
-	)
-
-	// If the skill set’s not found, return 404.
-	const skillSetErrorResponse = validateDataFound(foundSkillSet, "skill set", {
-		skillSetId,
-	})
-	if (skillSetErrorResponse) return skillSetErrorResponse
-
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -82,22 +60,53 @@ export async function POST(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Created skill.
-	const createdSkill = await createSkillByCandidateIdAndSkillSetId(
-		candidateId,
-		skillSetId,
-		validatedRequestBody,
-	)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the skill’s not created, return 500.
-	const createErrorResponse = validateDataCreated(createdSkill, "skill", {
-		candidateId,
-		skillSetId,
-	})
-	if (createErrorResponse) return createErrorResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the skill’s created, return 201.
-	return NextResponse.json({ skill: createdSkill }, { status: 201 })
+		// Found skill set.
+		const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
+			candidateId,
+			skillSetId,
+		)
+
+		// If the skill set’s not found, return 404.
+		const skillSetErrorResponse = validateDataFound(
+			foundSkillSet,
+			"skill set",
+			{
+				skillSetId,
+			},
+		)
+		if (skillSetErrorResponse) return skillSetErrorResponse
+
+		// Created skill.
+		const createdSkill = await createSkillByCandidateIdAndSkillSetId(
+			candidateId,
+			skillSetId,
+			validatedRequestBody,
+		)
+
+		// If the skill’s not created, return 500.
+		const createErrorResponse = validateDataCreated(createdSkill, "skill", {
+			candidateId,
+			skillSetId,
+		})
+		if (createErrorResponse) return createErrorResponse
+
+		// If the skill’s created, return 201.
+		return NextResponse.json({ skill: createdSkill }, { status: 201 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
