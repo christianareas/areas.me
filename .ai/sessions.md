@@ -135,3 +135,13 @@
   - `GET` and `DELETE` now match the standardized route-level error handling pattern used in newer routes.
   - `npm run lint` and `npx tsc --noEmit` passed.
 - Commits: none.
+- Request: remove full-resume `PUT` operation and related stubs/schemas.
+- Actions:
+  - Removed `PUT /api/resume/[candidateId]` handler from `src/app/api/resume/[candidateId]/route.ts`.
+  - Removed `replaceResumeByCandidateId` stub from `src/lib/db/resume/sql.ts`.
+  - Deleted `src/lib/api/schemas/resume/contract.ts` (`resumePutSchema`).
+  - Removed now-unused imports tied to `PUT`.
+- Outcome:
+  - Resume endpoint now exposes `GET` and `DELETE` only at `/api/resume/[candidateId]`.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.

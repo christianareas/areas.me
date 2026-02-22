@@ -37,15 +37,6 @@ export async function findResumeByCandidateId(candidateId: string) {
 }
 
 // --------------------------------------------------------------------------------
-// Replace resume by candidate ID.
-// --------------------------------------------------------------------------------
-
-export async function replaceResumeByCandidateId(candidateId: string) {
-	// Stub.
-	return { candidate: { candidateId } }
-}
-
-// --------------------------------------------------------------------------------
 // Delete resume by candidate ID.
 // --------------------------------------------------------------------------------
 
