@@ -126,3 +126,12 @@
   - Role create now supports atomic role+accomplishments creation and parity with skill set create behavior.
   - `npm run lint` and `npx tsc --noEmit` passed.
 - Commits: none.
+- Request: refresh `GET` and `DELETE` patterns in `src/app/api/resume/[candidateId]/route.ts`.
+- Actions:
+  - Added `catchServerError` import.
+  - Refactored `GET` to use route-level `try/catch` around DB read and return `catchServerError(error, request)` on failure.
+  - Refactored `DELETE` to use route-level `try/catch` around DB delete and return `catchServerError(error, request)` on failure.
+- Outcome:
+  - `GET` and `DELETE` now match the standardized route-level error handling pattern used in newer routes.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.

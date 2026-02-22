@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { resumePutSchema } from "@/lib/api/schemas/resume/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
@@ -22,7 +23,7 @@ import {
 // --------------------------------------------------------------------------------
 
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
@@ -32,17 +33,21 @@ export async function GET(
 	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
 	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Found resume.
-	const foundResume = await findResumeByCandidateId(candidateId)
+	try {
+		// Found resume.
+		const foundResume = await findResumeByCandidateId(candidateId)
 
-	// If the resume isn’t found, return 404.
-	const resumeErrorResponse = validateDataFound(foundResume, "resume", {
-		candidateId,
-	})
-	if (resumeErrorResponse) return resumeErrorResponse
+		// If the resume isn’t found, return 404.
+		const resumeErrorResponse = validateDataFound(foundResume, "resume", {
+			candidateId,
+		})
+		if (resumeErrorResponse) return resumeErrorResponse
 
-	// If the resume’s found, return 200.
-	return NextResponse.json({ resume: foundResume }, { status: 200 })
+		// If the resume’s found, return 200.
+		return NextResponse.json({ resume: foundResume }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -118,17 +123,21 @@ export async function DELETE(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Deleted resume.
-	const deletedResume = await deleteResumeByCandidateId(candidateId)
+	try {
+		// Deleted resume.
+		const deletedResume = await deleteResumeByCandidateId(candidateId)
 
-	// If the resume isn’t found, return 404.
-	const resumeErrorResponse = validateDataFound(deletedResume, "resume", {
-		candidateId,
-	})
-	if (resumeErrorResponse) return resumeErrorResponse
+		// If the resume isn’t found, return 404.
+		const resumeErrorResponse = validateDataFound(deletedResume, "resume", {
+			candidateId,
+		})
+		if (resumeErrorResponse) return resumeErrorResponse
 
-	// If the resume’s deleted, return 204.
-	return new NextResponse(null, { status: 204 })
+		// If the resume’s deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
