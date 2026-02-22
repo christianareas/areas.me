@@ -7,6 +7,8 @@ import { and, desc, eq, sql } from "drizzle-orm"
 import type {
 	AccomplishmentCreate,
 	AccomplishmentUpdate,
+	RoleCreate,
+	RoleUpdate,
 } from "@/lib/api/schemas/resume/experience/contract"
 import { db } from "@/lib/db"
 import { transformRoleRowsToObjects } from "@/lib/db/resume/transform"
@@ -16,7 +18,6 @@ import { accomplishments, roles } from "@/lib/db/schema"
 // Fields.
 // --------------------------------------------------------------------------------
 
-// Role fields.
 const roleFields = {
 	candidateId: roles.candidateId,
 	roleId: roles.roleId,
@@ -26,7 +27,6 @@ const roleFields = {
 	endDate: roles.endDate,
 }
 
-// Accomplishment fields.
 const accomplishmentFields = {
 	accomplishmentId: accomplishments.accomplishmentId,
 	accomplishment: accomplishments.accomplishment,
@@ -34,7 +34,7 @@ const accomplishmentFields = {
 }
 
 // --------------------------------------------------------------------------------
-// Find roles by candidate ID.
+// Roles.
 // --------------------------------------------------------------------------------
 
 export async function findRolesByCandidateId(candidateId: string) {
@@ -66,8 +66,72 @@ export async function findRolesByCandidateId(candidateId: string) {
 }
 
 // --------------------------------------------------------------------------------
-// Find role by candidate ID and role ID.
+// Role.
 // --------------------------------------------------------------------------------
+
+export async function createRoleByCandidateId(
+	candidateId: string,
+	roleCreate: RoleCreate,
+) {
+	const roleId = randomUUID()
+	const { company, role, startDate, endDate } = roleCreate
+	const { accomplishments: accomplishmentsCreate = [] } = roleCreate
+
+	// Insert role and accomplishments.
+	return db.transaction(async (tx) => {
+		// Insert role.
+		const [newRole] = await tx
+			.insert(roles)
+			.values({
+				candidateId,
+				roleId,
+				company,
+				role,
+				startDate,
+				endDate,
+			})
+			.returning({
+				candidateId: roles.candidateId,
+				roleId: roles.roleId,
+				company: roles.company,
+				role: roles.role,
+				startDate: roles.startDate,
+				endDate: roles.endDate,
+				createdAt: roles.createdAt,
+			})
+
+		if (!newRole) return null
+
+		// Insert accomplishments.
+		let newAccomplishments: {
+			accomplishmentId: string
+			accomplishment: string
+			sortOrder: number
+		}[] = []
+		if (accomplishmentsCreate.length > 0) {
+			newAccomplishments = await tx
+				.insert(accomplishments)
+				.values(
+					accomplishmentsCreate.map((accomplishmentCreate) => ({
+						candidateId,
+						roleId,
+						accomplishmentId: randomUUID(),
+						...accomplishmentCreate,
+					})),
+				)
+				.returning({
+					accomplishmentId: accomplishments.accomplishmentId,
+					accomplishment: accomplishments.accomplishment,
+					sortOrder: accomplishments.sortOrder,
+				})
+		}
+
+		return {
+			...newRole,
+			accomplishments: newAccomplishments,
+		}
+	})
+}
 
 export async function findRoleByCandidateIdAndRoleId(
 	candidateId: string,
@@ -95,8 +159,47 @@ export async function findRoleByCandidateIdAndRoleId(
 	return roleObject ?? null
 }
 
+export async function updateRoleByCandidateIdAndRoleId(
+	candidateId: string,
+	roleId: string,
+	roleUpdate: RoleUpdate,
+) {
+	// Update role.
+	const [updatedRole] = await db
+		.update(roles)
+		.set({
+			...roleUpdate,
+			updatedAt: new Date(),
+		})
+		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
+		.returning({
+			candidateId: roles.candidateId,
+			roleId: roles.roleId,
+			company: roles.company,
+			role: roles.role,
+			startDate: roles.startDate,
+			endDate: roles.endDate,
+			updatedAt: roles.updatedAt,
+		})
+
+	return updatedRole ?? null
+}
+
+export async function deleteRoleByCandidateIdAndRoleId(
+	candidateId: string,
+	roleId: string,
+) {
+	// Delete role.
+	const [deletedRole] = await db
+		.delete(roles)
+		.where(and(eq(roles.candidateId, candidateId), eq(roles.roleId, roleId)))
+		.returning({ candidateId: roles.candidateId })
+
+	return deletedRole ?? null
+}
+
 // --------------------------------------------------------------------------------
-// Create accomplishment by candidate ID and role ID.
+// Accomplishment.
 // --------------------------------------------------------------------------------
 
 export async function createAccomplishmentByCandidateIdAndRoleId(
@@ -123,16 +226,12 @@ export async function createAccomplishmentByCandidateIdAndRoleId(
 	return newAccomplishment ?? null
 }
 
-// --------------------------------------------------------------------------------
-// Find accomplishment by candidate ID, role ID, and accomplishment ID.
-// --------------------------------------------------------------------------------
-
 export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
 	roleId: string,
 	accomplishmentId: string,
 ) {
-	// Select role and accomplishments.
+	// Select role and accomplishment.
 	const [accomplishment] = await db
 		.select({
 			candidateId: roles.candidateId,
@@ -158,10 +257,6 @@ export async function findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentI
 
 	return accomplishment ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Update accomplishment by candidate ID, role ID, and accomplishment ID.
-// --------------------------------------------------------------------------------
 
 export async function updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,
@@ -189,10 +284,6 @@ export async function updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmen
 
 	return updatedAccomplishment ?? null
 }
-
-// --------------------------------------------------------------------------------
-// Delete accomplishment by candidate ID, role ID, and accomplishment ID.
-// --------------------------------------------------------------------------------
 
 export async function deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
 	candidateId: string,

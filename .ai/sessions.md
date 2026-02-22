@@ -83,3 +83,46 @@
   - `npm run lint` and `npx tsc --noEmit` passed.
 - Commits: none.
 - Next step: continue the same sweep for experience and resume routes.
+- Request: implement the remaining experience operations and match skill set route patterns.
+- Actions:
+  - Added role schemas in `src/lib/api/schemas/resume/experience/contract.ts`:
+    - `roleCreateSchema`, `roleUpdateSchema`
+    - `RoleCreate`, `RoleUpdate` types
+  - Added DB role operations in `src/lib/db/resume/experience/sql.ts`:
+    - `createRoleByCandidateId`
+    - `updateRoleByCandidateIdAndRoleId`
+    - `deleteRoleByCandidateIdAndRoleId`
+  - Added route handlers:
+    - `POST /api/resume/[candidateId]/experience` in `src/app/api/resume/[candidateId]/experience/route.ts`
+    - `PATCH /api/resume/[candidateId]/experience/[roleId]` in `src/app/api/resume/[candidateId]/experience/[roleId]/route.ts`
+    - `DELETE /api/resume/[candidateId]/experience/[roleId]` in `src/app/api/resume/[candidateId]/experience/[roleId]/route.ts`
+  - Updated `GET` handlers in both files to use route-level `try/catch + catchServerError`.
+- Outcome:
+  - The three remaining experience operations are now implemented and aligned with skill set route patterns.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.
+- Next step: optionally apply the same `try/catch + catchServerError` sweep to accomplishment routes and resume routes for full consistency.
+- Request: align comment style in `src/lib/db/resume/experience/sql.ts` with `src/lib/db/resume/skillSets/sql.ts`.
+- Actions:
+  - Replaced per-function section headers with grouped section headers:
+    - `Roles.`
+    - `Role.`
+    - `Accomplishment.`
+  - Removed inline field-label comments above field maps to match the skill set file’s style.
+- Outcome:
+  - Experience SQL comment structure now matches the skill sets SQL grouping style.
+  - `npm run lint` passed.
+- Commits: none.
+- Request: make `createRoleByCandidateId` match `createSkillSetByCandidateId` by creating nested children in one operation.
+- Actions:
+  - Updated `src/lib/api/schemas/resume/experience/contract.ts`:
+    - `roleCreateSchema` now accepts optional nested `accomplishments`.
+    - Reordered sections to define `accomplishmentCreateSchema` before role create extension.
+  - Updated `src/lib/db/resume/experience/sql.ts`:
+    - Refactored `createRoleByCandidateId` to use `db.transaction`.
+    - Insert role first, then optional nested accomplishments in the same transaction.
+    - Return created role with `accomplishments` array, mirroring skill set create shape.
+- Outcome:
+  - Role create now supports atomic role+accomplishments creation and parity with skill set create behavior.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.

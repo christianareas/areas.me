@@ -90,7 +90,11 @@ export async function createSkillSetByCandidateId(
 		if (!newSkillSet) return null
 
 		// Insert skills.
-		let newSkills: { skillId: string; skill: string; sortOrder: number }[] = []
+		let newSkills: {
+			skillId: string
+			skill: string
+			sortOrder: number
+		}[] = []
 		if (skillsCreate.length > 0) {
 			newSkills = await tx
 				.insert(skills)
