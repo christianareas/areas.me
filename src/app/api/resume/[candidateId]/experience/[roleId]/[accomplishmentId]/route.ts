@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { accomplishmentUpdateSchema } from "@/lib/api/schemas/resume/experience/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataFound,
 	validateRequestBodyAgainstSchema,
@@ -24,7 +25,7 @@ import {
 // --------------------------------------------------------------------------------
 
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{
 		params,
 	}: {
@@ -46,45 +47,49 @@ export async function GET(
 	])
 	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// Found role.
-	const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
-
-	// If the role’s not found, return 404.
-	const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
-	if (roleErrorResponse) return roleErrorResponse
-
-	// Found accomplishment.
-	const foundAccomplishment =
-		await findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
-			candidateId,
-			roleId,
-			accomplishmentId,
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
 		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the accomplishment’s not found, return 404.
-	const accomplishmentErrorResponse = validateDataFound(
-		foundAccomplishment,
-		"accomplishment",
-		{ accomplishmentId },
-	)
-	if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// If the accomplishment’s found, return 200.
-	return NextResponse.json(
-		{ accomplishment: foundAccomplishment },
-		{ status: 200 },
-	)
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Found accomplishment.
+		const foundAccomplishment =
+			await findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentErrorResponse = validateDataFound(
+			foundAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+
+		// If the accomplishment’s found, return 200.
+		return NextResponse.json(
+			{ accomplishment: foundAccomplishment },
+			{ status: 200 },
+		)
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -121,24 +126,6 @@ export async function PATCH(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// Found role.
-	const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
-
-	// If the role’s not found, return 404.
-	const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
-	if (roleErrorResponse) return roleErrorResponse
-
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -158,28 +145,50 @@ export async function PATCH(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Updated accomplishment.
-	const updatedAccomplishment =
-		await updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
-			candidateId,
-			roleId,
-			accomplishmentId,
-			validatedRequestBody,
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
 		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the accomplishment’s not found, return 404.
-	const accomplishmentErrorResponse = validateDataFound(
-		updatedAccomplishment,
-		"accomplishment",
-		{ accomplishmentId },
-	)
-	if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// If the accomplishment’s found and updated, return 200.
-	return NextResponse.json(
-		{ accomplishment: updatedAccomplishment },
-		{ status: 200 },
-	)
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Updated accomplishment.
+		const updatedAccomplishment =
+			await updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+				validatedRequestBody,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentErrorResponse = validateDataFound(
+			updatedAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+
+		// If the accomplishment’s found and updated, return 200.
+		return NextResponse.json(
+			{ accomplishment: updatedAccomplishment },
+			{ status: 200 },
+		)
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------
@@ -216,42 +225,46 @@ export async function DELETE(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// Found role.
-	const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
-
-	// If the role’s not found, return 404.
-	const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
-	if (roleErrorResponse) return roleErrorResponse
-
-	// Deleted accomplishment.
-	const deletedAccomplishment =
-		await deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
-			candidateId,
-			roleId,
-			accomplishmentId,
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
 		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the accomplishment’s not found, return 404.
-	const accomplishmentNotFoundResponse = validateDataFound(
-		deletedAccomplishment,
-		"accomplishment",
-		{ accomplishmentId },
-	)
-	if (accomplishmentNotFoundResponse) return accomplishmentNotFoundResponse
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// If the accomplishment’s found and deleted, return 204.
-	return new NextResponse(null, { status: 204 })
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Deleted accomplishment.
+		const deletedAccomplishment =
+			await deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentNotFoundResponse = validateDataFound(
+			deletedAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentNotFoundResponse) return accomplishmentNotFoundResponse
+
+		// If the accomplishment’s found and deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------

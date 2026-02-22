@@ -6,6 +6,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authorizeApiToken } from "@/lib/api/auth"
 import { accomplishmentCreateSchema } from "@/lib/api/schemas/resume/experience/contract"
 import {
+	catchServerError,
 	parseJson,
 	validateDataCreated,
 	validateDataFound,
@@ -40,24 +41,6 @@ export async function POST(
 	})
 	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Found candidate.
-	const foundCandidate = await findCandidateByCandidateId(candidateId)
-
-	// If the candidate’s not found, return 404.
-	const candidateErrorResponse = validateDataFound(
-		foundCandidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateErrorResponse) return candidateErrorResponse
-
-	// Found role.
-	const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
-
-	// If the role’s not found, return 404.
-	const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
-	if (roleErrorResponse) return roleErrorResponse
-
 	// If parsing the request body fails, return 400.
 	const requestBodyOrErrorResponse = await parseJson(request)
 	if (requestBodyOrErrorResponse instanceof NextResponse)
@@ -77,27 +60,49 @@ export async function POST(
 	// Validated request body.
 	const validatedRequestBody = validatedRequestBodyOrErrorResponse
 
-	// Created accomplishment.
-	const createdAccomplishment =
-		await createAccomplishmentByCandidateIdAndRoleId(
-			candidateId,
-			roleId,
-			validatedRequestBody,
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
 		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// If the accomplishment’s not created, return 500.
-	const createErrorResponse = validateDataCreated(
-		createdAccomplishment,
-		"accomplishment",
-		{ candidateId, roleId },
-	)
-	if (createErrorResponse) return createErrorResponse
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// If the accomplishment’s created, return 201.
-	return NextResponse.json(
-		{ accomplishment: createdAccomplishment },
-		{ status: 201 },
-	)
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Created accomplishment.
+		const createdAccomplishment =
+			await createAccomplishmentByCandidateIdAndRoleId(
+				candidateId,
+				roleId,
+				validatedRequestBody,
+			)
+
+		// If the accomplishment’s not created, return 500.
+		const createErrorResponse = validateDataCreated(
+			createdAccomplishment,
+			"accomplishment",
+			{ candidateId, roleId },
+		)
+		if (createErrorResponse) return createErrorResponse
+
+		// If the accomplishment’s created, return 201.
+		return NextResponse.json(
+			{ accomplishment: createdAccomplishment },
+			{ status: 201 },
+		)
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
 
 // --------------------------------------------------------------------------------

@@ -162,3 +162,29 @@
   - `POST /api/resume` now creates a resume root with candidate data and empty `experience`, `skillSets`, and `education`.
   - `npm run lint` and `npx tsc --noEmit` passed.
 - Commits: none.
+
+## 2026-02-22 (Running Session)
+- Request: confirm whether `src/lib/db/tokens/create.ts` needed updates for `POST /api/resume` auth flow and improve usage text.
+- Actions:
+  - Reviewed `src/app/api/resume/route.ts`, `src/lib/api/auth.ts`, `src/lib/db/schema.ts`, and `src/lib/db/tokens/create.ts`.
+  - Updated token CLI usage/help examples to explicitly include `resume:create` and clearer scope guidance.
+  - Ran local checks after subsequent changes: `npm run lint` and `npx tsc --noEmit` (both passed).
+  - Performed codebase sweep for remaining consistency tasks.
+- Outcomes:
+  - `POST /api/resume` supports `resume:create` as intended.
+  - Branch is clean after user commits.
+  - Remaining consistency gap identified in accomplishment routes: no route-level `try/catch + catchServerError` yet.
+- Commits: user-managed in-session (latest seen locally: `c288002 Added POST /api/resume.`).
+- Next step: optionally align accomplishment routes with standardized error handling pattern, then update/undraft PR.
+
+## 2026-02-22 (Running Session)
+- Request: add route-level `try/catch + catchServerError` to accomplishment routes and do a final review.
+- Actions:
+  - Updated `src/app/api/resume/[candidateId]/experience/[roleId]/accomplishments/route.ts` (`POST`) to wrap DB calls with `try/catch` and return `catchServerError`.
+  - Updated `src/app/api/resume/[candidateId]/experience/[roleId]/[accomplishmentId]/route.ts` (`GET`, `PATCH`, `DELETE`) to use the same pattern.
+  - Ran `npm run lint` and `npx tsc --noEmit`.
+- Outcomes:
+  - Experience collection routes now consistently use route-level server error handling.
+  - Lint and type-check both passed.
+- Commits: none.
+- Next step: review and commit these route updates (and `.ai/sessions.md` if desired).
