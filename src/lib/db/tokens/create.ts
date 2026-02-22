@@ -35,7 +35,7 @@ function throwCliErrorMessage(message: string): never {
 		[
 			"Usage:",
 			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token"',
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token" --scopes resume:read,resume:write --expires-at 2025-01-01T00:00:00Z',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token" --scopes resume:read,resume:create,resume:write --expires-at 2025-01-01T00:00:00Z',
 		].join("\n"),
 	)
 

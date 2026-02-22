@@ -2,7 +2,9 @@
 // Dependencies.
 // --------------------------------------------------------------------------------
 
+import { randomUUID } from "node:crypto"
 import { eq } from "drizzle-orm"
+import type { ResumeCreate } from "@/lib/api/schemas/resume/contract"
 import { db } from "@/lib/db"
 import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 import { findEducationByCandidateId } from "@/lib/db/resume/education/sql"
@@ -34,6 +36,32 @@ export async function findResumeByCandidateId(candidateId: string) {
 		skillSets,
 		education,
 	}
+}
+
+// --------------------------------------------------------------------------------
+// Create resume.
+// --------------------------------------------------------------------------------
+
+export async function createResume(resumeCreate: ResumeCreate) {
+	const candidateId = randomUUID()
+
+	// Insert candidate.
+	const [newCandidate] = await db
+		.insert(candidates)
+		.values({
+			candidateId,
+			...resumeCreate.candidate,
+		})
+		.returning({
+			candidateId: candidates.candidateId,
+		})
+
+	if (!newCandidate) return null
+
+	// Found resume.
+	const foundResume = await findResumeByCandidateId(newCandidate.candidateId)
+
+	return foundResume ?? null
 }
 
 // --------------------------------------------------------------------------------

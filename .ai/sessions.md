@@ -145,3 +145,20 @@
   - Resume endpoint now exposes `GET` and `DELETE` only at `/api/resume/[candidateId]`.
   - `npm run lint` and `npx tsc --noEmit` passed.
 - Commits: none.
+- Request: add `POST /api/resume` as a simple resume initializer (candidate only, empty collections).
+- Actions:
+  - Added `src/app/api/resume/route.ts` with `POST` handler:
+    - parse JSON
+    - validate against `resumeCreateSchema`
+    - call `createResume`
+    - return `201` with created resume
+    - use `catchServerError` for thrown errors
+  - Added `src/lib/api/schemas/resume/contract.ts`:
+    - `resumeCreateSchema` with `candidate: candidateCreateSchema`
+  - Added `createResume` in `src/lib/db/resume/sql.ts`:
+    - inserts candidate with generated UUID
+    - returns canonical resume via `findResumeByCandidateId` (empty arrays initially)
+- Outcome:
+  - `POST /api/resume` now creates a resume root with candidate data and empty `experience`, `skillSets`, and `education`.
+  - `npm run lint` and `npx tsc --noEmit` passed.
+- Commits: none.

@@ -13,7 +13,7 @@ import { apiTokens } from "@/lib/db/schema"
 // --------------------------------------------------------------------------------
 
 type ApiAuthOptions = {
-	candidateId: string
+	candidateId?: string
 	scopeRequirement: string
 }
 
@@ -86,8 +86,8 @@ export async function authorizeApiToken(
 		)
 	}
 
-	// If the API token’s candidateId doesn’t match, return an error.
-	if (apiToken.candidateId !== candidateId) {
+	// If there’s a candidateId and it doesn’t match the API token’s candidateId, return an error.
+	if (candidateId && apiToken.candidateId !== candidateId) {
 		return NextResponse.json(
 			{
 				error: `Couldn't find the candidate by candidateId (${candidateId}).`,

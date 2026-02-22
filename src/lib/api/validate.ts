@@ -115,16 +115,20 @@ export function validateRequestBodyAgainstSchema<T>(
 export function validateDataCreated<T>(
 	data: T | null,
 	dataName: string,
-	ids: Record<string, string>,
+	ids: Record<string, string> = {},
 ) {
 	if (!data) {
 		const identifierMessage = Object.entries(ids)
 			.map(([key, value]) => `${key} (${value})`)
 			.join(" and ")
 
+		const errorMessage = identifierMessage
+			? `Couldn't create the ${dataName} by ${identifierMessage}.`
+			: `Couldn't create the ${dataName}.`
+
 		return NextResponse.json(
 			{
-				error: `Couldn't create the ${dataName} by ${identifierMessage}.`,
+				error: errorMessage,
 			},
 			{ status: 500 },
 		)
