@@ -1,26 +1,9 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
-	"vcs": {
-		"enabled": true,
-		"clientKind": "git",
-		"useIgnoreFile": true
-	},
 	"assist": {
 		"actions": {
 			"source": {
 				"organizeImports": "on"
-			}
-		}
-	},
-	"formatter": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"nursery": {
-				"useSortedClasses": "error"
 			}
 		}
 	},
@@ -29,10 +12,27 @@
 			"tailwindDirectives": true
 		}
 	},
+	"formatter": {
+		"enabled": true
+	},
 	"javascript": {
 		"formatter": {
 			"jsxQuoteStyle": "double",
 			"semicolons": "asNeeded"
 		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"nursery": {
+				"useSortedClasses": "error"
+			},
+			"recommended": true
+		}
+	},
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
 	}
 }
