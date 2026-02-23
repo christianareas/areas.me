@@ -1,30 +1,88 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
-import { type NextRequest, NextResponse } from "next/server"
-import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getResumeByCandidateId } from "@/lib/db/resume/sql"
+// --------------------------------------------------------------------------------
 
-//
-// GET /api/resume/[candidateId]/.
-//
+import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
+import {
+	catchServerError,
+	validateDataFound,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import {
+	deleteResumeByCandidateId,
+	findResumeByCandidateId,
+} from "@/lib/db/resume/sql"
+
+// --------------------------------------------------------------------------------
+// GET /api/resume/[candidateId].
+// --------------------------------------------------------------------------------
+
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
 ) {
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Resume.
-	const resume = await getResumeByCandidateId(candidateId)
+	try {
+		// Found resume.
+		const foundResume = await findResumeByCandidateId(candidateId)
 
-	// Validate the resume found.
-	const resumeValidationResponse = validateDataFound(resume, "resume", {
-		candidateId,
-	})
-	if (resumeValidationResponse) return resumeValidationResponse
+		// If the resume isn’t found, return 404.
+		const resumeErrorResponse = validateDataFound(foundResume, "resume", {
+			candidateId,
+		})
+		if (resumeErrorResponse) return resumeErrorResponse
 
-	return NextResponse.json({ resume }, { status: 200 })
+		// If the resume’s found, return 200.
+		return NextResponse.json({ resume: foundResume }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
+
+// --------------------------------------------------------------------------------
+// DELETE /api/resume/[candidateId].
+// --------------------------------------------------------------------------------
+
+export async function DELETE(
+	request: NextRequest,
+	{ params }: { params: Promise<{ candidateId: string }> },
+) {
+	// Candidate ID.
+	const { candidateId } = await params
+
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	try {
+		// Deleted resume.
+		const deletedResume = await deleteResumeByCandidateId(candidateId)
+
+		// If the resume isn’t found, return 404.
+		const resumeErrorResponse = validateDataFound(deletedResume, "resume", {
+			candidateId,
+		})
+		if (resumeErrorResponse) return resumeErrorResponse
+
+		// If the resume’s deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
+}
+
+// --------------------------------------------------------------------------------

@@ -1,17 +1,26 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { createHash } from "node:crypto"
 import { eq } from "drizzle-orm"
 import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { apiTokens } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type ApiAuthOptions = {
-	candidateId: string
+	candidateId?: string
 	scopeRequirement: string
 }
 
+// --------------------------------------------------------------------------------
 // Authorize the API token.
+// --------------------------------------------------------------------------------
+
 export async function authorizeApiToken(
 	request: NextRequest,
 	{ candidateId, scopeRequirement }: ApiAuthOptions,
@@ -30,7 +39,7 @@ export async function authorizeApiToken(
 	// Bearer token.
 	const [scheme, token] = authorizationHeader.trim().split(/\s+/)
 
-	// If the Authorization header is not a Bearer token, return an error.
+	// If the Authorization header isn’t a Bearer token, return an error.
 	if (scheme?.toLowerCase() !== "bearer" || !token) {
 		return NextResponse.json(
 			{ error: "You must send a Bearer token." },
@@ -77,8 +86,8 @@ export async function authorizeApiToken(
 		)
 	}
 
-	// If the API token’s candidateId doesn’t match, return an error.
-	if (apiToken.candidateId !== candidateId) {
+	// If there’s a candidateId and it doesn’t match the API token’s candidateId, return an error.
+	if (candidateId && apiToken.candidateId !== candidateId) {
 		return NextResponse.json(
 			{
 				error: `Couldn't find the candidate by candidateId (${candidateId}).`,
@@ -97,3 +106,5 @@ export async function authorizeApiToken(
 
 	return null
 }
+
+// --------------------------------------------------------------------------------

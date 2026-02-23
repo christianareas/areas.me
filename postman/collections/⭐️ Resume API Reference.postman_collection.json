@@ -1,0 +1,2569 @@
+{
+  "info": {
+    "_postman_id": "11c69e73-608b-4e77-8be1-ae12cd23905c",
+    "name": "⭐️ Resume API Reference",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Resume",
+      "item": [
+        {
+          "name": "Create a Resume",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save candidateId as an environment variable.",
+                  "pm.environment.set(\"candidateId\", response.resume.candidate.candidateId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "86e4effb-4fcc-46b9-beae-88a7cc6b76ad",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"candidate\": {\n    \"firstName\": \"Christian\",\n    \"middleName\": \"\",\n    \"lastName\": \"Areas\",\n    \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n    \"email\": \"me@areas.me\",\n    \"phoneCountryCode\": 1,\n    \"phoneNumber\": 4088029811,\n    \"website\": \"https://www.areas.me/\",\n    \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n    \"gitHub\": \"https://github.com/christianareas\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume"
+              ]
+            },
+            "description": "Creates a new resume. Requires Bearer token with resume:create scope."
+          },
+          "response": [
+            {
+              "id": "b1ee85ab-a4c7-4350-9693-db6623180f98",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"candidate\": {\n    \"firstName\": \"Christian\",\n    \"middleName\": \"\",\n    \"lastName\": \"Areas\",\n    \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n    \"email\": \"me@areas.me\",\n    \"phoneCountryCode\": 1,\n    \"phoneNumber\": 4088029811,\n    \"website\": \"https://www.areas.me/\",\n    \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n    \"gitHub\": \"https://github.com/christianareas\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:29:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"resume\": {\n        \"candidate\": {\n            \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n            \"firstName\": \"Christian\",\n            \"middleName\": \"\",\n            \"lastName\": \"Areas\",\n            \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n            \"email\": \"me@areas.me\",\n            \"phoneCountryCode\": 1,\n            \"phoneNumber\": 4088029811,\n            \"website\": \"https://www.areas.me/\",\n            \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n            \"gitHub\": \"https://github.com/christianareas\"\n        },\n        \"experience\": [],\n        \"skillSets\": [],\n        \"education\": []\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get a Resume",
+          "id": "7df91ce0-2722-4932-bc6a-e6c1ae696366",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}"
+              ]
+            },
+            "description": "Returns the full resume for a candidate. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "1694d611-562e-42c2-adc6-b18dc5cfafe4",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:28:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"resume\": {\n        \"candidate\": {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"firstName\": \"Christian\",\n            \"middleName\": \"\",\n            \"lastName\": \"Areas\",\n            \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n            \"email\": \"me@areas.me\",\n            \"phoneCountryCode\": 1,\n            \"phoneNumber\": 4088029811,\n            \"website\": \"https://www.areas.me/\",\n            \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n            \"gitHub\": \"https://github.com/christianareas\"\n        },\n        \"experience\": [\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"637f9a15-ea20-4597-990b-d67bd20db1c1\",\n                \"company\": \"Postman\",\n                \"role\": \"Senior Technical Writer\",\n                \"startDate\": \"2024-03-18\",\n                \"endDate\": null,\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"7f4d6d8b-56c4-40a7-9c75-9d48f34a5161\",\n                        \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"508b3571-95ab-49de-8a9e-ef30806a389f\",\n                        \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"accomplishmentId\": \"5ac5331b-7549-45de-b0a3-64cfbeb46cb8\",\n                        \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"accomplishmentId\": \"af61fff1-a32e-43f4-a548-cea6b4181ebc\",\n                        \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n                        \"sortOrder\": 3\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"7b329cf8-5a11-4de8-bdc7-65696dbc1e2c\",\n                \"company\": \"Apple\",\n                \"role\": \"Senior Technical Writer, Special Projects\",\n                \"startDate\": \"2023-09-01\",\n                \"endDate\": \"2024-03-01\",\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"26c0fffc-9ce8-49c6-84ff-d404b6bc384d\",\n                        \"accomplishment\": \"Designed a comprehensive workflow that manages the team's documentation lifecycle. The workflow includes a two-step review process and an automated method to flag outdated content.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"28780fdb-38d3-487c-a84b-d05b05f0f5ef\",\n                        \"accomplishment\": \"Worked with cross-functional partners to write how-tos for users who collect data and test in-development products for Apple's research and development organization.\",\n                        \"sortOrder\": 1\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"3d7d7353-35ef-4be8-b32d-ee8151a13709\",\n                \"company\": \"Sabbatical\",\n                \"role\": \"\",\n                \"startDate\": \"2022-04-01\",\n                \"endDate\": \"2023-09-01\",\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"f0814cea-c88c-4f2a-bda4-c9eb779344de\",\n                        \"accomplishment\": \"Completed a 24-week, full-stack JavaScript developer boot camp. Led all team projects — and in one case made over 90% of the contributions to the codebase. Learned TypeScript shortly thereafter.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"0ea02570-6c24-45ad-bd6b-fb3816dfb416\",\n                        \"accomplishment\": \"Finished a 5-course, self-paced Python specialization.\",\n                        \"sortOrder\": 1\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"0e6bdabb-10b6-495a-985d-26526faedfa0\",\n                \"company\": \"Apple\",\n                \"role\": \"Senior Technical Writer, Apple Pay\",\n                \"startDate\": \"2019-08-01\",\n                \"endDate\": \"2022-04-01\",\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"2107ad23-c1ae-4a8e-be58-38dd5c2eb612\",\n                        \"accomplishment\": \"Functioned as Apple Pay server engineering's sole technical writer.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"98b24a62-861c-43f9-ad29-c10d307ad933\",\n                        \"accomplishment\": \"Wrote several documents from scratch, including one that explains the system behind Apple Pay Later.\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"accomplishmentId\": \"4ffd34d2-9d96-4f5f-a847-b4a1d3e8460c\",\n                        \"accomplishment\": \"Worked with engineering managers and engineers across Apple Pay to gather requirements for a new docs-as-code solution to centralize Apple Pay's API specifications.\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"accomplishmentId\": \"7c3e616e-de93-4eaa-a701-dd142148f69c\",\n                        \"accomplishment\": \"Designed the docs-as-code solution. It sources Markdown and OpenAPI files from multiple GitHub repos, and uses web hooks and a CI/CD pipeline to publish the latest updates to teams across Apple. The solution supports fine-grained permissions, and gives users an easy way to create text-based message sequence diagrams.\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"accomplishmentId\": \"2b4bc481-c06e-40b6-8c5f-56bac31e6ca0\",\n                        \"accomplishment\": \"Interviewed nearly 50 candidates to hire Apple Pay server engineering's second technical writer.\",\n                        \"sortOrder\": 4\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"b985c1d0-0f7f-46d6-a39d-ebbd0a8db7aa\",\n                \"company\": \"Apple\",\n                \"role\": \"Senior Technical Writer, Employee Productivity\",\n                \"startDate\": \"2015-07-01\",\n                \"endDate\": \"2019-08-01\",\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"55008b01-eafa-4308-98bb-d1fcda84a0a7\",\n                        \"accomplishment\": \"Wrote in the Apple voice for Apple employees — guides and how-tos for everyday users, new employees, managers, and other audiences.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"546660bd-1062-4966-bc08-15690742973d\",\n                        \"accomplishment\": \"Referenced the Apple Style Guide, Human Interface Guidelines (HIG), Chicago Manual of Style, and other resources to maintain consistency across content.\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"accomplishmentId\": \"124deb74-8b4b-4acf-a094-dcaa47eee508\",\n                        \"accomplishment\": \"Managed and mentored writers.\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"accomplishmentId\": \"5331572b-e99f-4c63-8a01-4d7ac5b24318\",\n                        \"accomplishment\": \"Led major, cross-functional projects — such as the complete overhaul of one of Apple's main internal sites — and subsequently iterated to improve the user experience.\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"accomplishmentId\": \"6c7f62ee-3f84-4aa9-a84a-cbd3d90e1ac0\",\n                        \"accomplishment\": \"Wrote SQL queries to generate reports. Used the data to answer questions and drive decisions.\",\n                        \"sortOrder\": 4\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"roleId\": \"c92724f9-41fe-417e-8f26-e75ef1005ab0\",\n                \"company\": \"MGT\",\n                \"role\": \"Documentation Manager\",\n                \"startDate\": \"2013-10-01\",\n                \"endDate\": \"2015-07-01\",\n                \"accomplishments\": [\n                    {\n                        \"accomplishmentId\": \"1a2c1ea7-97ae-4058-a1e4-7d7d797064ef\",\n                        \"accomplishment\": \"Authored key documents from scratch to support the startup, including a 150+ page internal control system (ICS), information security policies, anti-money laundering (AML) and countering the financing of terrorism (CFT) policies, and more.\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"accomplishmentId\": \"0579a5bd-6abf-47dd-b64c-34badb306016\",\n                        \"accomplishment\": \"Wrote functional specifications for user registration, know your customer (KYC), and deposit and withdrawal flows.\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"accomplishmentId\": \"e8bf3337-33a7-412a-90d1-4ddcc3078396\",\n                        \"accomplishment\": \"Developed 20+ SQL queries to output all financial and operational data — registrations, logins, deposits and withdrawals, gaming activity, liabilities, and other metrics.\",\n                        \"sortOrder\": 2\n                    }\n                ]\n            }\n        ],\n        \"skillSets\": [\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"823ffbaa-5939-47d9-87ba-424c6d967731\",\n                \"skillSetType\": \"languages\",\n                \"sortOrder\": 0,\n                \"skills\": [\n                    {\n                        \"skillId\": \"6d07e824-66d5-4337-9398-628f284e610f\",\n                        \"skill\": \"Bash\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"aa5ac7c3-82d0-4c64-9f84-eb4315c70558\",\n                        \"skill\": \"JavaScript and TypeScript\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"54453dab-4401-4f1a-bc51-45bb92164e40\",\n                        \"skill\": \"JSON\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"skillId\": \"7cead30f-24ac-4b67-9d2c-283f6f26bd97\",\n                        \"skill\": \"Markdown\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"skillId\": \"314df7bb-fa03-4a93-8802-29cca9db0989\",\n                        \"skill\": \"Python\",\n                        \"sortOrder\": 4\n                    },\n                    {\n                        \"skillId\": \"e02050b4-9920-466f-a85c-4bd09409f36f\",\n                        \"skill\": \"Regex\",\n                        \"sortOrder\": 5\n                    },\n                    {\n                        \"skillId\": \"3fb48ca5-c5b7-4eff-86aa-fe35649c9365\",\n                        \"skill\": \"SQL\",\n                        \"sortOrder\": 6\n                    },\n                    {\n                        \"skillId\": \"e1a28074-7f04-4ded-acf1-d26bcff75376\",\n                        \"skill\": \"YAML\",\n                        \"sortOrder\": 7\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"c02facb0-8d4d-4247-b6e3-e25dd98f3bba\",\n                \"skillSetType\": \"specifications\",\n                \"sortOrder\": 1,\n                \"skills\": [\n                    {\n                        \"skillId\": \"4044c487-dafa-46d3-b292-7ed31f0773b2\",\n                        \"skill\": \"GraphQL\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"0f0e15de-f24d-4eb4-ae3b-e3d9aba3dae7\",\n                        \"skill\": \"gRPC\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"8146b1b7-7bef-48f8-9cee-9dfacea111ad\",\n                        \"skill\": \"JWT\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"skillId\": \"6d150ec7-5415-4d31-92a7-ebc812ae22e8\",\n                        \"skill\": \"MCP\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"skillId\": \"942f9e68-d2c4-409b-aacc-eebace3b5c27\",\n                        \"skill\": \"OpenAPI\",\n                        \"sortOrder\": 4\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"c599ffcc-cd4a-480e-b391-43b30df2f5e9\",\n                \"skillSetType\": \"command-line-tools\",\n                \"sortOrder\": 2,\n                \"skills\": [\n                    {\n                        \"skillId\": \"fa98f117-d48d-4dee-b029-a1862e2ad83d\",\n                        \"skill\": \"Brew\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"f7669d4f-99b3-45fd-9bff-e59f88bbd5c6\",\n                        \"skill\": \"Claude Code\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"cb382576-1fbd-429d-b7f9-f3fcc79e2588\",\n                        \"skill\": \"Codex\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"skillId\": \"1c38c32c-e181-42ec-b970-c6ad688d167e\",\n                        \"skill\": \"Git\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"skillId\": \"84af94e8-f87d-49fc-bcaa-74e47a873c4f\",\n                        \"skill\": \"GitHub CLI\",\n                        \"sortOrder\": 4\n                    },\n                    {\n                        \"skillId\": \"09d303b9-e689-4eb6-9eba-f2e2c03cf08f\",\n                        \"skill\": \"NPM\",\n                        \"sortOrder\": 5\n                    },\n                    {\n                        \"skillId\": \"70fe1fab-a1b0-4c68-9544-df3d049c0faf\",\n                        \"skill\": \"Vale\",\n                        \"sortOrder\": 6\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"e5cfedf3-ed23-461a-a5a7-7cc6962fbada\",\n                \"skillSetType\": \"databases\",\n                \"sortOrder\": 3,\n                \"skills\": [\n                    {\n                        \"skillId\": \"104bfb81-52d0-4686-9b58-f249ce78e368\",\n                        \"skill\": \"MongoDB\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"b1f04267-b7ee-4f84-b515-ea30589171ed\",\n                        \"skill\": \"MySQL\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"f97804cf-dc51-4d7c-8b32-7b0f10d94e49\",\n                        \"skill\": \"PostgreSQL\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"skillId\": \"a228ead0-9e6c-488b-88cb-9ef43bd9c343\",\n                        \"skill\": \"SQLite\",\n                        \"sortOrder\": 3\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"de66231e-5585-46da-9246-757e541d47de\",\n                \"skillSetType\": \"frameworks\",\n                \"sortOrder\": 4,\n                \"skills\": [\n                    {\n                        \"skillId\": \"da20674f-b931-48ee-91e8-b9c436cb5d57\",\n                        \"skill\": \"Next.js\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"55aa0f18-bf13-4a06-8927-cc956988e85d\",\n                        \"skill\": \"Node.js\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"0bde359b-0237-4c24-93de-8fe315f0ba8e\",\n                        \"skill\": \"React.js\",\n                        \"sortOrder\": 2\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"2bb574c3-b0fe-469a-a254-c0cb8d8f59d0\",\n                \"skillSetType\": \"cloud-deployments\",\n                \"sortOrder\": 5,\n                \"skills\": [\n                    {\n                        \"skillId\": \"e3b280c4-0508-4211-a662-e11bd0f213f7\",\n                        \"skill\": \"AWS\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"8130a6a0-06de-47cd-8378-5f7f62d4a942\",\n                        \"skill\": \"Google Cloud\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"a16960db-3a6e-4af7-9cae-22514fea422b\",\n                        \"skill\": \"Vercel\",\n                        \"sortOrder\": 2\n                    }\n                ]\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"skillSetId\": \"1477a047-4eee-40b3-a11b-6a870ec1a4b1\",\n                \"skillSetType\": \"apps\",\n                \"sortOrder\": 6,\n                \"skills\": [\n                    {\n                        \"skillId\": \"3d506368-077d-4b4c-8ade-d34912ae59ea\",\n                        \"skill\": \"Confluence and Jira\",\n                        \"sortOrder\": 0\n                    },\n                    {\n                        \"skillId\": \"0177a77f-344b-47fe-b56d-7735a997e610\",\n                        \"skill\": \"Figma\",\n                        \"sortOrder\": 1\n                    },\n                    {\n                        \"skillId\": \"74769530-845b-45c4-9b26-e19700ccc33a\",\n                        \"skill\": \"Postman\",\n                        \"sortOrder\": 2\n                    },\n                    {\n                        \"skillId\": \"3531aad4-0f41-423a-9bee-46611808e611\",\n                        \"skill\": \"Terminal and Warp\",\n                        \"sortOrder\": 3\n                    },\n                    {\n                        \"skillId\": \"545b7551-1ec3-471a-8bc9-d27e56637f4a\",\n                        \"skill\": \"Cursor and Visual Studio Code\",\n                        \"sortOrder\": 4\n                    },\n                    {\n                        \"skillId\": \"5e30bba5-c37b-4375-a15c-2a48e2fafa9c\",\n                        \"skill\": \"Xcode\",\n                        \"sortOrder\": 5\n                    }\n                ]\n            }\n        ],\n        \"education\": [\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"credentialId\": \"c560a09f-e1c0-438b-bdee-40b08193aa71\",\n                \"institution\": \"University of Michigan (Coursera)\",\n                \"credential\": \"Specialization Certificate, Python for Everyone\",\n                \"startDate\": null,\n                \"endDate\": \"2023-06-01\"\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"credentialId\": \"6d2a04b3-3aae-48fe-a96a-95bbc0072d0f\",\n                \"institution\": \"UC Berkeley Extension\",\n                \"credential\": \"Certificate of Completion, Full-Stack JavaScript Developer\",\n                \"startDate\": null,\n                \"endDate\": \"2023-03-01\"\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"credentialId\": \"424c3311-d868-4dae-94be-178bf12602d6\",\n                \"institution\": \"Emory University\",\n                \"credential\": \"MPH, Epidemiology (Coursework Complete)\",\n                \"startDate\": null,\n                \"endDate\": \"2008-05-01\"\n            },\n            {\n                \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n                \"credentialId\": \"96375c83-3995-48b7-a118-131572b154f3\",\n                \"institution\": \"UC Berkeley\",\n                \"credential\": \"BA, English and Premed\",\n                \"startDate\": null,\n                \"endDate\": \"2005-05-01\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a Resume",
+          "id": "228550db-e590-418a-8927-963fa5a3d1ae",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}"
+              ]
+            },
+            "description": "Deletes a resume. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "8a80952d-7a02-4cfc-a0e3-b697c2f731ad",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:55:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "7860b275-0647-469c-9d89-14d62d781bc2"
+    },
+    {
+      "name": "Candidate",
+      "item": [
+        {
+          "name": "Get a Candidate",
+          "id": "c1c604fa-bbba-4d64-ad6c-df35e2f986dc",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/candidate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "candidate"
+              ]
+            },
+            "description": "Returns candidate info. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "08b0241e-e36d-4838-ab76-093520351738",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/candidate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "candidate"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:31:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"candidate\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"firstName\": \"Christian\",\n        \"middleName\": \"\",\n        \"lastName\": \"Areas\",\n        \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n        \"email\": \"me@areas.me\",\n        \"phoneCountryCode\": 1,\n        \"phoneNumber\": 4088029811,\n        \"website\": \"https://www.areas.me/\",\n        \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n        \"gitHub\": \"https://github.com/christianareas\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a Candidate",
+          "id": "5c636389-09d3-4036-8588-313695cee395",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Christian\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/candidate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "candidate"
+              ]
+            },
+            "description": "Partially updates candidate info. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "c157f0c9-7c9f-481e-ba17-b1bad7b97497",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"Christian\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/candidate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "candidate"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:33:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"candidate\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"firstName\": \"Christian\",\n        \"middleName\": \"\",\n        \"lastName\": \"Areas\",\n        \"who\": \"A writer who uses his technical skills and love of learning to create a great developer experience\",\n        \"email\": \"me@areas.me\",\n        \"phoneCountryCode\": 1,\n        \"phoneNumber\": 4088029811,\n        \"website\": \"https://www.areas.me/\",\n        \"linkedIn\": \"https://www.linkedin.com/in/christianareas/\",\n        \"gitHub\": \"https://github.com/christianareas\",\n        \"updatedAt\": \"2026-02-23T02:33:39.340Z\"\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "id": "34caffd5-8948-4837-84cd-aac1fcca5bfd"
+    },
+    {
+      "name": "Experience",
+      "item": [
+        {
+          "name": "Get Experience",
+          "id": "3098caa6-5f31-48ae-b432-cb0b2c10fc9c",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience"
+              ]
+            },
+            "description": "Returns all experience entries. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "25689af2-0704-419e-92ba-0ed178236d2f",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 03:00:28 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"experience\": [\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"637f9a15-ea20-4597-990b-d67bd20db1c1\",\n            \"company\": \"Postman\",\n            \"role\": \"Senior Technical Writer\",\n            \"startDate\": \"2024-03-18\",\n            \"endDate\": null,\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"7f4d6d8b-56c4-40a7-9c75-9d48f34a5161\",\n                    \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"508b3571-95ab-49de-8a9e-ef30806a389f\",\n                    \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"accomplishmentId\": \"5ac5331b-7549-45de-b0a3-64cfbeb46cb8\",\n                    \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"accomplishmentId\": \"af61fff1-a32e-43f4-a548-cea6b4181ebc\",\n                    \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n                    \"sortOrder\": 3\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"7b329cf8-5a11-4de8-bdc7-65696dbc1e2c\",\n            \"company\": \"Apple\",\n            \"role\": \"Senior Technical Writer, Special Projects\",\n            \"startDate\": \"2023-09-01\",\n            \"endDate\": \"2024-03-01\",\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"26c0fffc-9ce8-49c6-84ff-d404b6bc384d\",\n                    \"accomplishment\": \"Designed a comprehensive workflow that manages the team's documentation lifecycle. The workflow includes a two-step review process and an automated method to flag outdated content.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"28780fdb-38d3-487c-a84b-d05b05f0f5ef\",\n                    \"accomplishment\": \"Worked with cross-functional partners to write how-tos for users who collect data and test in-development products for Apple's research and development organization.\",\n                    \"sortOrder\": 1\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"3d7d7353-35ef-4be8-b32d-ee8151a13709\",\n            \"company\": \"Sabbatical\",\n            \"role\": \"\",\n            \"startDate\": \"2022-04-01\",\n            \"endDate\": \"2023-09-01\",\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"f0814cea-c88c-4f2a-bda4-c9eb779344de\",\n                    \"accomplishment\": \"Completed a 24-week, full-stack JavaScript developer boot camp. Led all team projects — and in one case made over 90% of the contributions to the codebase. Learned TypeScript shortly thereafter.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"0ea02570-6c24-45ad-bd6b-fb3816dfb416\",\n                    \"accomplishment\": \"Finished a 5-course, self-paced Python specialization.\",\n                    \"sortOrder\": 1\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"0e6bdabb-10b6-495a-985d-26526faedfa0\",\n            \"company\": \"Apple\",\n            \"role\": \"Senior Technical Writer, Apple Pay\",\n            \"startDate\": \"2019-08-01\",\n            \"endDate\": \"2022-04-01\",\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"2107ad23-c1ae-4a8e-be58-38dd5c2eb612\",\n                    \"accomplishment\": \"Functioned as Apple Pay server engineering's sole technical writer.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"98b24a62-861c-43f9-ad29-c10d307ad933\",\n                    \"accomplishment\": \"Wrote several documents from scratch, including one that explains the system behind Apple Pay Later.\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"accomplishmentId\": \"4ffd34d2-9d96-4f5f-a847-b4a1d3e8460c\",\n                    \"accomplishment\": \"Worked with engineering managers and engineers across Apple Pay to gather requirements for a new docs-as-code solution to centralize Apple Pay's API specifications.\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"accomplishmentId\": \"7c3e616e-de93-4eaa-a701-dd142148f69c\",\n                    \"accomplishment\": \"Designed the docs-as-code solution. It sources Markdown and OpenAPI files from multiple GitHub repos, and uses web hooks and a CI/CD pipeline to publish the latest updates to teams across Apple. The solution supports fine-grained permissions, and gives users an easy way to create text-based message sequence diagrams.\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"accomplishmentId\": \"2b4bc481-c06e-40b6-8c5f-56bac31e6ca0\",\n                    \"accomplishment\": \"Interviewed nearly 50 candidates to hire Apple Pay server engineering's second technical writer.\",\n                    \"sortOrder\": 4\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"b985c1d0-0f7f-46d6-a39d-ebbd0a8db7aa\",\n            \"company\": \"Apple\",\n            \"role\": \"Senior Technical Writer, Employee Productivity\",\n            \"startDate\": \"2015-07-01\",\n            \"endDate\": \"2019-08-01\",\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"55008b01-eafa-4308-98bb-d1fcda84a0a7\",\n                    \"accomplishment\": \"Wrote in the Apple voice for Apple employees — guides and how-tos for everyday users, new employees, managers, and other audiences.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"546660bd-1062-4966-bc08-15690742973d\",\n                    \"accomplishment\": \"Referenced the Apple Style Guide, Human Interface Guidelines (HIG), Chicago Manual of Style, and other resources to maintain consistency across content.\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"accomplishmentId\": \"124deb74-8b4b-4acf-a094-dcaa47eee508\",\n                    \"accomplishment\": \"Managed and mentored writers.\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"accomplishmentId\": \"5331572b-e99f-4c63-8a01-4d7ac5b24318\",\n                    \"accomplishment\": \"Led major, cross-functional projects — such as the complete overhaul of one of Apple's main internal sites — and subsequently iterated to improve the user experience.\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"accomplishmentId\": \"6c7f62ee-3f84-4aa9-a84a-cbd3d90e1ac0\",\n                    \"accomplishment\": \"Wrote SQL queries to generate reports. Used the data to answer questions and drive decisions.\",\n                    \"sortOrder\": 4\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"roleId\": \"c92724f9-41fe-417e-8f26-e75ef1005ab0\",\n            \"company\": \"MGT\",\n            \"role\": \"Documentation Manager\",\n            \"startDate\": \"2013-10-01\",\n            \"endDate\": \"2015-07-01\",\n            \"accomplishments\": [\n                {\n                    \"accomplishmentId\": \"1a2c1ea7-97ae-4058-a1e4-7d7d797064ef\",\n                    \"accomplishment\": \"Authored key documents from scratch to support the startup, including a 150+ page internal control system (ICS), information security policies, anti-money laundering (AML) and countering the financing of terrorism (CFT) policies, and more.\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"accomplishmentId\": \"0579a5bd-6abf-47dd-b64c-34badb306016\",\n                    \"accomplishment\": \"Wrote functional specifications for user registration, know your customer (KYC), and deposit and withdrawal flows.\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"accomplishmentId\": \"e8bf3337-33a7-412a-90d1-4ddcc3078396\",\n                    \"accomplishment\": \"Developed 20+ SQL queries to output all financial and operational data — registrations, logins, deposits and withdrawals, gaming activity, liabilities, and other metrics.\",\n                    \"sortOrder\": 2\n                }\n            ]\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create a Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save roleId as an environment variable.",
+                  "pm.environment.set(\"roleId\", response.role.roleId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "134d8f46-c6b7-49a7-80e3-4ae9f53fc1d3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Postman\",\n  \"role\": \"Senior Technical Writer\",\n  \"startDate\": \"2024-03-18\",\n  \"endDate\": null,\n  \"accomplishments\": [\n    {\n      \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n      \"sortOrder\": 0\n    },\n    {\n      \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n      \"sortOrder\": 1\n    },\n    {\n      \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n      \"sortOrder\": 2\n    },\n    {\n      \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n      \"sortOrder\": 3\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience"
+              ]
+            },
+            "description": "Adds a role/experience entry. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "c3c1cbf1-e3b6-464a-911a-879133857e7d",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"company\": \"Postman\",\n  \"role\": \"Senior Technical Writer\",\n  \"startDate\": \"2024-03-18\",\n  \"endDate\": null,\n  \"accomplishments\": [\n    {\n      \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n      \"sortOrder\": 0\n    },\n    {\n      \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n      \"sortOrder\": 1\n    },\n    {\n      \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n      \"sortOrder\": 2\n    },\n    {\n      \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n      \"sortOrder\": 3\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:36:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"role\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"company\": \"Postman\",\n        \"role\": \"Senior Technical Writer\",\n        \"startDate\": \"2024-03-18\",\n        \"endDate\": null,\n        \"createdAt\": \"2026-02-23T02:36:49.655Z\",\n        \"accomplishments\": [\n            {\n                \"accomplishmentId\": \"85af2b68-a4a2-43d4-a45b-d6979a0f8f98\",\n                \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n                \"sortOrder\": 0\n            },\n            {\n                \"accomplishmentId\": \"e676f6d9-b9df-46e0-bfc9-fadf96cbc228\",\n                \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n                \"sortOrder\": 1\n            },\n            {\n                \"accomplishmentId\": \"cf7e99e7-d386-4d41-adca-aa26eb12223d\",\n                \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n                \"sortOrder\": 2\n            },\n            {\n                \"accomplishmentId\": \"4913982d-dd82-4c3e-92bb-aecb1bd4e35b\",\n                \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n                \"sortOrder\": 3\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get a Role",
+          "id": "246d4305-97c4-4154-b694-367441148021",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Returns a single role. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "7e5205ca-8ad2-4134-9635-e175e3c55750",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:37:09 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"role\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"company\": \"Postman\",\n        \"role\": \"Senior Technical Writer\",\n        \"startDate\": \"2024-03-18\",\n        \"endDate\": null,\n        \"accomplishments\": [\n            {\n                \"accomplishmentId\": \"85af2b68-a4a2-43d4-a45b-d6979a0f8f98\",\n                \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n                \"sortOrder\": 0\n            },\n            {\n                \"accomplishmentId\": \"e676f6d9-b9df-46e0-bfc9-fadf96cbc228\",\n                \"accomplishment\": \"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.\",\n                \"sortOrder\": 1\n            },\n            {\n                \"accomplishmentId\": \"cf7e99e7-d386-4d41-adca-aa26eb12223d\",\n                \"accomplishment\": \"Built a Next.js site that lists all of Postman's icons. The Postman Docs team uses the icons to add visual cues to the docs to improve the user experience.\",\n                \"sortOrder\": 2\n            },\n            {\n                \"accomplishmentId\": \"4913982d-dd82-4c3e-92bb-aecb1bd4e35b\",\n                \"accomplishment\": \"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.\",\n                \"sortOrder\": 3\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a Role",
+          "id": "2ecaa3e9-d808-4f6a-9a68-49f04539f257",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"Staff Technical Writer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Partially updates a role. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "459cfd2e-bf2d-4b6d-8408-cfbc94703627",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role\": \"Staff Technical Writer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:38:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"role\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"company\": \"Postman\",\n        \"role\": \"Staff Technical Writer\",\n        \"startDate\": \"2024-03-18\",\n        \"endDate\": null,\n        \"updatedAt\": \"2026-02-23T02:38:25.027Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a Role",
+          "id": "ab182b8e-9c46-4644-98c4-2c05e6908921",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}"
+              ]
+            },
+            "description": "Deletes a role. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "3d93b174-2a00-468c-8e75-a571b4a73713",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:44:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Create an Accomplishment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save accomplishmentId as an environment variable.",
+                  "pm.environment.set(\"accomplishmentId\", response.accomplishment.accomplishmentId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "2f5e2b18-2c4f-4477-ac56-26c0049340a7",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n  \"sortOrder\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/accomplishments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}",
+                "accomplishments"
+              ]
+            },
+            "description": "Adds an accomplishment to a role. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "02ca5db1-78e0-4e72-8ae8-578029bd439d",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n  \"sortOrder\": 0\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/accomplishments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}",
+                    "accomplishments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:42:00 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"accomplishment\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"accomplishmentId\": \"d7579717-8e09-495d-b566-14c53a695440\",\n        \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n        \"sortOrder\": 0,\n        \"createdAt\": \"2026-02-23T02:42:00.243Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get an Accomplishment",
+          "id": "cf6a6d4b-17d4-449c-86f3-947ca1bc8b89",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}",
+                "{{accomplishmentId}}"
+              ]
+            },
+            "description": "Returns a single accomplishment. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "98e22dac-da58-4a80-9d48-1a95e1c9e235",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}",
+                    "{{accomplishmentId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:42:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"accomplishment\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"accomplishmentId\": \"d7579717-8e09-495d-b566-14c53a695440\",\n        \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n        \"sortOrder\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update an Accomplishment",
+          "id": "2c0f85ee-c5cc-47de-aba0-846a7e59bc7a",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}",
+                "{{accomplishmentId}}"
+              ]
+            },
+            "description": "Partially updates an accomplishment. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "01b0eeac-6208-40cd-91de-5cebb0bb735c",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}",
+                    "{{accomplishmentId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:42:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"accomplishment\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"roleId\": \"6a917793-5366-4c5c-b894-3e133af6eabe\",\n        \"accomplishmentId\": \"d7579717-8e09-495d-b566-14c53a695440\",\n        \"accomplishment\": \"Wrote much of Postman's public-facing AI developer docs — including many of the Model Context Protocol (MCP) docs — and delivered them on tight deadlines. Continue to maintain them as the team adds features and enhancements.\",\n        \"sortOrder\": 0,\n        \"updatedAt\": \"2026-02-23T02:42:48.364Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete an Accomplishment",
+          "id": "49efd521-3d2c-4844-a587-690aa6bc20fa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "experience",
+                "{{roleId}}",
+                "{{accomplishmentId}}"
+              ]
+            },
+            "description": "Deletes an accomplishment. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "70fb7a77-8ec7-4f4a-bdac-ac33541bb2a4",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/experience/{{roleId}}/{{accomplishmentId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "experience",
+                    "{{roleId}}",
+                    "{{accomplishmentId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:43:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "95d6d092-ba41-4f44-ac60-bc24c7682d6b"
+    },
+    {
+      "name": "Skill Sets",
+      "item": [
+        {
+          "name": "Get Skill Sets",
+          "id": "031fa282-aedb-440d-82c2-3a3699f4c406",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets"
+              ]
+            },
+            "description": "Returns all skill sets. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "bfef4931-305c-49b4-9ee1-b87077a08a38",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 03:00:42 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skillSets\": [\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"823ffbaa-5939-47d9-87ba-424c6d967731\",\n            \"skillSetType\": \"languages\",\n            \"sortOrder\": 0,\n            \"skills\": [\n                {\n                    \"skillId\": \"6d07e824-66d5-4337-9398-628f284e610f\",\n                    \"skill\": \"Bash\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"aa5ac7c3-82d0-4c64-9f84-eb4315c70558\",\n                    \"skill\": \"JavaScript and TypeScript\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"54453dab-4401-4f1a-bc51-45bb92164e40\",\n                    \"skill\": \"JSON\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"skillId\": \"7cead30f-24ac-4b67-9d2c-283f6f26bd97\",\n                    \"skill\": \"Markdown\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"skillId\": \"314df7bb-fa03-4a93-8802-29cca9db0989\",\n                    \"skill\": \"Python\",\n                    \"sortOrder\": 4\n                },\n                {\n                    \"skillId\": \"e02050b4-9920-466f-a85c-4bd09409f36f\",\n                    \"skill\": \"Regex\",\n                    \"sortOrder\": 5\n                },\n                {\n                    \"skillId\": \"3fb48ca5-c5b7-4eff-86aa-fe35649c9365\",\n                    \"skill\": \"SQL\",\n                    \"sortOrder\": 6\n                },\n                {\n                    \"skillId\": \"e1a28074-7f04-4ded-acf1-d26bcff75376\",\n                    \"skill\": \"YAML\",\n                    \"sortOrder\": 7\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"c02facb0-8d4d-4247-b6e3-e25dd98f3bba\",\n            \"skillSetType\": \"specifications\",\n            \"sortOrder\": 1,\n            \"skills\": [\n                {\n                    \"skillId\": \"4044c487-dafa-46d3-b292-7ed31f0773b2\",\n                    \"skill\": \"GraphQL\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"0f0e15de-f24d-4eb4-ae3b-e3d9aba3dae7\",\n                    \"skill\": \"gRPC\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"8146b1b7-7bef-48f8-9cee-9dfacea111ad\",\n                    \"skill\": \"JWT\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"skillId\": \"6d150ec7-5415-4d31-92a7-ebc812ae22e8\",\n                    \"skill\": \"MCP\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"skillId\": \"942f9e68-d2c4-409b-aacc-eebace3b5c27\",\n                    \"skill\": \"OpenAPI\",\n                    \"sortOrder\": 4\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"c599ffcc-cd4a-480e-b391-43b30df2f5e9\",\n            \"skillSetType\": \"command-line-tools\",\n            \"sortOrder\": 2,\n            \"skills\": [\n                {\n                    \"skillId\": \"fa98f117-d48d-4dee-b029-a1862e2ad83d\",\n                    \"skill\": \"Brew\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"f7669d4f-99b3-45fd-9bff-e59f88bbd5c6\",\n                    \"skill\": \"Claude Code\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"cb382576-1fbd-429d-b7f9-f3fcc79e2588\",\n                    \"skill\": \"Codex\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"skillId\": \"1c38c32c-e181-42ec-b970-c6ad688d167e\",\n                    \"skill\": \"Git\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"skillId\": \"84af94e8-f87d-49fc-bcaa-74e47a873c4f\",\n                    \"skill\": \"GitHub CLI\",\n                    \"sortOrder\": 4\n                },\n                {\n                    \"skillId\": \"09d303b9-e689-4eb6-9eba-f2e2c03cf08f\",\n                    \"skill\": \"NPM\",\n                    \"sortOrder\": 5\n                },\n                {\n                    \"skillId\": \"70fe1fab-a1b0-4c68-9544-df3d049c0faf\",\n                    \"skill\": \"Vale\",\n                    \"sortOrder\": 6\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"e5cfedf3-ed23-461a-a5a7-7cc6962fbada\",\n            \"skillSetType\": \"databases\",\n            \"sortOrder\": 3,\n            \"skills\": [\n                {\n                    \"skillId\": \"104bfb81-52d0-4686-9b58-f249ce78e368\",\n                    \"skill\": \"MongoDB\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"b1f04267-b7ee-4f84-b515-ea30589171ed\",\n                    \"skill\": \"MySQL\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"f97804cf-dc51-4d7c-8b32-7b0f10d94e49\",\n                    \"skill\": \"PostgreSQL\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"skillId\": \"a228ead0-9e6c-488b-88cb-9ef43bd9c343\",\n                    \"skill\": \"SQLite\",\n                    \"sortOrder\": 3\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"de66231e-5585-46da-9246-757e541d47de\",\n            \"skillSetType\": \"frameworks\",\n            \"sortOrder\": 4,\n            \"skills\": [\n                {\n                    \"skillId\": \"da20674f-b931-48ee-91e8-b9c436cb5d57\",\n                    \"skill\": \"Next.js\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"55aa0f18-bf13-4a06-8927-cc956988e85d\",\n                    \"skill\": \"Node.js\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"0bde359b-0237-4c24-93de-8fe315f0ba8e\",\n                    \"skill\": \"React.js\",\n                    \"sortOrder\": 2\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"2bb574c3-b0fe-469a-a254-c0cb8d8f59d0\",\n            \"skillSetType\": \"cloud-deployments\",\n            \"sortOrder\": 5,\n            \"skills\": [\n                {\n                    \"skillId\": \"e3b280c4-0508-4211-a662-e11bd0f213f7\",\n                    \"skill\": \"AWS\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"8130a6a0-06de-47cd-8378-5f7f62d4a942\",\n                    \"skill\": \"Google Cloud\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"a16960db-3a6e-4af7-9cae-22514fea422b\",\n                    \"skill\": \"Vercel\",\n                    \"sortOrder\": 2\n                }\n            ]\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"skillSetId\": \"1477a047-4eee-40b3-a11b-6a870ec1a4b1\",\n            \"skillSetType\": \"apps\",\n            \"sortOrder\": 6,\n            \"skills\": [\n                {\n                    \"skillId\": \"3d506368-077d-4b4c-8ade-d34912ae59ea\",\n                    \"skill\": \"Confluence and Jira\",\n                    \"sortOrder\": 0\n                },\n                {\n                    \"skillId\": \"0177a77f-344b-47fe-b56d-7735a997e610\",\n                    \"skill\": \"Figma\",\n                    \"sortOrder\": 1\n                },\n                {\n                    \"skillId\": \"74769530-845b-45c4-9b26-e19700ccc33a\",\n                    \"skill\": \"Postman\",\n                    \"sortOrder\": 2\n                },\n                {\n                    \"skillId\": \"3531aad4-0f41-423a-9bee-46611808e611\",\n                    \"skill\": \"Terminal and Warp\",\n                    \"sortOrder\": 3\n                },\n                {\n                    \"skillId\": \"545b7551-1ec3-471a-8bc9-d27e56637f4a\",\n                    \"skill\": \"Cursor and Visual Studio Code\",\n                    \"sortOrder\": 4\n                },\n                {\n                    \"skillId\": \"5e30bba5-c37b-4375-a15c-2a48e2fafa9c\",\n                    \"skill\": \"Xcode\",\n                    \"sortOrder\": 5\n                }\n            ]\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create a Skill Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save skillSetId as an environment variable.",
+                  "pm.environment.set(\"skillSetId\", response.skillSet.skillSetId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "b4c54a57-4c64-42f3-97f9-53a40fef0004",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skillSetType\": \"apps\",\n  \"sortOrder\": 6,\n  \"skills\": [\n    {\n      \"skill\": \"Confluence and Jira\",\n      \"sortOrder\": 0\n    },\n    {\n      \"skill\": \"Figma\",\n      \"sortOrder\": 1\n    },\n    {\n      \"skill\": \"Postman\",\n      \"sortOrder\": 2\n    },\n    {\n      \"skill\": \"Terminal and Warp\",\n      \"sortOrder\": 3\n    },\n    {\n      \"skill\": \"Cursor and Visual Studio Code\",\n      \"sortOrder\": 4\n    },\n    {\n      \"skill\": \"Xcode\",\n      \"sortOrder\": 5\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets"
+              ]
+            },
+            "description": "Adds a skill set. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "51a7dd2e-8e87-4eb5-a077-1586b0b196c0",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"skillSetType\": \"apps\",\n  \"sortOrder\": 6,\n  \"skills\": [\n    {\n      \"skill\": \"Confluence and Jira\",\n      \"sortOrder\": 0\n    },\n    {\n      \"skill\": \"Figma\",\n      \"sortOrder\": 1\n    },\n    {\n      \"skill\": \"Postman\",\n      \"sortOrder\": 2\n    },\n    {\n      \"skill\": \"Terminal and Warp\",\n      \"sortOrder\": 3\n    },\n    {\n      \"skill\": \"Cursor and Visual Studio Code\",\n      \"sortOrder\": 4\n    },\n    {\n      \"skill\": \"Xcode\",\n      \"sortOrder\": 5\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:49:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skillSet\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillSetType\": \"apps\",\n        \"sortOrder\": 6,\n        \"createdAt\": \"2026-02-23T02:49:20.504Z\",\n        \"skills\": [\n            {\n                \"skillId\": \"0872e381-3ba8-4e80-aaf9-e4af1dc6f327\",\n                \"skill\": \"Confluence and Jira\",\n                \"sortOrder\": 0\n            },\n            {\n                \"skillId\": \"3dbeb267-6312-4259-b104-f417958cfb8b\",\n                \"skill\": \"Figma\",\n                \"sortOrder\": 1\n            },\n            {\n                \"skillId\": \"9d2add81-f6eb-4d7a-9bc6-60f2f3c7dcef\",\n                \"skill\": \"Postman\",\n                \"sortOrder\": 2\n            },\n            {\n                \"skillId\": \"9b71f68d-e89c-4bda-a8ce-3e3db293c4db\",\n                \"skill\": \"Terminal and Warp\",\n                \"sortOrder\": 3\n            },\n            {\n                \"skillId\": \"30e07513-5250-4b94-9a0f-ca65254d90b8\",\n                \"skill\": \"Cursor and Visual Studio Code\",\n                \"sortOrder\": 4\n            },\n            {\n                \"skillId\": \"fc6646fb-4c2f-4cb7-8025-388c72256b41\",\n                \"skill\": \"Xcode\",\n                \"sortOrder\": 5\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get a Skill Set",
+          "id": "7bf5bbe1-7e2f-44e0-a94e-50e7f5b19bfd",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}"
+              ]
+            },
+            "description": "Returns a single skill set. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "3c347079-3eff-4758-b0cc-596b4eec33b6",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:49:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skillSet\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillSetType\": \"apps\",\n        \"sortOrder\": 6,\n        \"skills\": [\n            {\n                \"skillId\": \"0872e381-3ba8-4e80-aaf9-e4af1dc6f327\",\n                \"skill\": \"Confluence and Jira\",\n                \"sortOrder\": 0\n            },\n            {\n                \"skillId\": \"3dbeb267-6312-4259-b104-f417958cfb8b\",\n                \"skill\": \"Figma\",\n                \"sortOrder\": 1\n            },\n            {\n                \"skillId\": \"9d2add81-f6eb-4d7a-9bc6-60f2f3c7dcef\",\n                \"skill\": \"Postman\",\n                \"sortOrder\": 2\n            },\n            {\n                \"skillId\": \"9b71f68d-e89c-4bda-a8ce-3e3db293c4db\",\n                \"skill\": \"Terminal and Warp\",\n                \"sortOrder\": 3\n            },\n            {\n                \"skillId\": \"30e07513-5250-4b94-9a0f-ca65254d90b8\",\n                \"skill\": \"Cursor and Visual Studio Code\",\n                \"sortOrder\": 4\n            },\n            {\n                \"skillId\": \"fc6646fb-4c2f-4cb7-8025-388c72256b41\",\n                \"skill\": \"Xcode\",\n                \"sortOrder\": 5\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a Skill Set",
+          "id": "03a1f97b-7318-4c4c-92d7-ea29648ce287",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sortOrder\": 6\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}"
+              ]
+            },
+            "description": "Partially updates a skill set. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "167ae956-1709-4878-a31c-6940e52053d4",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sortOrder\": 6\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:49:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skillSet\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillSetType\": \"apps\",\n        \"sortOrder\": 6,\n        \"updatedAt\": \"2026-02-23T02:49:57.653Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a Skill Set",
+          "id": "a89bb661-c6ff-4d72-9150-bc258a33cce7",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}"
+              ]
+            },
+            "description": "Deletes a skill set. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "bd39dc2d-2a9f-4ac2-b775-0072ba14e9f4",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:52:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Create a Skill",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save skillId as an environment variable.",
+                  "pm.environment.set(\"skillId\", response.skill.skillId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "a54657af-2d91-4a2f-9bc1-133698a83473",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skill\": \"Postman\",\n  \"sortOrder\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/skills",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}",
+                "skills"
+              ]
+            },
+            "description": "Adds a skill to a skill set. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "ac180553-8715-4249-965b-0902914da0cd",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"skill\": \"Postman\",\n  \"sortOrder\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/skills",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}",
+                    "skills"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:51:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skill\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillId\": \"fc5372be-6e87-4ef5-8970-133114872564\",\n        \"skill\": \"Postman\",\n        \"sortOrder\": 2,\n        \"createdAt\": \"2026-02-23T02:51:33.944Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get a Skill",
+          "id": "ce31b6b6-0be8-4fae-b579-40b7e30a5804",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}",
+                "{{skillId}}"
+              ]
+            },
+            "description": "Returns a single skill. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "6c673371-0b54-4dce-8f6c-3302bfa00b57",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}",
+                    "{{skillId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:51:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skill\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillId\": \"fc5372be-6e87-4ef5-8970-133114872564\",\n        \"skill\": \"Postman\",\n        \"sortOrder\": 2\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a Skill",
+          "id": "b7a9e7ea-cfc1-4eec-ac4e-801a3f706b37",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skill\": \"Postman\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}",
+                "{{skillId}}"
+              ]
+            },
+            "description": "Partially updates a skill. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "8dc6efa8-3235-4191-8fd4-c7fcd809aabf",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"skill\": \"Postman\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}",
+                    "{{skillId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:52:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"skill\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"skillSetId\": \"4694e236-1e8c-4381-8d6e-f8e7ecbac36f\",\n        \"skillId\": \"fc5372be-6e87-4ef5-8970-133114872564\",\n        \"skill\": \"Postman\",\n        \"sortOrder\": 2,\n        \"updatedAt\": \"2026-02-23T02:52:06.041Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a Skill",
+          "id": "6640f3da-f37d-4350-8029-55f20d807ec9",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "skillSets",
+                "{{skillSetId}}",
+                "{{skillId}}"
+              ]
+            },
+            "description": "Deletes a skill. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "d8ba3ad4-5ba6-47d2-88f0-7e3ff280da32",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/skillSets/{{skillSetId}}/{{skillId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "skillSets",
+                    "{{skillSetId}}",
+                    "{{skillId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:52:19 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "340b227d-ceb2-401e-a0b9-fd4088e18c4b"
+    },
+    {
+      "name": "Education",
+      "item": [
+        {
+          "name": "Get Education",
+          "id": "1a5c43d8-5cb8-4e5d-81b0-246cc3011408",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "education"
+              ]
+            },
+            "description": "Returns all education credentials. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "574b42ac-c52f-4b31-b8a7-a71c9c38a2c3",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "education"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 03:00:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"education\": [\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"credentialId\": \"c560a09f-e1c0-438b-bdee-40b08193aa71\",\n            \"institution\": \"University of Michigan (Coursera)\",\n            \"credential\": \"Specialization Certificate, Python for Everyone\",\n            \"startDate\": null,\n            \"endDate\": \"2023-06-01\"\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"credentialId\": \"6d2a04b3-3aae-48fe-a96a-95bbc0072d0f\",\n            \"institution\": \"UC Berkeley Extension\",\n            \"credential\": \"Certificate of Completion, Full-Stack JavaScript Developer\",\n            \"startDate\": null,\n            \"endDate\": \"2023-03-01\"\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"credentialId\": \"424c3311-d868-4dae-94be-178bf12602d6\",\n            \"institution\": \"Emory University\",\n            \"credential\": \"MPH, Epidemiology (Coursework Complete)\",\n            \"startDate\": null,\n            \"endDate\": \"2008-05-01\"\n        },\n        {\n            \"candidateId\": \"d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5\",\n            \"credentialId\": \"96375c83-3995-48b7-a118-131572b154f3\",\n            \"institution\": \"UC Berkeley\",\n            \"credential\": \"BA, English and Premed\",\n            \"startDate\": null,\n            \"endDate\": \"2005-05-01\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create a Credential",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Response.",
+                  "const response = pm.response.json();",
+                  "",
+                  "// Save credentialId as an environment variable.",
+                  "pm.environment.set(\"credentialId\", response.credential.credentialId);",
+                  ""
+                ]
+              }
+            }
+          ],
+          "id": "47f425f9-4e7d-4e9f-945e-ee021b0ed4cd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"institution\": \"UC Berkeley\",\n  \"credential\": \"BA, English and Premed\",\n  \"startDate\": null,\n  \"endDate\": \"2005-05-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "education"
+              ]
+            },
+            "description": "Adds an education credential. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "95f75524-7bbe-4b2d-b091-76766d91c832",
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"institution\": \"UC Berkeley\",\n  \"credential\": \"BA, English and Premed\",\n  \"startDate\": null,\n  \"endDate\": \"2005-05-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "education"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:53:48 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"credential\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"credentialId\": \"c458fdb8-998c-41fa-a173-6ef88632d8ff\",\n        \"institution\": \"UC Berkeley\",\n        \"credential\": \"BA, English and Premed\",\n        \"startDate\": null,\n        \"endDate\": \"2005-05-01\",\n        \"createdAt\": \"2026-02-23T02:53:48.416Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get a Credential",
+          "id": "574360f5-c231-4503-b4da-6d75695b44a3",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "education",
+                "{{credentialId}}"
+              ]
+            },
+            "description": "Returns a single education credential. Public endpoint."
+          },
+          "response": [
+            {
+              "id": "ae02e1d3-a34e-4f7a-b221-d990217ba309",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "education",
+                    "{{credentialId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:53:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"credential\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"credentialId\": \"c458fdb8-998c-41fa-a173-6ef88632d8ff\",\n        \"institution\": \"UC Berkeley\",\n        \"credential\": \"BA, English and Premed\",\n        \"startDate\": null,\n        \"endDate\": \"2005-05-01\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a Credential",
+          "id": "cb3dd5a6-cb0c-49f8-8c73-fc9ac55a8587",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credential\": \"BA, English and Premed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "education",
+                "{{credentialId}}"
+              ]
+            },
+            "description": "Partially updates an education credential. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "6078ff9b-1e8e-4fc0-a6e4-87bada28765b",
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credential\": \"BA, English and Premed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "education",
+                    "{{credentialId}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:54:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"credential\": {\n        \"candidateId\": \"59b82335-b7e4-4fce-b107-73af974ed76c\",\n        \"credentialId\": \"c458fdb8-998c-41fa-a173-6ef88632d8ff\",\n        \"institution\": \"UC Berkeley\",\n        \"credential\": \"BA, English and Premed\",\n        \"startDate\": null,\n        \"endDate\": \"2005-05-01\",\n        \"updatedAt\": \"2026-02-23T02:54:38.909Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a Credential",
+          "id": "7c1e8e87-3bf6-4437-aeea-91db0d3eee58",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "resume",
+                "{{candidateId}}",
+                "education",
+                "{{credentialId}}"
+              ]
+            },
+            "description": "Deletes an education credential. Requires Bearer token with resume:write scope."
+          },
+          "response": [
+            {
+              "id": "0885a1b8-73d7-4409-b852-f58298aa584e",
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resume/{{candidateId}}/education/{{credentialId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resume",
+                    "{{candidateId}}",
+                    "education",
+                    "{{credentialId}}"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "vary",
+                  "value": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Feb 2026 02:54:50 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "fbe83dea-660f-4bff-8149-02e448d7b2b2"
+    },
+    {
+      "name": "Download a Resume",
+      "id": "1547bcd1-a065-4976-b320-33b9eaca6208",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/resume/{{candidateId}}/pdf",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "resume",
+            "{{candidateId}}",
+            "pdf"
+          ]
+        },
+        "description": "Downloads the resume as a PDF. Returns application/pdf with Content-Disposition: attachment. Public endpoint."
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{vault:apiToken}}",
+        "type": "string"
+      }
+    ]
+  }
+}

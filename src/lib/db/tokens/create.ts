@@ -1,13 +1,24 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { parseArgs } from "node:util"
 import { config } from "dotenv"
 import { eq } from "drizzle-orm"
 import { validate as validateUuid } from "uuid"
-import { db } from "@/lib/db"
 import { apiTokens, candidates } from "@/lib/db/schema"
 
+// --------------------------------------------------------------------------------
+// Environment variables.
+// --------------------------------------------------------------------------------
+
+config({ path: ".env.local" })
+
+// --------------------------------------------------------------------------------
 // Types.
+// --------------------------------------------------------------------------------
+
 type Args = {
 	candidateId: string
 	tokenName: string
@@ -15,23 +26,26 @@ type Args = {
 	tokenExpiresAt: Date
 }
 
-// Environment variables.
-config({ path: ".env.local" })
-
+// --------------------------------------------------------------------------------
 // Throw a CLI error message.
+// --------------------------------------------------------------------------------
+
 function throwCliErrorMessage(message: string): never {
 	console.log(
 		[
 			"Usage:",
 			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token"',
-			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token" --scopes resume:read,resume:write --expires-at 2025-01-01T00:00:00Z',
+			'  npm run db:token:create -- --candidate-id d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5 --token-name "Christian\'s Resume API Token" --scopes resume:read,resume:create,resume:write --expires-at 2025-01-01T00:00:00Z',
 		].join("\n"),
 	)
 
 	throw new Error(message)
 }
 
+// --------------------------------------------------------------------------------
 // Parse the CLI arguments.
+// --------------------------------------------------------------------------------
+
 function parseCliArgs(argv: string[]): Args {
 	// Parse arguments.
 	const { values: argValues } = parseArgs({
@@ -90,7 +104,7 @@ function parseCliArgs(argv: string[]): Args {
 		? new Date(argValues["expires-at"])
 		: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
 
-	// If expiration date isn't a date, throw an error.
+	// If expiration date isn’t a date, throw an error.
 	if (Number.isNaN(tokenExpiresAt.getTime())) {
 		throwCliErrorMessage("Your --expires-at value isn't a valid date.")
 	}
@@ -103,8 +117,12 @@ function parseCliArgs(argv: string[]): Args {
 	}
 }
 
+// --------------------------------------------------------------------------------
 // Create the API token.
+// --------------------------------------------------------------------------------
+
 async function main() {
+	const { db } = await import("@/lib/db")
 	const { candidateId, tokenName, tokenScopes, tokenExpiresAt } = parseCliArgs(
 		process.argv.slice(2),
 	)
@@ -150,3 +168,5 @@ main().catch((error) => {
 	console.error(error)
 	process.exit(1)
 })
+
+// --------------------------------------------------------------------------------

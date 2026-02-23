@@ -1,14 +1,18 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import fs from "node:fs/promises"
 import path from "node:path"
 import { type NextRequest, NextResponse } from "next/server"
 import { chromium } from "playwright-chromium"
 import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
 
-//
-// GET /resume/[candidateId]/pdf.
-//
+// --------------------------------------------------------------------------------
+// GET /api/resume/[candidateId]/pdf.
+// --------------------------------------------------------------------------------
+
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ candidateId: string }> },
@@ -16,23 +20,23 @@ export async function GET(
 	// Candidate ID.
 	const { candidateId } = await params
 
-	// Validate the candidate ID is a valid UUID.
-	const uuidFormatValidationResponse = validateUuidFormat(candidateId)
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	// If the candidate ID isn’t a valid UUID, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([candidateId])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	// Found candidate.
+	const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
+	// If the candidate’s not found, return 404.
+	const candidateErrorResponse = validateDataFound(
+		foundCandidate,
 		"candidate",
 		{ candidateId },
 	)
-	if (candidateValidationResponse) return candidateValidationResponse
+	if (candidateErrorResponse) return candidateErrorResponse
 
 	// Candidate name.
-	const { firstName, lastName } = candidate
+	const { firstName, lastName } = foundCandidate
 
 	// PDF name and location.
 	const pdfName = `${firstName} ${lastName}.pdf`
@@ -118,3 +122,5 @@ export async function GET(
 		}
 	}
 }
+
+// --------------------------------------------------------------------------------

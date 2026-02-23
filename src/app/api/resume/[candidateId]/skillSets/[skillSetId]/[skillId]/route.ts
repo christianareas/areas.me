@@ -1,15 +1,31 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
-import { type NextRequest, NextResponse } from "next/server"
-import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getSkillByCandidateIdSkillSetIdAndSkillId } from "@/lib/db/resume/skillSets/skillSet/skill/sql"
-import { getSkillSetByCandidateIdAndSkillSetId } from "@/lib/db/resume/skillSets/skillSet/sql"
+// --------------------------------------------------------------------------------
 
-//
+import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
+import { skillUpdateSchema } from "@/lib/api/schemas/resume/skillSets/contract"
+import {
+	catchServerError,
+	parseJson,
+	validateDataFound,
+	validateRequestBodyAgainstSchema,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import {
+	deleteSkillByCandidateIdAndSkillSetIdAndSkillId,
+	findSkillByCandidateIdAndSkillSetIdAndSkillId,
+	findSkillSetByCandidateIdAndSkillSetId,
+	updateSkillByCandidateIdAndSkillSetIdAndSkillId,
+} from "@/lib/db/resume/skillSets/sql"
+
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{
 		params,
 	}: {
@@ -23,52 +39,244 @@ export async function GET(
 	// Candidate, skill set, skill IDs.
 	const { candidateId, skillSetId, skillId } = await params
 
-	// Validate the candidate, skill set, and skill IDs are valid UUIDs.
-	const uuidFormatValidationResponse = validateUuidFormat([
+	// If the candidate, skill set, and skill IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
 		candidateId,
 		skillSetId,
 		skillId,
 	])
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// Skill set.
-	const skillSet = await getSkillSetByCandidateIdAndSkillSetId(
-		candidateId,
-		skillSetId,
-	)
+		// Found skill set.
+		const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
+			candidateId,
+			skillSetId,
+		)
 
-	// Validate the skill set found.
-	const skillSetValidationResponse = validateDataFound(skillSet, "skill set", {
-		candidateId,
-		skillSetId,
-	})
-	if (skillSetValidationResponse) return skillSetValidationResponse
+		// If the skill set’s not found, return 404.
+		const skillSetErrorResponse = validateDataFound(
+			foundSkillSet,
+			"skill set",
+			{
+				skillSetId,
+			},
+		)
+		if (skillSetErrorResponse) return skillSetErrorResponse
 
-	// Skill.
-	const skill = await getSkillByCandidateIdSkillSetIdAndSkillId(
-		candidateId,
-		skillSetId,
-		skillId,
-	)
+		// Found skill.
+		const foundSkill = await findSkillByCandidateIdAndSkillSetIdAndSkillId(
+			candidateId,
+			skillSetId,
+			skillId,
+		)
 
-	// Validate the skill found.
-	const skillValidationResponse = validateDataFound(skill, "skill", {
-		candidateId,
-		skillSetId,
-		skillId,
-	})
-	if (skillValidationResponse) return skillValidationResponse
+		// If the skill’s not found, return 404.
+		const skillErrorResponse = validateDataFound(foundSkill, "skill", {
+			skillId,
+		})
+		if (skillErrorResponse) return skillErrorResponse
 
-	return NextResponse.json({ skill }, { status: 200 })
+		// If the skill’s found, return 200.
+		return NextResponse.json({ skill: foundSkill }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
+
+// --------------------------------------------------------------------------------
+// PATCH /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
+// --------------------------------------------------------------------------------
+
+export async function PATCH(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: Promise<{
+			candidateId: string
+			skillSetId: string
+			skillId: string
+		}>
+	},
+) {
+	// Candidate, skill set, skill IDs.
+	const { candidateId, skillSetId, skillId } = await params
+
+	// If the candidate, skill set, and skill IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
+		candidateId,
+		skillSetId,
+		skillId,
+	])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	// If parsing the request body fails, return 400.
+	const requestBodyOrErrorResponse = await parseJson(request)
+	if (requestBodyOrErrorResponse instanceof NextResponse)
+		return requestBodyOrErrorResponse
+
+	// Request body.
+	const requestBody = requestBodyOrErrorResponse
+
+	// If validating the request body against the schema fails, return 400.
+	const validatedRequestBodyOrErrorResponse = validateRequestBodyAgainstSchema(
+		requestBody,
+		skillUpdateSchema,
+	)
+	if (validatedRequestBodyOrErrorResponse instanceof NextResponse)
+		return validatedRequestBodyOrErrorResponse
+
+	// Validated request body.
+	const validatedRequestBody = validatedRequestBodyOrErrorResponse
+
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
+
+		// Found skill set.
+		const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
+			candidateId,
+			skillSetId,
+		)
+
+		// If the skill set’s not found, return 404.
+		const skillSetErrorResponse = validateDataFound(
+			foundSkillSet,
+			"skill set",
+			{
+				skillSetId,
+			},
+		)
+		if (skillSetErrorResponse) return skillSetErrorResponse
+
+		// Updated skill.
+		const updatedSkill = await updateSkillByCandidateIdAndSkillSetIdAndSkillId(
+			candidateId,
+			skillSetId,
+			skillId,
+			validatedRequestBody,
+		)
+
+		// If the skill’s not found, return 404.
+		const skillErrorResponse = validateDataFound(updatedSkill, "skill", {
+			skillId,
+		})
+		if (skillErrorResponse) return skillErrorResponse
+
+		// If the skill’s found and updated, return 200.
+		return NextResponse.json({ skill: updatedSkill }, { status: 200 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
+}
+
+// --------------------------------------------------------------------------------
+// DELETE /api/resume/[candidateId]/skillSets/[skillSetId]/[skillId].
+// --------------------------------------------------------------------------------
+
+export async function DELETE(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: Promise<{
+			candidateId: string
+			skillSetId: string
+			skillId: string
+		}>
+	},
+) {
+	// Candidate, skill set, skill IDs.
+	const { candidateId, skillSetId, skillId } = await params
+
+	// If the candidate, skill set, and skill IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
+		candidateId,
+		skillSetId,
+		skillId,
+	])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
+
+		// Found skill set.
+		const foundSkillSet = await findSkillSetByCandidateIdAndSkillSetId(
+			candidateId,
+			skillSetId,
+		)
+
+		// If the skill set’s not found, return 404.
+		const skillSetErrorResponse = validateDataFound(
+			foundSkillSet,
+			"skill set",
+			{
+				skillSetId,
+			},
+		)
+		if (skillSetErrorResponse) return skillSetErrorResponse
+
+		// Deleted skill.
+		const deletedSkill = await deleteSkillByCandidateIdAndSkillSetIdAndSkillId(
+			candidateId,
+			skillSetId,
+			skillId,
+		)
+
+		// If the skill’s not found, return 404.
+		const skillNotFoundResponse = validateDataFound(deletedSkill, "skill", {
+			skillId,
+		})
+		if (skillNotFoundResponse) return skillNotFoundResponse
+
+		// If the skill’s found and deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
+}
+
+// --------------------------------------------------------------------------------

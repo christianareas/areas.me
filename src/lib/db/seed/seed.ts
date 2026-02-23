@@ -1,6 +1,9 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { config } from "dotenv"
-import { db } from "@/lib/db"
+import { resumeSchema } from "@/lib/api/schemas/contract"
 import {
 	accomplishments,
 	candidates,
@@ -10,13 +13,19 @@ import {
 	skills,
 } from "@/lib/db/schema"
 import { resume } from "@/lib/db/seed/resume"
-import { resumeSchema } from "@/lib/api/schemas/resume/contract"
 
+// --------------------------------------------------------------------------------
 // Environment variables.
+// --------------------------------------------------------------------------------
+
 config({ path: ".env.local" })
 
+// --------------------------------------------------------------------------------
 // Seed the database.
+// --------------------------------------------------------------------------------
+
 async function main() {
+	const { db } = await import("@/lib/db")
 	const parsedResume = resumeSchema.parse(resume)
 
 	// Candidate.
@@ -33,7 +42,7 @@ async function main() {
 	const education = parsedResume.education ?? []
 
 	await db.transaction(async (tx) => {
-		// Upsert candidates.
+		// Upsert candidate.
 		await tx
 			.insert(candidates)
 			.values(candidate)
@@ -118,7 +127,7 @@ async function main() {
 
 		// Upsert skills.
 		for (const skillSet of skillSetsData) {
-			for (const skill of skillSet.skills) {
+			for (const skill of skillSet.skills ?? []) {
 				await tx
 					.insert(skills)
 					.values({
@@ -170,7 +179,7 @@ async function main() {
 	console.log("Seeded skill sets:", skillSetsData.length)
 	console.log(
 		"Seeded skills:",
-		skillSetsData.reduce((sum, s) => sum + s.skills.length, 0),
+		skillSetsData.reduce((sum, s) => sum + (s.skills?.length ?? 0), 0),
 	)
 	console.log("Seeded credentials:", education.length)
 }
@@ -179,3 +188,5 @@ main().catch((error) => {
 	console.error(error)
 	process.exit(1)
 })
+
+// --------------------------------------------------------------------------------

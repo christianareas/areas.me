@@ -1,10 +1,16 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
+// --------------------------------------------------------------------------------
+
 import { eq } from "drizzle-orm"
-import type { CandidatePatch } from "@/lib/api/schemas/resume/candidate/contract"
+import type { CandidateUpdate } from "@/lib/api/schemas/resume/candidate/contract"
 import { db } from "@/lib/db"
 import { candidates } from "@/lib/db/schema"
 
-// Candidate fields.
+// --------------------------------------------------------------------------------
+// Fields.
+// --------------------------------------------------------------------------------
+
 const candidateFields = {
 	candidateId: candidates.candidateId,
 	firstName: candidates.firstName,
@@ -19,8 +25,11 @@ const candidateFields = {
 	gitHub: candidates.gitHub,
 }
 
-// Get first candidate ID.
-export async function getFirstCandidateId() {
+// --------------------------------------------------------------------------------
+// Candidate.
+// --------------------------------------------------------------------------------
+
+export async function findFirstCandidateId() {
 	// Select candidate.
 	const [candidate] = await db
 		.select({
@@ -33,8 +42,7 @@ export async function getFirstCandidateId() {
 	return candidate?.candidateId ?? null
 }
 
-// Get candidate by candidate ID.
-export async function getCandidateByCandidateId(candidateId: string) {
+export async function findCandidateByCandidateId(candidateId: string) {
 	// Select candidate.
 	const [candidate] = await db
 		.select(candidateFields)
@@ -45,15 +53,14 @@ export async function getCandidateByCandidateId(candidateId: string) {
 	return candidate ?? null
 }
 
-// Update candidate by candidate ID.
 export async function updateCandidateByCandidateId(
 	candidateId: string,
-	candidatePatch: CandidatePatch,
+	candidateUpdate: CandidateUpdate,
 ) {
 	// Update candidate.
 	const [updatedCandidate] = await db
 		.update(candidates)
-		.set({ ...candidatePatch, updatedAt: new Date() })
+		.set({ ...candidateUpdate, updatedAt: new Date() })
 		.where(eq(candidates.candidateId, candidateId))
 		.returning({
 			...candidateFields,
@@ -63,13 +70,4 @@ export async function updateCandidateByCandidateId(
 	return updatedCandidate ?? null
 }
 
-// Delete candidate by candidate ID.
-export async function deleteCandidateByCandidateId(candidateId: string) {
-	// Delete candidate.
-	const [deletedCandidate] = await db
-		.delete(candidates)
-		.where(eq(candidates.candidateId, candidateId))
-		.returning({ candidateId: candidates.candidateId })
-
-	return deletedCandidate ?? null
-}
+// --------------------------------------------------------------------------------

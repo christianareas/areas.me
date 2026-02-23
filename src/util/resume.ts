@@ -1,4 +1,6 @@
+// --------------------------------------------------------------------------------
 // Format a phone number.
+// --------------------------------------------------------------------------------
 export function formatPhoneNumber(
 	phoneCountryCode: number,
 	phoneNumber: number,
@@ -14,7 +16,10 @@ export function formatPhoneNumber(
 	return phoneNumber
 }
 
+// --------------------------------------------------------------------------------
 // Format a URL.
+// --------------------------------------------------------------------------------
+
 export function formatUrl(url: string) {
 	try {
 		const parsedUrl = new URL(url)
@@ -50,3 +55,5 @@ export function formatDate(date?: string | null) {
 
 	return monthYearFormatter.format(parsedDate).replace(/ /g, "\u00A0")
 }
+
+// --------------------------------------------------------------------------------

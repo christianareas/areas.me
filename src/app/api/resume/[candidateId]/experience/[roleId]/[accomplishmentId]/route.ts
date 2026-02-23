@@ -1,15 +1,31 @@
+// --------------------------------------------------------------------------------
 // Dependencies.
-import { type NextRequest, NextResponse } from "next/server"
-import { validateDataFound, validateUuidFormat } from "@/lib/api/validate"
-import { getCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
-import { getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId } from "@/lib/db/resume/experience/role/accomplishment/sql"
-import { getRoleByCandidateIdAndRoleId } from "@/lib/db/resume/experience/role/sql"
+// --------------------------------------------------------------------------------
 
-//
+import { type NextRequest, NextResponse } from "next/server"
+import { authorizeApiToken } from "@/lib/api/auth"
+import { accomplishmentUpdateSchema } from "@/lib/api/schemas/resume/experience/contract"
+import {
+	catchServerError,
+	parseJson,
+	validateDataFound,
+	validateRequestBodyAgainstSchema,
+	validateUuidFormat,
+} from "@/lib/api/validate"
+import { findCandidateByCandidateId } from "@/lib/db/resume/candidate/sql"
+import {
+	deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId,
+	findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId,
+	findRoleByCandidateIdAndRoleId,
+	updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId,
+} from "@/lib/db/resume/experience/sql"
+
+// --------------------------------------------------------------------------------
 // GET /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
-//
+// --------------------------------------------------------------------------------
+
 export async function GET(
-	_request: NextRequest,
+	request: NextRequest,
 	{
 		params,
 	}: {
@@ -23,50 +39,232 @@ export async function GET(
 	// Candidate, role, accomplishment IDs.
 	const { candidateId, roleId, accomplishmentId } = await params
 
-	// Validate the candidate, role, and accomplishment IDs are valid UUIDs.
-	const uuidFormatValidationResponse = validateUuidFormat([
+	// If the candidate, role, and accomplishment IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
 		candidateId,
 		roleId,
 		accomplishmentId,
 	])
-	if (uuidFormatValidationResponse) return uuidFormatValidationResponse
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
 
-	// Candidate.
-	const candidate = await getCandidateByCandidateId(candidateId)
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
 
-	// Validate the candidate found.
-	const candidateValidationResponse = validateDataFound(
-		candidate,
-		"candidate",
-		{ candidateId },
-	)
-	if (candidateValidationResponse) return candidateValidationResponse
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
 
-	// Role.
-	const role = await getRoleByCandidateIdAndRoleId(candidateId, roleId)
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
 
-	// Validate the role found.
-	const roleValidationResponse = validateDataFound(role, "role", {
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Found accomplishment.
+		const foundAccomplishment =
+			await findAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentErrorResponse = validateDataFound(
+			foundAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+
+		// If the accomplishment’s found, return 200.
+		return NextResponse.json(
+			{ accomplishment: foundAccomplishment },
+			{ status: 200 },
+		)
+	} catch (error) {
+		return catchServerError(error, request)
+	}
+}
+
+// --------------------------------------------------------------------------------
+// PATCH /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
+// --------------------------------------------------------------------------------
+
+export async function PATCH(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: Promise<{
+			candidateId: string
+			roleId: string
+			accomplishmentId: string
+		}>
+	},
+) {
+	// Candidate, role, accomplishment IDs.
+	const { candidateId, roleId, accomplishmentId } = await params
+
+	// If the candidate, role, and accomplishment IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
 		candidateId,
 		roleId,
+		accomplishmentId,
+	])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
 	})
-	if (roleValidationResponse) return roleValidationResponse
+	if (authorizationErrorResponse) return authorizationErrorResponse
 
-	// Accomplishment.
-	const accomplishment =
-		await getAccomplishmentByCandidateIdRoleIdAndAccomplishmentId(
-			candidateId,
-			roleId,
-			accomplishmentId,
-		)
+	// If parsing the request body fails, return 400.
+	const requestBodyOrErrorResponse = await parseJson(request)
+	if (requestBodyOrErrorResponse instanceof NextResponse)
+		return requestBodyOrErrorResponse
 
-	// Validate the accomplishment found.
-	const accomplishmentValidationResponse = validateDataFound(
-		accomplishment,
-		"accomplishment",
-		{ candidateId, roleId, accomplishmentId },
+	// Request body.
+	const requestBody = requestBodyOrErrorResponse
+
+	// If validating the request body against the schema fails, return 400.
+	const validatedRequestBodyOrErrorResponse = validateRequestBodyAgainstSchema(
+		requestBody,
+		accomplishmentUpdateSchema,
 	)
-	if (accomplishmentValidationResponse) return accomplishmentValidationResponse
+	if (validatedRequestBodyOrErrorResponse instanceof NextResponse)
+		return validatedRequestBodyOrErrorResponse
 
-	return NextResponse.json({ accomplishment }, { status: 200 })
+	// Validated request body.
+	const validatedRequestBody = validatedRequestBodyOrErrorResponse
+
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
+
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
+
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Updated accomplishment.
+		const updatedAccomplishment =
+			await updateAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+				validatedRequestBody,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentErrorResponse = validateDataFound(
+			updatedAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentErrorResponse) return accomplishmentErrorResponse
+
+		// If the accomplishment’s found and updated, return 200.
+		return NextResponse.json(
+			{ accomplishment: updatedAccomplishment },
+			{ status: 200 },
+		)
+	} catch (error) {
+		return catchServerError(error, request)
+	}
 }
+
+// --------------------------------------------------------------------------------
+// DELETE /api/resume/[candidateId]/experience/[roleId]/[accomplishmentId].
+// --------------------------------------------------------------------------------
+
+export async function DELETE(
+	request: NextRequest,
+	{
+		params,
+	}: {
+		params: Promise<{
+			candidateId: string
+			roleId: string
+			accomplishmentId: string
+		}>
+	},
+) {
+	// Candidate, role, accomplishment IDs.
+	const { candidateId, roleId, accomplishmentId } = await params
+
+	// If the candidate, role, and accomplishment IDs aren’t valid UUIDs, return 400.
+	const uuidFormatErrorResponse = validateUuidFormat([
+		candidateId,
+		roleId,
+		accomplishmentId,
+	])
+	if (uuidFormatErrorResponse) return uuidFormatErrorResponse
+
+	// If authorization fails, return 401, 403, or 404.
+	const authorizationErrorResponse = await authorizeApiToken(request, {
+		candidateId,
+		scopeRequirement: "resume:write",
+	})
+	if (authorizationErrorResponse) return authorizationErrorResponse
+
+	try {
+		// Found candidate.
+		const foundCandidate = await findCandidateByCandidateId(candidateId)
+
+		// If the candidate’s not found, return 404.
+		const candidateErrorResponse = validateDataFound(
+			foundCandidate,
+			"candidate",
+			{ candidateId },
+		)
+		if (candidateErrorResponse) return candidateErrorResponse
+
+		// Found role.
+		const foundRole = await findRoleByCandidateIdAndRoleId(candidateId, roleId)
+
+		// If the role’s not found, return 404.
+		const roleErrorResponse = validateDataFound(foundRole, "role", { roleId })
+		if (roleErrorResponse) return roleErrorResponse
+
+		// Deleted accomplishment.
+		const deletedAccomplishment =
+			await deleteAccomplishmentByCandidateIdAndRoleIdAndAccomplishmentId(
+				candidateId,
+				roleId,
+				accomplishmentId,
+			)
+
+		// If the accomplishment’s not found, return 404.
+		const accomplishmentNotFoundResponse = validateDataFound(
+			deletedAccomplishment,
+			"accomplishment",
+			{ accomplishmentId },
+		)
+		if (accomplishmentNotFoundResponse) return accomplishmentNotFoundResponse
+
+		// If the accomplishment’s found and deleted, return 204.
+		return new NextResponse(null, { status: 204 })
+	} catch (error) {
+		return catchServerError(error, request)
+	}
+}
+
+// --------------------------------------------------------------------------------
