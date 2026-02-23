@@ -4,10 +4,7 @@ To learn more about Christian’s professional background, see [Christian’s re
 
 ### REST API
 
-To programmatically interact with Christian’s resume, see:
-
-- [👉 Get Started with Christian’s Resume API](https://www.postman.com/areas-team/workspace/christians-resume-api/collection/19201670-6cc61b76-a3b5-4c18-9683-26498d04541c)
-- [📖 Christian’s Resume API Reference](https://www.postman.com/areas-team/workspace/christians-resume-api/collection/19201670-7e1c4ea0-c638-4920-86bc-6ffaacf43629)
+To programmatically interact with Christian’s resume, see [⭐️ Christian’s Resume API Reference](https://www.postman.com/areas-team/workspace/christians-resume-api/collection/19201670-532ae6dc-5207-4ab7-a80e-bef68cc077d4).
 
 ### MCP Server
 
