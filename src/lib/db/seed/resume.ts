@@ -46,9 +46,9 @@ export const resume = {
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 					roleId: "637f9a15-ea20-4597-990b-d67bd20db1c1",
-					accomplishmentId: "508b3571-95ab-49de-8a9e-ef30806a389f",
+					accomplishmentId: "af61fff1-a32e-43f4-a548-cea6b4181ebc",
 					accomplishment:
-						"Overhauled the Postman API Network docs to help API publishers get their API consumers to their first 200 OK response in the fewest steps possible.",
+						"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.",
 					sortOrder: 1,
 				},
 				{
@@ -62,9 +62,9 @@ export const resume = {
 				{
 					candidateId: "d5a5e5dc-f2dd-4f5a-8745-0e835d9f26a5",
 					roleId: "637f9a15-ea20-4597-990b-d67bd20db1c1",
-					accomplishmentId: "af61fff1-a32e-43f4-a548-cea6b4181ebc",
+					accomplishmentId: "28cd21b3-b1a2-4872-ae73-cdbb1565b1af",
 					accomplishment:
-						"Published an NPM package that's a Vale-compatible implementation of the Postman Style Guide. The team uses Vale to lint the docs locally and in GitHub with GitHub Actions — and ultimately ensures the docs adhere to Postman's style.",
+						"Prototyped an AI workflow that treats docs as a contract and validates them against the product using Playwright and other tooling.",
 					sortOrder: 3,
 				},
 			],
