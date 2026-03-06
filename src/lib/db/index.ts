@@ -4,6 +4,7 @@
 
 import { Pool } from "@neondatabase/serverless"
 import { drizzle } from "drizzle-orm/neon-serverless"
+import * as schema from "@/lib/db/schema"
 
 // --------------------------------------------------------------------------------
 // Database URL.
@@ -20,6 +21,7 @@ if (!databaseUrl) {
 
 export const db = drizzle({
 	client: new Pool({ connectionString: databaseUrl }),
+	schema,
 })
 
 // --------------------------------------------------------------------------------
